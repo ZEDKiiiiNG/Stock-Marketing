@@ -106,8 +106,7 @@ std::vector<char> Socket::recvMesg(int sockfd) {
 int Socket::recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len, bool chunked) {
     int total = 0;
     int nBytes;
-    // TODO change end condition
-    while ( (not chunked and total < len) || (chunked and not chunkEnd(buffer)) ) {
+    while (total < len) {
         nBytes = recv(sockfd, ptr, bufferLen - total, 0);
         if (nBytes == -1) {
             throw std::invalid_argument("no-id: ERROR receive large data\n");
