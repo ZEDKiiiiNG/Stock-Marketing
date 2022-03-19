@@ -97,29 +97,16 @@ int Socket::recvSmallData(int sockfd, std::vector<char> & buffer, int bufferLen,
 
 std::vector<char> Socket::recvMesg(int sockfd) {
     std::vector<char> buffer(SMALL_BUFFER_LEN, '\0');
+    //TODO handle large data
     int nBytes = recvSmallData(sockfd, buffer, SMALL_BUFFER_LEN, buffer.data());
     buffer.resize(nBytes);
     return buffer;
 }
 
-Request Socket::recvRequest(int sockfd, int id) {
-    std::vector<char> buffer = recvMesg(sockfd);
-    return Request(id, buffer);
-}
-
-bool Socket::chunkEnd(std::vector<char> & buffer) {
-    return findTermChunk(buffer) != buffer.end();
-}
-
-std::vector<char>::iterator Socket::findTermChunk(std::vector<char> & buffer) {
-    const char * termChunk = "0\r\n\r\n";
-    std::vector<char>::iterator it = std::search(buffer.begin(), buffer.end(), termChunk, termChunk + TERM_CHUNK_LEN);
-    return it;
-}
-
 int Socket::recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len, bool chunked) {
     int total = 0;
     int nBytes;
+    // TODO change end condition
     while ( (not chunked and total < len) || (chunked and not chunkEnd(buffer)) ) {
         nBytes = recv(sockfd, ptr, bufferLen - total, 0);
         if (nBytes == -1) {
@@ -129,36 +116,6 @@ int Socket::recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen,
         ptr += nBytes;
     }
     return total;
-}
-
-Response Socket::recvResponse(int sockfd) {
-    // receive whole header, partial body
-    std::vector<char> buffer(LARGE_BUFFER_LEN, '\0');
-    char * ptr = buffer.data();
-    int firstLen = recvSmallData(sockfd, buffer, LARGE_BUFFER_LEN, ptr);
-    ptr += firstLen;
-    Response response;
-    try {
-        response = Response(buffer.data());
-    } catch (std::invalid_argument & e) {
-        std::string badMsg = "HTTP/1.1 502 Bad Gateway\r\n\r\n";
-        Response badResponse(badMsg);
-        badResponse.setMsg(badMsg);
-        return badResponse;
-    }
-    // receive remaining message
-    bool chunked = response.getChunked();
-    int remainLen = response.getRemainLen(firstLen);
-    recvLargeData(sockfd, buffer, LARGE_BUFFER_LEN - firstLen, ptr, remainLen, chunked);
-    if (not chunked) {
-        buffer.resize(firstLen + remainLen);
-    } else {
-        char * begin = buffer.data();
-        char * end = &(*findTermChunk(buffer));
-        buffer.resize(end + TERM_CHUNK_LEN - begin);
-    }
-    response.setMsg(buffer);
-    return response;
 }
 
 

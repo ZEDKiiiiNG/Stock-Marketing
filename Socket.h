@@ -5,8 +5,6 @@
 #ifndef _SOCKET_H_
 #define _SOCKET_H_
 
-#include "Request.h"
-#include "Response.h"
 #include <iostream>
 #include <vector>
 #include <stdexcept>
@@ -20,7 +18,8 @@
 #define BAGLOG 10
 #define LARGE_BUFFER_LEN 1000000
 #define SMALL_BUFFER_LEN 8000
-#define TERM_CHUNK_LEN 5
+#define HOST "vcm-24846.vm.duke.edu"
+#define PORT "12345"
 
 class Socket {
 private:
@@ -32,14 +31,11 @@ private:
     int recvSmallData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr);
     int recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len, bool chunked);
     void sendMesg(int sockfd, const char * ptr, int msgLen);
-    bool chunkEnd(std::vector<char> & buffer);
-    std::vector<char>::iterator findTermChunk(std::vector<char> & buffer);
+
 public:
     int setupServer(const char * port);
     int acceptConn(int sockfd);
     int setupClient(std::string hostname, std::string port);
-    Request recvRequest(int sockfd, int id);
-    Response recvResponse(int sockfd);
     std::vector<char> recvMesg(int sockfd);
     void sendMesg(int sockfd, std::vector<char> msg);
     void sendMesg(int sockfd, std::string msg);
