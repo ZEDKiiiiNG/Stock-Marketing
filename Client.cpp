@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
     std::cout << "client running...\n";
     Socket socket;
-    int client_fd = socket.setupClient(HOST, PORT);
+    int msg_fd = socket.setupClient(HOST, PORT);
     std::string request = "173\n"
                           "  <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                           "  <create>\n"
@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
                           "      <account id=\"123456\">100000</account>\n"
                           "    </symbol>\n"
                           "</create>";
-    socket.sendMesg(client_fd, request);
-    socket.closeConn(client_fd);
+    socket.sendMesg(msg_fd, request);
+    socket.closeConn(msg_fd);
     return EXIT_SUCCESS;
 }
