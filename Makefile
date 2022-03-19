@@ -1,4 +1,4 @@
-client: Client.cpp
+client: Client.cpp Socket.cpp
 	g++ -std=gnu++11 -g -o $@ $^
 server: Server.cpp
 	g++ -std=gnu++11 -g -o $@ $^

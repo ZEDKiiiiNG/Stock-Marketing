@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <iostream>
+#include "Socket.h"
 
 class Client {
 
