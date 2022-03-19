@@ -1,3 +1,5 @@
+ALL=client server
+all: $(ALL)
 client: Client.cpp Socket.cpp
 	g++ -std=gnu++11 -g -o $@ $^
 server: Server.cpp Socket.cpp
@@ -5,4 +7,4 @@ server: Server.cpp Socket.cpp
 
 .PHONY: clean
 clean:
-	rm -f *~ client server
+	rm -f *~ all
