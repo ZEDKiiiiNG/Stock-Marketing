@@ -103,7 +103,7 @@ std::vector<char> Socket::recvMesg(int sockfd) {
     return buffer;
 }
 
-int Socket::recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len, bool chunked) {
+int Socket::recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len) {
     int total = 0;
     int nBytes;
     while (total < len) {

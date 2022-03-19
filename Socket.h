@@ -29,7 +29,7 @@ private:
     void listenPort(int sockfd);
     void connToServer(int sockfd, struct addrinfo * servinfo);
     int recvSmallData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr);
-    int recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len, bool chunked);
+    int recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len);
     void sendMesg(int sockfd, const char * ptr, int msgLen);
 
 public:

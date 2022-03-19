@@ -1,6 +1,6 @@
 client: Client.cpp Socket.cpp
 	g++ -std=gnu++11 -g -o $@ $^
-server: Server.cpp
+server: Server.cpp Socket.cpp
 	g++ -std=gnu++11 -g -o $@ $^
 
 .PHONY: clean
