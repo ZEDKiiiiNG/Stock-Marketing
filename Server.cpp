@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     std::vector<char> request = socket.recvMesg(msg_fd);
     std::cout << request.data() << '\n';
 
-    std::string response = "173\n"
+    std::string response = "128\n"
                            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                            "<results>\n"
                            "    <created id=\"123456\"/>\n"
