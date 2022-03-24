@@ -9,9 +9,13 @@
 #include <iostream>
 #include <vector>
 #include "Socket.h"
+#include "tinyxml.h"
+#include <cstring>
 
 class Server {
-
+//std::string getXmlContent(const std::string& raw);
+public:
+    const char * getXmlContent(const char* raw);
 };
 
 

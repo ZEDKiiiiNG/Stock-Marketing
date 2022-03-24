@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) {
                           "    </symbol>\n"
                           "</create>";
     socket.sendMesg(msg_fd, request);
-
     std::vector<char> response = socket.recvMesg(msg_fd);
     std::cout << response.data() << '\n';
 
