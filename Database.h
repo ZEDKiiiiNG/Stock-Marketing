@@ -12,7 +12,7 @@
 
 class Database {
 private:
-    pqxx::connection conn;
+    pqxx::connection * conn;
 
 public:
     Database();

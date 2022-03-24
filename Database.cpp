@@ -4,8 +4,7 @@
 
 #include "Database.h"
 
-Database::Database() {
-    conn = pqxx::connection(DB_INFO);
+Database::Database() : *conn(new pqxx::*connection(DB_INFO)) {
     createTable("tables.sql");
 }
 
@@ -20,14 +19,14 @@ void Database::createTable(const char *fileName) {
     while (std::getline(ifs, line)) {
         ss << line;
     }
-    pqxx::work w(conn);
+    pqxx::work w(*conn);
     w.exec(ss.str());
     w.commit();
     ifs.close();
 }
 
 void Database::saveAccount(int id, int balance) {
-    pqxx::work w(conn);
+    pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO account (account_id, balance) VALUES (" << id << "," << balance << ");";
     w.exec(ss.str());
