@@ -6,6 +6,7 @@
 
 void DatabaseTest::testSaveAccount(Database & db) {
     db.saveAccount(1, 10000);
+    db.saveAccount(2, 1500);
     pqxx::nontransaction n(*db.conn);
     std::string query("SELECT * FROM account;");
     pqxx::result r(n.exec(query));
