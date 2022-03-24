@@ -33,7 +33,7 @@ void Database::saveAccount(int id, int balance) {
     w.commit();
 }
 
-void Database::~Database() {
+Database::~Database() {
     delete conn;
 }
 
