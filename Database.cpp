@@ -4,7 +4,7 @@
 
 #include "Database.h"
 
-Database::Database() : *conn(new pqxx::connection(DB_INFO)) {
+Database::Database() : conn(new pqxx::connection(DB_INFO)) {
     createTable("tables.sql");
 }
 
