@@ -8,7 +8,7 @@
 #include <pqxx/pqxx>
 #include "Constant.h"
 #include <string>
-
+#include <fstream>
 
 class Database {
 private:
