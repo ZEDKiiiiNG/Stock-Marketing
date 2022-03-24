@@ -7,4 +7,4 @@ server: Server.cpp Socket.cpp
 
 .PHONY: clean
 clean:
-	rm -f *~ all
+	rm -f *~ $(ALL)
