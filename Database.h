@@ -17,6 +17,7 @@ private:
 public:
     Database();
     void saveAccount(int id, int balance);
+    ~Database();
 private:
     void createTable(const char * fileName);
 };
