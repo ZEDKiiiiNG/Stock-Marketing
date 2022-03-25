@@ -14,6 +14,7 @@
 #include <arpa/inet.h>
 #include <string>
 #include <cstring>
+#include <sstream>
 #include "Constant.h"
 
 class Socket {
@@ -26,6 +27,7 @@ private:
     int recvSmallData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr);
     int recvLargeData(int sockfd, std::vector<char> & buffer, int bufferLen, char * ptr, int len);
     void sendMesg(int sockfd, const char * ptr, int msgLen);
+    int getRequestLen(std::vector<char> & buffer);
 
 public:
     int setupServer(const char * port);

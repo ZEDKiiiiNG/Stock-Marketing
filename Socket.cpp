@@ -95,11 +95,22 @@ int Socket::recvSmallData(int sockfd, std::vector<char> & buffer, int bufferLen,
     return nBytes;
 }
 
+int Socket::getRequestLen(std::vector<char> &buffer) {
+    std::stringstream ss(buffer.data());
+    std::string line;
+    std::getline(ss, line);
+    return std::stoi(line);
+}
+
 std::vector<char> Socket::recvMesg(int sockfd) {
-    std::vector<char> buffer(SMALL_BUFFER_LEN, '\0');
-    //TODO handle large data
-    int nBytes = recvSmallData(sockfd, buffer, SMALL_BUFFER_LEN, buffer.data());
-    buffer.resize(nBytes);
+    std::vector<char> buffer(LARGE_BUFFER_LEN, '\0');
+    char * ptr = buffer.data();
+    int nBytes = recvSmallData(sockfd, buffer, LARGE_BUFFER_LEN, buffer.data());
+    int len = getRequestLen(buffer);
+    std::cout << "request length: " << len << '\n';
+    ptr += nBytes;
+    recvLargeData(sockfd, buffer, LARGE_BUFFER_LEN - nBytes, ptr, len - nBytes);
+    buffer.resize(len);
     return buffer;
 }
 
