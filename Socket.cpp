@@ -107,7 +107,7 @@ std::vector<char> Socket::recvMesg(int sockfd) {
     char * ptr = buffer.data();
     int nBytes = recvSmallData(sockfd, buffer, LARGE_BUFFER_LEN, buffer.data());
     int len = getRequestLen(buffer);
-    std::cout << "request length: " << len << '\n';
+    std::cout << "nbytes: " << nBytes << " request length: " << len << '\n';
     ptr += nBytes;
     recvLargeData(sockfd, buffer, LARGE_BUFFER_LEN - nBytes, ptr, len - nBytes);
     buffer.resize(len);
