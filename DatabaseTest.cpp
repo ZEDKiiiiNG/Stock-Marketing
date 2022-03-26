@@ -25,8 +25,11 @@ void DatabaseTest::testHasAccount() {
 
 void DatabaseTest::testPosition() {
     db.savePosition("SYM", 1);
-    double amount = db.getAmount("SYM", 1);
-    assert(amount == 0);
+    double ans1 = db.getAmount("SYM", 1);
+    assert(ans1 == 0);
+    db.updateAmount("SYM", 1, 200);
+    double ans2 = db.getAmount("SYM", 1);
+    assert(ans2 == 200);
 }
 
 int main(int argc, char *argv[]) {
