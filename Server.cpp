@@ -25,7 +25,7 @@ void Server::handleAccountCreate(TiXmlElement* rootElement, TiXmlElement* rootRe
     TiXmlAttribute *pAttr = rootElement->FirstAttribute();//第一个属性
     int id = std::atoi(pAttr->Value());
     pAttr = pAttr->Next();
-    int balance = std::atoi(pAttr->Value());
+    double balance = std::atof(pAttr->Value());
     if(db.hasAccount(id)){
         //<error id="ACCOUNT_ID">Msg</error> #For account create error
         TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
@@ -42,6 +42,31 @@ void Server::handleAccountCreate(TiXmlElement* rootElement, TiXmlElement* rootRe
 }
 void Server::handleSymbolCreate(TiXmlElement* rootElement, TiXmlElement* rootResultElement){
     //current root is symbol create
+    /*<symbol sym="SPY">
+        <account id="123456">100000</account>
+    </symbol>*/
+    TiXmlAttribute *pAttr = rootElement->FirstAttribute();//第一个属性 which is sym
+    const char *sym = pAttr->Value();
+    TiXmlElement *accountElement = rootElement->FirstChildElement();
+    TiXmlAttribute *aAttr = accountElement->FirstAttribute();//第一个属性 which is id
+    int id = std::atoi(pAttr->Value());
+    double amount = std::atof(accountElement->FirstChild()->Value());
+    //check existance
+    if(!db.hasAccount(id)){
+        //<error sym="SYM" id="ACCOUNT_ID">Msg</error>
+        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
+        newChildElement->SetAttribute("sym", sym); //属性sym
+        newChildElement->SetAttribute("id", id); //属性id
+        newChildElement->LinkEndChild(new TiXmlText("Account dose not exit"));
+        rootResultElement->LinkEndChild(newChildElement);
+    }else{
+        //<created sym="SYM" id="ACCOUNT_ID"/>
+        //TODO: update database
+        TiXmlElement *newChildElement = new TiXmlElement("created");//根元素
+        newChildElement->SetAttribute("sym", sym); //属性sym
+        newChildElement->SetAttribute("id", id); //属性id
+        rootResultElement->LinkEndChild(newChildElement);
+    }
 }
 void Server::handleCreate(TiXmlElement* rootElement, TiXmlElement* rootResultElement){
     //Handle Create
