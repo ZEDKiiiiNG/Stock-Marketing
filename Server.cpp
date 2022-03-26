@@ -49,7 +49,7 @@ void Server::handleSymbolCreate(TiXmlElement* rootElement, TiXmlElement* rootRes
     const char *sym = pAttr->Value();
     TiXmlElement *accountElement = rootElement->FirstChildElement();
     TiXmlAttribute *aAttr = accountElement->FirstAttribute();//第一个属性 which is id
-    int id = std::atoi(pAttr->Value());
+    int id = std::atoi(aAttr->Value());
     double amount = std::atof(accountElement->FirstChild()->Value());
     //check existance
     if(!db.hasAccount(id)){
@@ -62,6 +62,7 @@ void Server::handleSymbolCreate(TiXmlElement* rootElement, TiXmlElement* rootRes
     }else{
         //<created sym="SYM" id="ACCOUNT_ID"/>
         //TODO: update database
+        db.updatePosition(sym, id, amount);
         TiXmlElement *newChildElement = new TiXmlElement("created");//根元素
         newChildElement->SetAttribute("sym", sym); //属性sym
         newChildElement->SetAttribute("id", id); //属性id
