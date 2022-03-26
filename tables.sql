@@ -13,3 +13,16 @@ CREATE TABLE position (
     account_id INT,
     FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
+
+CREATE TABLE order (
+    order_id INT,
+    symbol VARCHAR(256),
+    amount DOUBLE PRECISION,
+    limit_price DOUBLE PRECISION,
+    status VARCHAR(256) DEFAULT 'open',
+    update_time INT,
+    execute_price DOUBLE PRECISION,
+    account_id INT,
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
