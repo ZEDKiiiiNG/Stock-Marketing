@@ -31,7 +31,7 @@ void DatabaseTest::testSymbol() {
     ss << "SELECT * FROM position WHERE account_id = " << 1 << "AND symbol = " << n.quote("SYM") <<";";
     pqxx::result r(n.exec(ss.str()));
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
-        std::cout << c[0].as<std::string>() << "\n"
+        std::cout << c[0].as<std::string>() << " "
         << c[1].as<double>() << "\n";
     }
 
