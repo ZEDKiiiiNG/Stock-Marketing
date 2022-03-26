@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS account CASCADE;
 
 CREATE TABLE account (
     account_id INT NOT NULL,
-    balance DOUBLE DEFAULT 0,
+    balance INT DEFAULT 0,
     PRIMARY KEY (account_id)
 );
 
