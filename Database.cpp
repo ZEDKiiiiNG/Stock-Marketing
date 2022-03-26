@@ -58,7 +58,7 @@ double Database::getAmount(std::string symbol, int accountId) {
 
 
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
-        std::cout << c[0].as<std::string>() << "\n";
+        std::cout << "here: " << c[0].as<std::string>() << "\n";
     }
 
     return 0;
