@@ -23,9 +23,31 @@ void DatabaseTest::testHasAccount() {
     assert(not ans2);
 }
 
+void DatabaseTest::testPosition() {
+    assert(not db.hasPosition("SYM", 1));
+    db.savePosition("SYM", 1);
+    assert(db.hasPosition("SYM", 1));
+    assert(not db.hasPosition("SYM", 2));
+
+    assert(db.getAmount("SYM", 1) == 0);
+
+    db.updateAmount("SYM", 1, 200);
+    assert(db.getAmount("SYM", 1) == 200);
+    db.updateAmount("SYM", 1, 18.8);
+    assert(db.getAmount("SYM", 1) == 218.8);
+
+    db.updatePosition("BTC", 2, 15);
+    assert(db.getAmount("BTC", 2) == 15);
+    db.updatePosition("BTC", 1, 22.2);
+    assert(db.getAmount("BTC", 1) == 22.2);
+    db.updatePosition("SYM", 1, 10);
+    assert(db.getAmount("SYM", 1) == 228.8);
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
     test.testHasAccount();
+    test.testPosition();
     return EXIT_SUCCESS;
 }

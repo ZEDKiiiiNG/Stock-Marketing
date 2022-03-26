@@ -9,4 +9,4 @@ db_test: Database.cpp DatabaseTest.cpp
 
 .PHONY: clean
 clean:
-	rm -f *~ all
+	rm -f *~ $(ALL)

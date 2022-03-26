@@ -9,6 +9,7 @@
 #include "Constant.h"
 #include <string>
 #include <fstream>
+#include "iostream"
 
 class Database {
 private:
@@ -16,12 +17,17 @@ private:
 
 public:
     Database();
-    void saveAccount(int id, int balance);
+    void saveAccount(int id, double balance);
     bool hasAccount(int id);
+    void updatePosition(std::string symbol, int accountId, double amount);
     ~Database();
     friend class DatabaseTest;
 private:
     void createTable(const char * fileName);
+    void savePosition(std::string symbol, int accountId);
+    double getAmount(std::string symbol, int accountId);
+    void updateAmount(std::string symbol, int accountId, double amount);
+    bool hasPosition(std::string symbol, int accountId);
 };
 
 

@@ -25,7 +25,7 @@ void Database::createTable(const char *fileName) {
     ifs.close();
 }
 
-void Database::saveAccount(int id, int balance) {
+void Database::saveAccount(int id, double balance) {
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO account (account_id, balance) VALUES (" << id << "," << balance << ");";
@@ -36,9 +36,54 @@ void Database::saveAccount(int id, int balance) {
 bool Database::hasAccount(int id) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
-    ss << "SELECT * FROM account WHERE account_id = " << id << ";";
+    ss << "SELECT * FROM account"
+        << " WHERE account_id = " << id << ";";
     pqxx::result r(n.exec(ss.str()));
     return r.size() > 0;
+}
+
+void Database::savePosition(std::string symbol, int accountId) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "INSERT INTO position (symbol, account_id) VALUES (" << w.quote(symbol) << "," << accountId << ");";
+    w.exec(ss.str());
+    w.commit();
+}
+
+double Database::getAmount(std::string symbol, int accountId) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT amount FROM position"
+        << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) << ";";
+    pqxx::result r(n.exec(ss.str()));
+    return r.begin()[0].as<double>();
+}
+
+void Database::updateAmount(std::string symbol, int accountId, double amount) {
+    double curr = getAmount(symbol, accountId);
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "UPDATE position"
+        << " SET amount = " << curr + amount
+        << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
+    w.exec(ss.str());
+    w.commit();
+}
+
+bool Database::hasPosition(std::string symbol, int accountId) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM position"
+       << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) << ";";
+    pqxx::result r(n.exec(ss.str()));
+    return r.size() > 0;
+}
+
+void Database::updatePosition(std::string symbol, int accountId, double amount) {
+    if (not hasPosition(symbol, accountId)) {
+        savePosition(symbol, accountId);
+    }
+    updateAmount(symbol, accountId, amount);
 }
 
 Database::~Database() {
