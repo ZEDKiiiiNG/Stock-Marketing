@@ -20,6 +20,7 @@ public:
     void saveAccount(int id, double balance);
     bool hasAccount(int id);
     void updatePosition(std::string symbol, int accountId, double amount);
+    void saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
     ~Database();
     friend class DatabaseTest;
 private:

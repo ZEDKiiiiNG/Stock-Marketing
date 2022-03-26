@@ -21,7 +21,7 @@ CREATE TABLE trade_order (
     amount DOUBLE PRECISION,
     limit_price DOUBLE PRECISION,
     status VARCHAR(256) DEFAULT 'open',
-    update_time INT default 0,
+    update_time INT,
     execute_price DOUBLE PRECISION default 0,
     account_id INT,
     PRIMARY KEY (order_id),
