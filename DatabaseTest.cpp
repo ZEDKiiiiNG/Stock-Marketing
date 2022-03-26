@@ -26,8 +26,7 @@ void DatabaseTest::testHasAccount() {
 void DatabaseTest::testSymbol() {
     db.saveSymbol("SYM", 1);
 
-    // pqxx::nontransaction n(*db.conn);
-    /*
+    pqxx::nontransaction n(*db.conn);
     std::stringstream ss;
     ss << "SELECT * FROM position WHERE account_id = " << 1 << "AND symbol = " << n.quote("SYM") <<";";
     pqxx::result r(n.exec(ss.str()));
@@ -35,11 +34,11 @@ void DatabaseTest::testSymbol() {
         std::cout << c[0].as<std::string>() << "\n"
         << c[1].as<double>() << "\n";
     }
-     */
 
 
 
-    double amount = db.getAmount("SYM", 1);
+
+    // double amount = db.getAmount("SYM", 1);
     //assert(amount == 0);
     //std::cout << amount << '\n';
 
