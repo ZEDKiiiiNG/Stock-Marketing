@@ -34,7 +34,7 @@ void Database::saveAccount(int id, int balance) {
 }
 
 bool Database::hasAccount(int id) {
-    pqxx::nontransaction n(*conn)
+    pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM account WHERE account_id = " << id << ";";
     pqxx:result r(n.exec(ss.str()));
