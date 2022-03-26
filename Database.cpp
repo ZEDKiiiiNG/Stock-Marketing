@@ -44,7 +44,7 @@ bool Database::hasAccount(int id) {
 void Database::saveSymbol(std::string symbol, int accountId) {
     pqxx::work w(*conn);
     std::stringstream ss;
-    ss << "INSERT INTO position (symbol, accountId) VALUES (" << symbol << "," << accountId << ");";
+    ss << "INSERT INTO position (symbol, account_id) VALUES (" << symbol << "," << accountId << ");";
     w.exec(ss.str());
     w.commit();
 }
