@@ -54,7 +54,7 @@ double Database::getAmount(std::string symbol, int accountId) {
     std::stringstream ss;
     ss << "SELECT amount FROM position WHERE account_id = " << accountId << "AND symbol = " << symbol <<";";
     pqxx::result r(n.exec(ss.str()));
-    return r[0][1];
+    return r[0][1].as<double>();
 }
 
 Database::~Database() {
