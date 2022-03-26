@@ -40,7 +40,7 @@ void DatabaseTest::testPosition() {
     assert(db.getAmount("BTC", 2) == 15);
     db.updatePosition("BTC", 1, 22.2);
     assert(db.getAmount("BTC", 1) == 22.2);
-    db.updatePosition("SYM", 10);
+    db.updatePosition("SYM", 1, 10);
     assert(db.getAmount("SYM", 2) == 228.8);
 }
 
