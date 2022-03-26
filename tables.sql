@@ -9,5 +9,5 @@ CREATE TABLE account (
 CREATE TABLE position (
     symbol VARCHAR(256),
     amount DOUBLE PRECISION DEFAULT 0,
-    FOREIGN KEY (account_id) REFERENCES STATE(account_id) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
