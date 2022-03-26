@@ -34,12 +34,11 @@ void Database::saveAccount(int id, int balance) {
 }
 
 bool Database::hasAccount(int id) {
-    pqxx::work w(*conn);
+    pqxx::nontransaction n(*conn)
     std::stringstream ss;
-    ss << "SELECT COUNT(account_id) FROM account WHERE account_id = " << id;
-    int cnt = w.query_value<int>(ss.str());
-    w.commit();
-    return cnt > 0;
+    ss << "SELECT * FROM account WHERE account_id = " << id << ";";
+    pqxx:result r(n.exec(ss.str()));
+    return r.size() > 0;
 }
 
 Database::~Database() {
