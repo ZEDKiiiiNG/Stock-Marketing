@@ -49,7 +49,7 @@ void Database::saveSymbol(std::string symbol, int accountId) {
     w.commit();
 }
 
-void Database::getAmount(std::string symbol, int accountId) {
+double Database::getAmount(std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT amount FROM position WHERE account_id = " << id << "AND symbol = " << symbol <<";";
