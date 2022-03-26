@@ -56,12 +56,10 @@ double Database::getAmount(std::string symbol, int accountId) {
     pqxx::result r(n.exec(ss.str()));
     std::cout << "size: " << r.size() << '\n';
 
-    /*
+
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
-        std::cout << c[0].as<std::string>() << "\n"
-                  << c[1].as<double>() << "\n";
+        std::cout << c[0].as<std::string>() << "\n";
     }
-     */
 
     return 0;
 }
