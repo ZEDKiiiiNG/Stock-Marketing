@@ -70,11 +70,11 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     w.commit();
 }
 
-bool Database::hasPosition(std::string symbol) {
+bool Database::hasPosition(std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM position"
-       << " WHERE symbol = " << n.quote(symbol) << ";";
+       << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) <<";";
     pqxx::result r(n.exec(ss.str()));
     return r.size() > 0;
 }
