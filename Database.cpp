@@ -52,7 +52,7 @@ void Database::saveSymbol(std::string symbol, int accountId) {
 double Database::getAmount(std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
-    ss << "SELECT amount FROM position WHERE account_id = " << id << "AND symbol = " << symbol <<";";
+    ss << "SELECT amount FROM position WHERE account_id = " << accountId << "AND symbol = " << symbol <<";";
     pqxx::result r(n.exec(ss.str()));
     return r[0][1];
 }
