@@ -64,7 +64,7 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "UPDATE position"
-        << "SET amount = " << curr + amount
+        << " SET amount = " << curr + amount
         << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) <<";";
     w.exec(ss.str());
     w.commit();
