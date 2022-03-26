@@ -83,7 +83,7 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
     if (not hasPosition(symbol, accountId)) {
         savePosition(symbol, accountId);
     }
-    updatePosition(symbol, amount);
+    updateAmount(symbol, accountId, amount);
 }
 
 Database::~Database() {
