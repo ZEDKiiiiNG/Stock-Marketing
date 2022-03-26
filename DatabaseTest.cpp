@@ -31,6 +31,7 @@ void DatabaseTest::testSymbol() {
     pqxx::result r(n.exec(ss.str()));
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
         std::cout << c[0].as<std::string>() << "\n";
+    }
     /*
     double amount = db.getAmount("SYM", 1);
     assert(amount == 0);
