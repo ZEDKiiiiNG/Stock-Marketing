@@ -27,7 +27,6 @@ void DatabaseTest::testSymbol() {
     db.saveSymbol("SYM", 1);
     double amount = db.getAmount("SYM", 1);
     assert(amount == 0);
-    std::cout << amount << '\n';
 }
 
 int main(int argc, char *argv[]) {
