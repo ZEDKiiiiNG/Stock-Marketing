@@ -33,16 +33,14 @@ void Database::saveAccount(int id, int balance) {
     w.commit();
 }
 
-/*
 bool Database::hasAccount(int id) {
     pqxx::work w(*conn);
     std::stringstream ss;
-    ss << "SELECT COUNT(account_id) FROM account WHERE account_id = " << id << ";";
+    ss << "SELECT COUNT(account_id) FROM account WHERE account_id = " << id;
     int cnt = w.query_value<int>(ss.str());
     w.commit();
     return cnt > 0;
 }
- */
 
 Database::~Database() {
     delete conn;
