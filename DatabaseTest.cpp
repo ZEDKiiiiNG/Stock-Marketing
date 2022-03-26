@@ -23,8 +23,8 @@ void DatabaseTest::testHasAccount() {
     assert(not ans2);
 }
 
-void DatabaseTest::testSymbol() {
-    db.saveSymbol("SYM", 1);
+void DatabaseTest::testPosition() {
+    db.savePosition("SYM", 1);
     double amount = db.getAmount("SYM", 1);
     assert(amount == 0);
 }

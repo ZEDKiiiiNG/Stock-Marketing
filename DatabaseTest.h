@@ -16,7 +16,7 @@ private:
 public:
     void testSaveAccount();
     void testHasAccount();
-    void testSymbol();
+    void testPosition();
 
 };
 

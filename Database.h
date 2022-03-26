@@ -24,7 +24,7 @@ public:
     friend class DatabaseTest;
 private:
     void createTable(const char * fileName);
-    void saveSymbol(std::string symbol, int accountId);
+    void savePosition(std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId);
     void updateAmount(std::string symbol, int accountId, double amount);
 };
