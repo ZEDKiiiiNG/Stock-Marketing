@@ -44,7 +44,7 @@ bool Database::hasAccount(int id) {
 void Database::saveSymbol(std::string symbol, int accountId) {
     pqxx::work w(*conn);
     std::stringstream ss;
-    ss << "INSERT INTO position (symbol, amount, account_id) VALUES (" << w.quote(symbol) << ", 0" << "," << accountId << ");";
+    ss << "INSERT INTO position (symbol, amount, account_id) VALUES (" << w.quote(symbol) << ", 5" << "," << accountId << ");";
     w.exec(ss.str());
     w.commit();
 }
@@ -54,14 +54,7 @@ double Database::getAmount(std::string symbol, int accountId) {
     std::stringstream ss;
     ss << "SELECT amount FROM position WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) <<";";
     pqxx::result r(n.exec(ss.str()));
-    std::cout << "size: " << r.size() << '\n';
-
-
-    for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
-        std::cout << "here: " << c[0].as<std::string>() << "\n";
-    }
-
-    return 0;
+    return r.begin()[0].as<double>();
 }
 
 Database::~Database() {

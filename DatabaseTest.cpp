@@ -41,8 +41,8 @@ void DatabaseTest::testSymbol() {
 
 
     double amount = db.getAmount("SYM", 1);
-    //assert(amount == 0);
-    //std::cout << amount << '\n';
+    assert(amount == 0);
+    std::cout << amount << '\n';
 
 }
 
