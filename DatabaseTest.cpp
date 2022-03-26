@@ -29,15 +29,19 @@ void DatabaseTest::testPosition() {
     assert(db.hasPosition("SYM", 1));
     assert(not db.hasPosition("SYM", 2));
 
-    double ans1 = db.getAmount("SYM", 1);
-    assert(ans1 == 0);
+    assert(db.getAmount("SYM", 1) == 0);
 
     db.updateAmount("SYM", 1, 200);
-    double ans2 = db.getAmount("SYM", 1);
-    assert(ans2 == 200);
+    assert(db.getAmount("SYM", 1) == 200);
     db.updateAmount("SYM", 1, 18.8);
-    double ans3 = db.getAmount("SYM", 1);
-    assert(ans3 == 218.8);
+    assert(db.getAmount("SYM", 1) == 218.8);
+
+    db.updatePosition("BTC", 2, 15);
+    assert(db.getAmount("BTC", 2) == 15);
+    db.updatePosition("BTC", 1, 22.2);
+    assert(db.getAmount("BTC", 1) == 22.2);
+    DB.updatePosition("SYM", 10);
+    assert(db.getAmount("SYM", 2) == 228.8);
 }
 
 int main(int argc, char *argv[]) {

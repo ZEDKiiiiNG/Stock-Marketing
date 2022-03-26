@@ -79,6 +79,13 @@ bool Database::hasPosition(std::string symbol, int accountId) {
     return r.size() > 0;
 }
 
+void Database::updatePosition(std::string symbol, int accountId, double amount) {
+    if (not hasPosition(symbol, accountId)) {
+        savePosition(symbol, accountId);
+    }
+    updatePosition(symbol, amount);
+}
+
 Database::~Database() {
     delete conn;
 }
