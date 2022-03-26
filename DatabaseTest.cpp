@@ -30,6 +30,11 @@ void DatabaseTest::testPosition() {
     db.updateAmount("SYM", 1, 200);
     double ans2 = db.getAmount("SYM", 1);
     assert(ans2 == 200);
+    std::cout << ans2 << '\n';
+    db.updateAmount("SYM", 1, 18.8);
+    double ans3 = db.getAmount("SYM", 1);
+    assert(ans3, 218.8);
+    std::cout << ans3 << '\n';
 }
 
 int main(int argc, char *argv[]) {
