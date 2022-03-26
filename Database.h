@@ -17,6 +17,7 @@ private:
 public:
     Database();
     void saveAccount(int id, int balance);
+    bool hasAccount(int id);
     ~Database();
     friend class DatabaseTest;
 private:
