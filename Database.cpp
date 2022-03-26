@@ -33,6 +33,7 @@ void Database::saveAccount(int id, int balance) {
     w.commit();
 }
 
+/*
 bool Database::hasAccount(int id) {
     pqxx::work w(*conn);
     std::stringstream ss;
@@ -41,6 +42,7 @@ bool Database::hasAccount(int id) {
     w.commit();
     return cnt > 0;
 }
+ */
 
 Database::~Database() {
     delete conn;
