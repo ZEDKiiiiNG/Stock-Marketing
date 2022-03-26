@@ -60,7 +60,6 @@ double Database::getAmount(std::string symbol, int accountId) {
 }
 
 void Database::updateAmount(std::string symbol, int accountId, double amount) {
-    /*
     double curr = getAmount(symbol, accountId);
     pqxx::work w(*conn);
     std::stringstream ss;
@@ -69,7 +68,6 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
         << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) <<";";
     w.exec(ss.str());
     w.commit();
-     */
 }
 
 Database::~Database() {
