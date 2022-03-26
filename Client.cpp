@@ -14,6 +14,8 @@ int main(int argc, char *argv[]) {
                           "    <account id=\"123456\" balance=\"1000\"/>\n"
                           "    <symbol sym=\"SPY\">\n"
                           "        <account id=\"123456\">100000</account>\n"
+                          "        <account id=\"12345\">100000</account>\n"
+                          "        <account id=\"1234\">100000</account>\n"
                           "    </symbol>\n"
                           "</create>";
     socket.sendMesg(msg_fd, request);
