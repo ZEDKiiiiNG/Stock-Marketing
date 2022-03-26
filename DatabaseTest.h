@@ -8,10 +8,14 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Database.h"
+#include <assert.h>
 
 class DatabaseTest {
+private:
+    Database db;
 public:
-    void testSaveAccount(Database & db);
+    void testSaveAccount();
+    void testHasAccount();
 
 };
 

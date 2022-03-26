@@ -4,7 +4,7 @@
 
 #include "DatabaseTest.h"
 
-void DatabaseTest::testSaveAccount(Database & db) {
+void DatabaseTest::testSaveAccount() {
     db.saveAccount(1, 10000);
     db.saveAccount(2, 1500);
     pqxx::nontransaction n(*db.conn);
@@ -16,9 +16,16 @@ void DatabaseTest::testSaveAccount(Database & db) {
     }
 }
 
+void DatabaseTest::testHasAccount() {
+    bool ans1 = db.hasAccount(1);
+    assert(ans1);
+    bool ans2 = db.hasAccount(3);
+    assert(not ans2);
+}
+
 int main(int argc, char *argv[]) {
-    Database db;
     DatabaseTest test;
-    test.testSaveAccount(db);
+    test.testSaveAccount();
+    test.testHasAccount();
     return EXIT_SUCCESS;
 }
