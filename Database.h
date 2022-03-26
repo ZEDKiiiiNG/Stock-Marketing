@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include "iostream"
+#include <time.h>
 
 class Database {
 private:
