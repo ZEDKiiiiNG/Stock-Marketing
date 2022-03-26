@@ -46,6 +46,7 @@ void DatabaseTest::testPosition() {
 
 void DatabaseTest::testOrder() {
     db.saveOrder(1, "SYM", 1, 18, 230);
+    db.saveOrder(2, "BTC", 2, -5, 110);
 }
 
 int main(int argc, char *argv[]) {
