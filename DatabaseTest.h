@@ -10,8 +10,10 @@
 #include "Database.h"
 
 class DatabaseTest {
+private:
+    Database db;
 public:
-    void testSaveAccount(Database & db);
+    void testSaveAccount();
 
 };
 

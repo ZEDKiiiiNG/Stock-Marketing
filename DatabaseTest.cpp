@@ -4,7 +4,7 @@
 
 #include "DatabaseTest.h"
 
-void DatabaseTest::testSaveAccount(Database & db) {
+void DatabaseTest::testSaveAccount() {
     db.saveAccount(1, 10000);
     db.saveAccount(2, 1500);
     pqxx::nontransaction n(*db.conn);
@@ -17,8 +17,7 @@ void DatabaseTest::testSaveAccount(Database & db) {
 }
 
 int main(int argc, char *argv[]) {
-    Database db;
     DatabaseTest test;
-    test.testSaveAccount(db);
+    test.testSaveAccount();
     return EXIT_SUCCESS;
 }
