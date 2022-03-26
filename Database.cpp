@@ -91,7 +91,7 @@ void Database::saveOrder(int orderId, std::string symbol, int accountId, double 
     std::stringstream ss;
     ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, update_time, account_id) VALUES ("
     << orderId << "," << w.quote(symbol) << "," << amount << ","
-    << limit_price << "," << std::time(NULL) << "," << accountId << ");";
+    << limit << "," << time(NULL) << "," << accountId << ");";
     w.exec(ss.str());
     w.commit();
 }
