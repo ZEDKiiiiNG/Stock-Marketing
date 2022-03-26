@@ -1,4 +1,5 @@
 ALL=client server
+TEST=db_test
 all: $(ALL)
 client: Client.cpp Socket.cpp
 	g++ -std=gnu++11 -g -o $@ $^
@@ -9,4 +10,4 @@ db_test: Database.cpp DatabaseTest.cpp
 
 .PHONY: clean
 clean:
-	rm -f *~ $(ALL)
+	rm -f *~ $(ALL) $(TEST)
