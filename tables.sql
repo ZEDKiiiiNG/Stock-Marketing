@@ -11,5 +11,6 @@ CREATE TABLE position (
     symbol VARCHAR(256),
     amount DOUBLE PRECISION DEFAULT 0,
     account_id INT,
+    PRIMARY KEY (symbol),
     FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
