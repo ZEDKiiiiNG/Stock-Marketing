@@ -27,7 +27,7 @@ private:
     void savePosition(std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId);
     void updateAmount(std::string symbol, int accountId, double amount);
-    void hasPosition(std::string symbol);
+    bool hasPosition(std::string symbol);
 };
 
 
