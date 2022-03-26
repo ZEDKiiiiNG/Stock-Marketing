@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS account CASCADE;
+DROP TABLE IF EXISTS position CASCADE;
 
 CREATE TABLE account (
     account_id INT,
