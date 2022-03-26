@@ -47,26 +47,28 @@ void Server::handleSymbolCreate(TiXmlElement* rootElement, TiXmlElement* rootRes
     </symbol>*/
     TiXmlAttribute *pAttr = rootElement->FirstAttribute();//第一个属性 which is sym
     const char *sym = pAttr->Value();
-    TiXmlElement *accountElement = rootElement->FirstChildElement();
-    TiXmlAttribute *aAttr = accountElement->FirstAttribute();//第一个属性 which is id
-    int id = std::atoi(aAttr->Value());
-    double amount = std::atof(accountElement->FirstChild()->Value());
-    //check existance
-    if(!db.hasAccount(id)){
-        //<error sym="SYM" id="ACCOUNT_ID">Msg</error>
-        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
-        newChildElement->SetAttribute("sym", sym); //属性sym
-        newChildElement->SetAttribute("id", id); //属性id
-        newChildElement->LinkEndChild(new TiXmlText("Account dose not exit"));
-        rootResultElement->LinkEndChild(newChildElement);
-    }else{
-        //<created sym="SYM" id="ACCOUNT_ID"/>
-        //TODO: update database
-        db.updatePosition(sym, id, amount);
-        TiXmlElement *newChildElement = new TiXmlElement("created");//根元素
-        newChildElement->SetAttribute("sym", sym); //属性sym
-        newChildElement->SetAttribute("id", id); //属性id
-        rootResultElement->LinkEndChild(newChildElement);
+    for(TiXmlElement *accountElement = rootElement->FirstChildElement();accountElement != nullptr; accountElement = accountElement->NextSiblingElement() ){
+//        TiXmlElement *accountElement = rootElement->FirstChildElement();
+        TiXmlAttribute *aAttr = accountElement->FirstAttribute();//第一个属性 which is id
+        int id = std::atoi(aAttr->Value());
+        double amount = std::atof(accountElement->FirstChild()->Value());
+        //check existance
+        if(!db.hasAccount(id)){
+            //<error sym="SYM" id="ACCOUNT_ID">Msg</error>
+            TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
+            newChildElement->SetAttribute("sym", sym); //属性sym
+            newChildElement->SetAttribute("id", id); //属性id
+            newChildElement->LinkEndChild(new TiXmlText("Account dose not exit"));
+            rootResultElement->LinkEndChild(newChildElement);
+        }else{
+            //<created sym="SYM" id="ACCOUNT_ID"/>
+
+            db.updatePosition(sym, id, amount);
+            TiXmlElement *newChildElement = new TiXmlElement("created");//根元素
+            newChildElement->SetAttribute("sym", sym); //属性sym
+            newChildElement->SetAttribute("id", id); //属性id
+            rootResultElement->LinkEndChild(newChildElement);
+        }
     }
 }
 void Server::handleCreate(TiXmlElement* rootElement, TiXmlElement* rootResultElement){
