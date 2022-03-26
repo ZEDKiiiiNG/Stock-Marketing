@@ -18,10 +18,14 @@ public:
     Database();
     void saveAccount(int id, double balance);
     bool hasAccount(int id);
+    void updatePosition(std::string symbol, int accountId, double amount);
     ~Database();
     friend class DatabaseTest;
 private:
     void createTable(const char * fileName);
+    void saveSymbol(std::string symbol, int accountId);
+    double getAmount(std::string symbol, int accountId);
+    void updateAmount(std::string symbol, int accountId, double amount);
 };
 
 
