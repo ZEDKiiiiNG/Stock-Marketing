@@ -25,7 +25,7 @@ void Database::createTable(const char *fileName) {
     ifs.close();
 }
 
-void Database::saveAccount(int id, int balance) {
+void Database::saveAccount(int id, double balance) {
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO account (account_id, balance) VALUES (" << id << "," << balance << ");";
