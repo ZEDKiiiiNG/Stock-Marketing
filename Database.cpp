@@ -74,7 +74,7 @@ bool Database::hasPosition(std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM position"
-       << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) <<";";
+       << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) <<";";
     pqxx::result r(n.exec(ss.str()));
     return r.size() > 0;
 }
