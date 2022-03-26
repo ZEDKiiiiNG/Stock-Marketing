@@ -37,7 +37,7 @@ bool Database::hasAccount(int id) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM account"
-        << "WHERE account_id = " << id << ";";
+        << " WHERE account_id = " << id << ";";
     pqxx::result r(n.exec(ss.str()));
     return r.size() > 0;
 }
@@ -54,7 +54,7 @@ double Database::getAmount(std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT amount FROM position"
-        << "WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) <<";";
+        << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) <<";";
     pqxx::result r(n.exec(ss.str()));
     return r.begin()[0].as<double>();
 }
@@ -66,7 +66,7 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     std::stringstream ss;
     ss << "UPDATE position"
         << "SET amount = " << curr + amount
-        << "WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) <<";";
+        << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) <<";";
     w.exec(ss.str());
     w.commit();
      */
