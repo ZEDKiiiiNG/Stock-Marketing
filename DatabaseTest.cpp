@@ -44,10 +44,15 @@ void DatabaseTest::testPosition() {
     assert(db.getAmount("SYM", 1) == 228.8);
 }
 
+void DatabaseTest::testOrder() {
+    db.saveOrder(1, "SYM", 1, 18, 230);
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
     test.testHasAccount();
     test.testPosition();
+    test.testOrder();
     return EXIT_SUCCESS;
 }
