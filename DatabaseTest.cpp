@@ -24,7 +24,9 @@ void DatabaseTest::testHasAccount() {
 }
 
 void DatabaseTest::testPosition() {
+    assert(not db.hasPosition("SYM"));
     db.savePosition("SYM", 1);
+    assert(db.hasPosition("SYM"));
     double ans1 = db.getAmount("SYM", 1);
     assert(ans1 == 0);
     db.updateAmount("SYM", 1, 200);

@@ -70,6 +70,15 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     w.commit();
 }
 
+void Database::hasPosition(std::string symbol) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM position"
+       << " WHERE symbol = " << n.quote(symbol) << ";";
+    pqxx::result r(n.exec(ss.str()));
+    return r.size() > 0;
+}
+
 Database::~Database() {
     delete conn;
 }
