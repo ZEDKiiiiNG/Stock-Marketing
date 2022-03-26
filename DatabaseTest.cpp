@@ -20,9 +20,6 @@ void DatabaseTest::testHasAccount() {
     bool ans1 = db.hasAccount(1);
     assert(ans1);
     bool ans2 = db.hasAccount(3);
-    if (ans1) {
-        std::cout << "has account" << 2 << '\n';
-    }
     assert(not ans2);
 }
 
