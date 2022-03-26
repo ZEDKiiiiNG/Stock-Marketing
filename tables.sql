@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS account CASCADE;
 DROP TABLE IF EXISTS position CASCADE;
-DROP TABLE IF EXISTS order CASCADE;
+DROP TABLE IF EXISTS trade_order CASCADE;
 
 CREATE TABLE account (
     account_id INT,
@@ -15,7 +15,7 @@ CREATE TABLE position (
     FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
-CREATE TABLE order (
+CREATE TABLE trade_order (
     order_id INT,
     symbol VARCHAR(256),
     amount DOUBLE PRECISION,
