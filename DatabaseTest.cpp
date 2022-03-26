@@ -33,6 +33,6 @@ int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
     test.testHasAccount();
-    test.testSymbol();
+    test.testPosition();
     return EXIT_SUCCESS;
 }
