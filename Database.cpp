@@ -33,7 +33,7 @@ void Database::saveAccount(int id, int balance) {
     w.commit();
 }
 
-void Database::hasAccount(int id) {
+bool Database::hasAccount(int id) {
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "SELECT COUNT(account_id) FROM account WHERE account_id = " << id << ";";
