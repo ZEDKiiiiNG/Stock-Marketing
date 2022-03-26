@@ -16,6 +16,13 @@ void DatabaseTest::testSaveAccount() {
     }
 }
 
+void DatabaseTest::testHasAccount() {
+    bool ans1 = db.hasAccount(1);
+    assert(ans1);
+    bool ans2 = db.hasAccount(3);
+    assert(not ans2);
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
