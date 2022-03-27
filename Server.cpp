@@ -98,6 +98,7 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
     double amount = std::atof(pAttr->Value());
     pAttr = pAttr->Next();
     double limit = std::atof(pAttr->Value());
+    std::cout<< "sym: "<< sym<< " amount: "<< amount << " limit: " << limit << std::endl;
     try {
         //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
         db.saveOrder( orderId, sym, accountId,  amount,  limit);
@@ -143,6 +144,7 @@ void Server::handleTransection(TiXmlElement* rootElement, TiXmlElement* rootResu
         TiXmlElement *createdElement = SubItem->ToElement();
         // if just a child node not element then return
         if (strcmp(createdElement ->Value(), "order") == 0){
+            std::cout << "!!!!!current Node " <<createdElement ->Value() <<std::endl;
             handleOrderTransection(createdElement, rootResultElement, accountId);
         }else if (strcmp(createdElement ->Value(), "query") == 0){
             handleQueryTransection(createdElement, rootResultElement, accountId);
@@ -195,24 +197,12 @@ void printXml(TiXmlElement* rootElement, bool isElement) {
         SubItem = SubItem->NextSibling();
     }
 }
-
-int main(int argc, char *argv[]) {
-    std::cout << "server running\n";
-    Socket socket;
+void Server::serveRequest(Socket socket, Server server){
     int listen_fd = socket.setupServer(PORT);
     int msg_fd = socket.acceptConn(listen_fd);
     std::vector<char> request = socket.recvMesg(msg_fd);
     std::cout << request.data() << '\n';
-//    std::string response = "127\n"
-//                           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-//                           "<results>\n"
-//                           "    <created id=\"123456\"/>\n"
-//                           "    <created sym=\"SPY\" id=\"123456\"/>\n"
-//                           "</results>";
 
-    //目前是print 所有的值，之后应该会用map存
-
-    Server server;
     TiXmlDocument* myDocument = new TiXmlDocument();
     myDocument->Parse(server.getXmlContent(request.data()));
 //    myDocument->Parse(request.data());
@@ -240,5 +230,15 @@ int main(int argc, char *argv[]) {
 
     socket.closeConn(listen_fd);
     socket.closeConn(msg_fd);
+}
+
+int main(int argc, char *argv[]) {
+    std::cout << "server running\n";
+    Socket socket;
+    Server server;
+    while(true){
+        server.serveRequest(socket, server);
+    }
+
     return EXIT_SUCCESS;
 }
