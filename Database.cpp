@@ -88,10 +88,10 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
 
 void Database::saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit) {
     if (amount < 0) {
-        updateBalance(accountId, limit * amount); // buy order, deduct total cost
+        updateAmount(symbol, accountId, amount);  // negative amount, sell order, deduct shares
     }
     else {
-        updateAmount(symbol, accountId, -amount);  // sell order, deduct shares
+        updateBalance(accountId, limit * amount); // buy order, deduct total cost
     }
     pqxx::work w(*conn);
     std::stringstream ss;

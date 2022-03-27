@@ -42,10 +42,14 @@ void DatabaseTest::testOrder() {
     db.updateBalance(1, -1000);
     assert(db.getBalance(1) == 9000);
 
-    db.saveOrder(1, "SYM", 1, 18, 230);
-    assert(db.getAmount("SYM", 1) == 210.8);
-    db.saveOrder(2, "BTC", 2, -5, 110);
-    assert(db.getBalance(2) == 950);
+    db.saveOrder(2, "BTC", 2, -5, 110);  // sell
+    assert(db.getAmount("BTC", 10)); // deduct share
+    assert(db.getBalance(2) == 1500);
+
+    db.saveOrder(1, "SYM", 1, 18, 230);  // buy
+    assert(db.getBalance(1) == 4860); // deduct balance
+    assert(db.getAmount("SYM", 1) == 228.8);
+
 }
 
 int main(int argc, char *argv[]) {
