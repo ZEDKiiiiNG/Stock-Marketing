@@ -26,17 +26,17 @@ void Server::handleAccountCreate(TiXmlElement* rootElement, TiXmlElement* rootRe
     int id = std::atoi(pAttr->Value());
     pAttr = pAttr->Next();
     double balance = std::atof(pAttr->Value());
-    if(db.hasAccount(id)){
-        //<error id="ACCOUNT_ID">Msg</error> #For account create error
-        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
-        newChildElement->SetAttribute("id", id); //属性
-        newChildElement->LinkEndChild(new TiXmlText("Account Already exits"));
-        rootResultElement->LinkEndChild(newChildElement);
-    }else{
-        //<created id="ACCOUNT_ID"/> #For account create
+    try {
         db.saveAccount(id, balance);
         TiXmlElement *newChildElement = new TiXmlElement("created");//根元素
         newChildElement->SetAttribute("id", id); //属性
+        rootResultElement->LinkEndChild(newChildElement);
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        //<error id="ACCOUNT_ID">Msg</error> #For account create error
+        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
+        newChildElement->SetAttribute("id", id); //属性
+        newChildElement->LinkEndChild(new TiXmlText(e.what()));
         rootResultElement->LinkEndChild(newChildElement);
     }
 }
@@ -53,22 +53,22 @@ void Server::handleSymbolCreate(TiXmlElement* rootElement, TiXmlElement* rootRes
         int id = std::atoi(aAttr->Value());
         double amount = std::atof(accountElement->FirstChild()->Value());
         //check existance
-        if(!db.hasAccount(id)){
-            //<error sym="SYM" id="ACCOUNT_ID">Msg</error>
-            TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
-            newChildElement->SetAttribute("sym", sym); //属性sym
-            newChildElement->SetAttribute("id", id); //属性id
-            newChildElement->LinkEndChild(new TiXmlText("Account dose not exit"));
-            rootResultElement->LinkEndChild(newChildElement);
-        }else{
+        try {
             //<created sym="SYM" id="ACCOUNT_ID"/>
-
             db.updatePosition(sym, id, amount);
             TiXmlElement *newChildElement = new TiXmlElement("created");//根元素
             newChildElement->SetAttribute("sym", sym); //属性sym
             newChildElement->SetAttribute("id", id); //属性id
             rootResultElement->LinkEndChild(newChildElement);
+        } catch (std::invalid_argument & e) {
+            //<error sym="SYM" id="ACCOUNT_ID">Msg</error>
+            TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
+            newChildElement->SetAttribute("sym", sym); //属性sym
+            newChildElement->SetAttribute("id", id); //属性id
+            newChildElement->LinkEndChild(new TiXmlText(e.what()));
+            rootResultElement->LinkEndChild(newChildElement);
         }
+
     }
 }
 void Server::handleCreate(TiXmlElement* rootElement, TiXmlElement* rootResultElement){
@@ -99,16 +99,7 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
     double amount = std::atof(pAttr->Value());
     pAttr = pAttr->Next();
     double limit = std::atof(pAttr->Value());
-
-    if(!db.hasAccount(accountId)){
-        //<error sym="SYM" amount="AMT" limit="LMT">Message</error>
-        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
-        newChildElement->SetAttribute("sym", sym); //属性
-        newChildElement->SetAttribute("amount", amount); //属性
-        newChildElement->SetAttribute("limit", limit); //属性
-        newChildElement->LinkEndChild(new TiXmlText("Account dose not exit"));
-        rootResultElement->LinkEndChild(newChildElement);
-    }else{
+    try {
         //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
         db.saveOrder( orderId, sym, accountId,  amount,  limit);
         orderId++;
@@ -118,7 +109,16 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
         newChildElement->SetAttribute("limit", limit); //属性
         newChildElement->SetAttribute("id", orderId); //属性
         rootResultElement->LinkEndChild(newChildElement);
+    } catch (std::invalid_argument & e) {
+        //<error sym="SYM" amount="AMT" limit="LMT">Message</error>
+        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
+        newChildElement->SetAttribute("sym", sym); //属性
+        newChildElement->SetAttribute("amount", amount); //属性
+        newChildElement->SetAttribute("limit", limit); //属性
+        newChildElement->LinkEndChild(new TiXmlText(e.what()));
+        rootResultElement->LinkEndChild(newChildElement);
     }
+
 }
 void Server::handleQueryTransection(TiXmlElement* rootElement, TiXmlElement* rootResultElement, int accountId){
     //handle Query Transection
