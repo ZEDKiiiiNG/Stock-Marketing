@@ -58,6 +58,12 @@ void DatabaseTest::testException() {
     } catch (std::invalid_argument & e) {
         assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
     }
+
+    try {
+        db.saveAccount(1, 200);
+    } catch (std::invalid_argument & e) {
+        assert(std::string(e.what()) == ACCOUNT_EXIST_ERROR);
+    }
 }
 
 int main(int argc, char *argv[]) {

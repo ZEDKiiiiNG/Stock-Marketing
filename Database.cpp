@@ -26,6 +26,9 @@ void Database::createTable(const char *fileName) {
 }
 
 void Database::saveAccount(int id, double balance) {
+    if (hasAccount(id)) {
+        throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
+    }
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO account (account_id, balance) VALUES (" << id << "," << balance << ");";
