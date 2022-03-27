@@ -179,7 +179,7 @@ void Database::updateCancelOrder(int orderId, int accountId) {
     ss << "UPDATE trade_order"
        << " SET status = " << STATUS_CANCELLED
        << ", update_time = " << time(NULL)
-       << " WHERE account_id = " << accountId << "AND orderId = " << orderId << ";";
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId << ";";
     w.exec(ss.str());
     w.commit();
 
