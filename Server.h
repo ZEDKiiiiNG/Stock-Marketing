@@ -37,7 +37,7 @@ public:
     }
     const char * getXmlContent(const char* raw);
 
-    void serveRequest(Socket socket, Server server);
+    void serveRequest(Socket socket);
 
 };
 
