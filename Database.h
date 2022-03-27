@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include "iostream"
+#include <time.h>
 
 class Database {
 private:
@@ -20,14 +21,17 @@ public:
     void saveAccount(int id, double balance);
     bool hasAccount(int id);
     void updatePosition(std::string symbol, int accountId, double amount);
+    void saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
     ~Database();
     friend class DatabaseTest;
 private:
     void createTable(const char * fileName);
     void savePosition(std::string symbol, int accountId);
-    double getAmount(std::string symbol, int accountId);
-    void updateAmount(std::string symbol, int accountId, double amount);
+    double getAmount(std::string symbol, int accountId); // amount in position
+    void updateAmount(std::string symbol, int accountId, double amount);  // amount in position
     bool hasPosition(std::string symbol, int accountId);
+    void updateBalance(int accountId, double amount);
+    double getBalance(int accountId);
 };
 
 

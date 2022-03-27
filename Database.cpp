@@ -86,6 +86,42 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
     updateAmount(symbol, accountId, amount);
 }
 
+void Database::saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit) {
+    if (amount < 0) {
+        updateAmount(symbol, accountId, amount);  // negative amount, sell order, deduct shares
+    }
+    else {
+        updateBalance(accountId, -limit * amount); // buy order, deduct total cost
+    }
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, update_time, account_id) VALUES ("
+    << orderId << "," << w.quote(symbol) << "," << amount << ","
+    << limit << "," << time(NULL) << "," << accountId << ");";
+    w.exec(ss.str());
+    w.commit();
+}
+
+void Database::updateBalance(int accountId, double amount) {
+    double curr = getBalance(accountId);
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "UPDATE account"
+       << " SET balance = " << curr + amount
+       << " WHERE account_id = " << accountId  << ";";
+    w.exec(ss.str());
+    w.commit();
+}
+
+double Database::getBalance(int accountId) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT balance FROM account"
+       << " WHERE account_id = " << accountId << ";";
+    pqxx::result r(n.exec(ss.str()));
+    return r.begin()[0].as<double>();
+}
+
 Database::~Database() {
     delete conn;
 }
