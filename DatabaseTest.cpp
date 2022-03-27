@@ -35,6 +35,8 @@ void DatabaseTest::testPosition() {
     assert(db.getAmount("BTC", 1) == 22.2);
     db.updatePosition("SYM", 1, 10);
     assert(db.getAmount("SYM", 1) == 228.8);
+
+    assert(db.getAmount("ABC", 1) == 0);
 }
 
 void DatabaseTest::testOrder() {
@@ -76,7 +78,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveOrder(1, "BTC", 2, -11, 110); // buy
+        db.saveOrder(1, "BTC", 2, -11, 110); // sell
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);

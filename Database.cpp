@@ -54,6 +54,9 @@ void Database::savePosition(std::string symbol, int accountId) {
 }
 
 double Database::getAmount(std::string symbol, int accountId) {
+    if (not hasPosition(symbol, accountId)) {
+        return 0;
+    }
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT amount FROM position"
