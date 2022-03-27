@@ -45,6 +45,10 @@ void DatabaseTest::testPosition() {
 }
 
 void DatabaseTest::testOrder() {
+    assert(db.getBalance(1) == 10000);
+    db.updateBalance(1, -1000);
+    assert(db.getBalance(1) == 9900);
+
     db.saveOrder(1, "SYM", 1, 18, 230);
     db.saveOrder(2, "BTC", 2, -5, 110);
 }
