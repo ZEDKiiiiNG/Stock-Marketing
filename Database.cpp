@@ -145,9 +145,9 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
-    std::string symbol = r.begin()[1].as<std::string>;
-    double amount = r.begin()[2].as<double>;
-    double limit = r.begin()[3].as<double>;
+    std::string symbol = r.begin()[1].as<std::string>();
+    double amount = r.begin()[2].as<double>();
+    double limit = r.begin()[3].as<double>();
     // refund
     if (amount < 0) {
         updateAmount(symbol, accountId, -amount);  // negative amount, sell order, refund shares
