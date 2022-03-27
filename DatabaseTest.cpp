@@ -98,12 +98,12 @@ void DatabaseTest::testCancel() {
     pqxx::result r = db.getOrder(1, 1, STATUS_OPEN);
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
         std::cout << c[0].as<int>() << " "
-                  << c[1].as<std::string>()
-                  << c[2].as<double>()
-                  << c[3].as<double>()
-                  << c[4].as<std::string>()
-                  << c[5].as<int>()
-                  << c[6].as<double>()
+                  << c[1].as<std::string>() << " "
+                  << c[2].as<double>() << " "
+                  << c[3].as<double>() << " "
+                  << c[4].as<std::string>() << " "
+                  << c[5].as<int>() << " "
+                  << c[6].as<double>() << " "
                   << c[7].as<int>();
     }
 }
