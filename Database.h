@@ -11,6 +11,7 @@
 #include <fstream>
 #include "iostream"
 #include <time.h>
+#include <stdexcept>
 
 class Database {
 private:

@@ -52,11 +52,20 @@ void DatabaseTest::testOrder() {
 
 }
 
+void DatabaseTest::testException() {
+    try {
+        db.updatePosition("SYM", 5, 100);
+    } catch (std::invalid_argument & e) {
+        assert(e.what() == ACCOUNT_NOT_EXIST_ERROR);
+    }
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
     test.testHasAccount();
     test.testPosition();
     test.testOrder();
+    test.testException();
     return EXIT_SUCCESS;
 }
