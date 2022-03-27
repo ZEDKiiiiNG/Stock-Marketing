@@ -7,6 +7,7 @@
 void DatabaseTest::testSaveAccount() {
     db.saveAccount(1, 10000);
     db.saveAccount(2, 1500);
+    db.saveAccount(12456, 1000);
 }
 
 void DatabaseTest::testHasAccount() {
@@ -91,7 +92,14 @@ void DatabaseTest::testException() {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
     }
+}
 
+void DatabaseTest::testCancel() {
+    pqxx::result db.getOrder(1, 1, STATUS_OPEN);
+    for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
+        std::cout << c[0].as<int>() << " "
+                  << c[1].as<int>() << "\n";
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -101,5 +109,6 @@ int main(int argc, char *argv[]) {
     test.testPosition();
     test.testOrder();
     test.testException();
+    test.testCancel();
     return EXIT_SUCCESS;
 }

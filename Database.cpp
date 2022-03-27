@@ -140,6 +140,7 @@ double Database::getBalance(int accountId) {
     return r.begin()[0].as<double>();
 }
 
+/*
 void Database::cancelOrder(int orderId, int accountId) {
     pqxx::result r = getOrder(orderId, accountId, "open");
     if (r.size() == 0) {
@@ -157,6 +158,7 @@ void Database::cancelOrder(int orderId, int accountId) {
     }
     // update order
 }
+*/
 
 pqxx::result getOrder(int orderId, int accountId, std::string status) {
     pqxx::nontransaction n(*conn);
