@@ -95,7 +95,7 @@ void DatabaseTest::testException() {
 }
 
 void DatabaseTest::testCancel() {
-    pqxx::result db.getOrder(1, 1, STATUS_OPEN);
+    pqxx::result r = db.getOrder(1, 1, STATUS_OPEN);
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
         std::cout << c[0].as<int>() << " "
                   << c[1].as<int>() << "\n";
