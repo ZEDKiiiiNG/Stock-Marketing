@@ -80,6 +80,9 @@ bool Database::hasPosition(std::string symbol, int accountId) {
 }
 
 void Database::updatePosition(std::string symbol, int accountId, double amount) {
+    if (hasAccount(accountId)) {
+        std::cout << ACCOUNT_NOT_EXIST_ERROR << '\n';
+    }
     if (not hasAccount(accountId)) {
         std::cout << ACCOUNT_NOT_EXIST_ERROR << '\n';
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
