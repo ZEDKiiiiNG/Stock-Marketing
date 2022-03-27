@@ -35,6 +35,7 @@ private:
     void updateBalance(int accountId, double amount);
     double getBalance(int accountId);
     pqxx::result getOrder(int orderId, int accountId, std::string status);
+    void updateCancelOrder(int orderId, int accountId);
 };
 
 

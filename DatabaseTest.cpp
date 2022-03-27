@@ -106,6 +106,7 @@ void DatabaseTest::testCancel() {
                   << c[6].as<double>() << " "
                   << c[7].as<int>() << "\n";
     }
+    db.updateCancelOrder(1, 1);
 }
 
 int main(int argc, char *argv[]) {
