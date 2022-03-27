@@ -91,7 +91,7 @@ void Database::saveOrder(int orderId, std::string symbol, int accountId, double 
         updateAmount(symbol, accountId, amount);  // negative amount, sell order, deduct shares
     }
     else {
-        updateBalance(accountId, limit * amount); // buy order, deduct total cost
+        updateBalance(accountId, -limit * amount); // buy order, deduct total cost
     }
     pqxx::work w(*conn);
     std::stringstream ss;
