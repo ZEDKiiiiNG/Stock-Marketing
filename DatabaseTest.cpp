@@ -85,6 +85,13 @@ void DatabaseTest::testException() {
         assert(db.getAmount("BTC", 2) == 10);
     }
 
+    try {
+        db.saveOrder(1, "BTC", 3, -5, 110);
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
+    }
+
 }
 
 int main(int argc, char *argv[]) {

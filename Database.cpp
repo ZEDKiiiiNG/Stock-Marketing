@@ -99,6 +99,9 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
 }
 
 void Database::saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit) {
+    if (not hasAccount(accountId)) {
+        throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
+    }
     if (amount < 0) {
         updateAmount(symbol, accountId, amount);  // negative amount, sell order, deduct shares
     }
