@@ -157,10 +157,11 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
         updateBalance(accountId, limit * amount); // buy order, refund price
     }
     // update order
+    return getOrder(orderId, accountId, "");
 }
-*/
+ */
 
-pqxx::result Database::getOrder(int orderId, int accountId, std::string status) {
+pqxx::result Database::getOrder(int orderId, int accountId, std::vector<std::string> status) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
@@ -170,6 +171,18 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
     }
     ss << ";";
     return pqxx::result(n.exec(ss.str()));
+}
+
+void Database::updateCancelOrder(int orderId, int accountId) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "UPDATE order"
+       << " SET status = " << STATUS_CANCELLED
+       << ", update_time" << time(NULL)
+       << " WHERE account_id = " << accountId << "AND orderId = " << orderId << ";";
+    w.exec(ss.str());
+    w.commit();
+
 }
 
 Database::~Database() {
