@@ -22,7 +22,7 @@ public:
     void testException();
     void testCancel();
 private:
-    void displayOrder(pqxx::result r);
+    void displayOrder(pqxx::result & r);
 
 };
 
