@@ -20,7 +20,7 @@ CREATE TABLE trade_order (
     symbol VARCHAR(256),
     amount DOUBLE PRECISION,
     limit_price DOUBLE PRECISION,
-    status VARCHAR(256) DEFAULT 'open',
+    status VARCHAR(256) DEFAULT STATUS_OPEN,
     update_time INT,
     execute_price DOUBLE PRECISION default 0,
     account_id INT,
