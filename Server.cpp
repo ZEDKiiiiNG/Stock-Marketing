@@ -159,7 +159,8 @@ void Server::handleRequest(TiXmlElement* rootElement, TiXmlElement* rootResultEl
     if (rootElement == nullptr) return;
     if (strcmp(rootElement->Value() , "create") == 0 ){
         handleCreate(rootElement, rootResultElement);
-    } else if (strcmp(rootElement->Value() , "transection") == 0){
+    } else if (strcmp(rootElement->Value() , "transactions") == 0){
+        std::cout <<"-current root " <<rootElement->Value() << std::endl;
         handleTransection(rootElement, rootResultElement);
     } else{
         // Exception
