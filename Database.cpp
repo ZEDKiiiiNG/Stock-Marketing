@@ -178,7 +178,7 @@ void Database::updateCancelOrder(int orderId, int accountId) {
     std::stringstream ss;
     ss << "UPDATE trade_order"
        << " SET status = " << STATUS_CANCELLED
-       << ", update_time" << time(NULL)
+       << ", update_time = " << time(NULL)
        << " WHERE account_id = " << accountId << "AND orderId = " << orderId << ";";
     w.exec(ss.str());
     w.commit();
