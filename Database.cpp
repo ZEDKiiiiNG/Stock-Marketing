@@ -176,7 +176,7 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
 void Database::updateCancelOrder(int orderId, int accountId) {
     pqxx::work w(*conn);
     std::stringstream ss;
-    ss << "UPDATE order"
+    ss << "UPDATE trade_order"
        << " SET status = " << STATUS_CANCELLED
        << ", update_time" << time(NULL)
        << " WHERE account_id = " << accountId << "AND orderId = " << orderId << ";";
