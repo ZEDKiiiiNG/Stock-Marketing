@@ -164,7 +164,7 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM account"
-       << " WHERE account_id = " << accountId << " AND orderId = " << orderId;
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId;
     if (not status.empty()) {
         ss << " AND status = " << n.quote(status);
     }
