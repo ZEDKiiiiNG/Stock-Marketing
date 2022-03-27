@@ -80,18 +80,79 @@ void Server::handleCreate(TiXmlElement* rootElement, TiXmlElement* rootResultEle
         TiXmlElement *createdElement = SubItem->ToElement();
         // if just a child node not element then return
         if (strcmp(createdElement ->Value(), "account") == 0){
-            std::cout << "acount Node " <<SubItem->Value() << ": "<<std::endl;
+//            std::cout << "acount Node " <<SubItem->Value() << ": "<<std::endl;
             handleAccountCreate(createdElement, rootResultElement);
         }else if (strcmp(createdElement ->Value(), "symbol") == 0){
-            std::cout << "sym Node " <<SubItem->Value() << ": "<<std::endl;
+//            std::cout << "sym Node " <<SubItem->Value() << ": "<<std::endl;
             handleSymbolCreate(createdElement, rootResultElement);
         }else{
             return;
         }
     }
 }
+void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* rootResultElement, int accountId){
+    //handle Order Transection
+    //<order sym="SYM" amount="AMT" limit="LMT"/>
+    TiXmlAttribute *pAttr = rootElement->FirstAttribute();//第一个属性
+    const char * sym = pAttr->Value();
+    pAttr = pAttr->Next();
+    double amount = std::atof(pAttr->Value());
+    pAttr = pAttr->Next();
+    double limit = std::atof(pAttr->Value());
+
+    if(!db.hasAccount(accountId)){
+        //<error sym="SYM" amount="AMT" limit="LMT">Message</error>
+        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
+        newChildElement->SetAttribute("sym", sym); //属性
+        newChildElement->SetAttribute("amount", amount); //属性
+        newChildElement->SetAttribute("limit", limit); //属性
+        newChildElement->LinkEndChild(new TiXmlText("Account dose not exit"));
+        rootResultElement->LinkEndChild(newChildElement);
+    }else{
+        //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
+        db.saveOrder( orderId, sym, accountId,  amount,  limit);
+        orderId++;
+        TiXmlElement *newChildElement = new TiXmlElement("opened");//根元素
+        newChildElement->SetAttribute("sym", sym); //属性
+        newChildElement->SetAttribute("amount", amount); //属性
+        newChildElement->SetAttribute("limit", limit); //属性
+        newChildElement->SetAttribute("id", orderId); //属性
+        rootResultElement->LinkEndChild(newChildElement);
+    }
+}
+void Server::handleQueryTransection(TiXmlElement* rootElement, TiXmlElement* rootResultElement, int accountId){
+    //handle Query Transection
+}
+void Server::handleCancelTransection(TiXmlElement* rootElement, TiXmlElement* rootResultElement, int accountId){
+    //handle Cancel Transection
+}
+
 void Server::handleTransection(TiXmlElement* rootElement, TiXmlElement* rootResultElement){
     //Hanle Transction
+    /*<transactions id="ACCOUNT_ID"> #contains 1 or more of the below children
+         <order sym="SYM" amount="AMT" limit="LMT"/>
+         <query id="TRANS_ID">
+         <cancel id="TRANS_ID">
+        </transactions>
+     * */
+    std::cout<< rootElement->Value()<< ":"<<rootElement->FirstAttribute()->Value()  << std::endl;
+    int accountId = std::atoi(rootElement->FirstAttribute()->Value());
+    for (TiXmlNode *SubItem = rootElement->FirstChild(); SubItem != nullptr; SubItem = SubItem->NextSibling()) {
+        std::cout << "!!!current Node " <<SubItem->Value() << ": "<<std::endl;
+
+        //TODO: check whether can be transfer to element or not
+        TiXmlElement *createdElement = SubItem->ToElement();
+        // if just a child node not element then return
+        if (strcmp(createdElement ->Value(), "order") == 0){
+            handleOrderTransection(createdElement, rootResultElement, accountId);
+        }else if (strcmp(createdElement ->Value(), "query") == 0){
+            handleQueryTransection(createdElement, rootResultElement, accountId);
+        }else if (strcmp(createdElement ->Value(), "cancel") == 0){
+            handleCancelTransection(createdElement, rootResultElement, accountId);
+        }else{
+            return;
+        }
+    }
 }
 // handle all type of request
 void Server::handleRequest(TiXmlElement* rootElement, TiXmlElement* rootResultElement){
