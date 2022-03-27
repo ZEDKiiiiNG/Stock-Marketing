@@ -64,6 +64,9 @@ double Database::getAmount(std::string symbol, int accountId) {
 
 void Database::updateAmount(std::string symbol, int accountId, double amount) {
     double curr = getAmount(symbol, accountId);
+    if (curr + amount < 0) {
+        throw std::invalid_argument(INSUFFICIENT_SHARE_ERROR);
+    }
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "UPDATE position"
@@ -110,6 +113,9 @@ void Database::saveOrder(int orderId, std::string symbol, int accountId, double 
 
 void Database::updateBalance(int accountId, double amount) {
     double curr = getBalance(accountId);
+    if (curr + amount < 0) {
+        throw std::invalid_argument(INSUFFICIENT_BALANCE_ERROR);
+    }
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "UPDATE account"
