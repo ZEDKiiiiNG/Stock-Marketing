@@ -68,7 +68,6 @@ void Server::handleSymbolCreate(TiXmlElement* rootElement, TiXmlElement* rootRes
             newChildElement->LinkEndChild(new TiXmlText(e.what()));
             rootResultElement->LinkEndChild(newChildElement);
         }
-
     }
 }
 void Server::handleCreate(TiXmlElement* rootElement, TiXmlElement* rootResultElement){
