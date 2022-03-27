@@ -161,7 +161,7 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
 }
  */
 
-pqxx::result Database::getOrder(int orderId, int accountId, std::vector<std::string> status) {
+pqxx::result Database::getOrder(int orderId, int accountId, std::string status) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
