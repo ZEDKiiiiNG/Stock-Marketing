@@ -110,7 +110,7 @@ void DatabaseTest::testCancel() {
     displayOrder(r);
 
     try {
-        db.cancelorder(2, 2);
+        db.cancelOrder(2, 2);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == NO_OPEN_ORDER_ERROR);
