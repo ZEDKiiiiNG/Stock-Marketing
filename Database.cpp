@@ -156,7 +156,7 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
         updateBalance(accountId, limit * amount); // buy order, refund price
     }
     db.updateCancleOrder(orderId, accountId);
-    return getOrder(orderId, accountId, "");
+    return getOrder(orderId, accountId);
 }
 
 pqxx::result Database::getOrder(int orderId, int accountId, std::string status) {
@@ -169,6 +169,10 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
     }
     ss << ";";
     return pqxx::result(n.exec(ss.str()));
+}
+
+pqxx::result Database::getOrder(int orderId, int accountId) {
+    getOrder(orderId, accountId, "");
 }
 
 void Database::updateCancelOrder(int orderId, int accountId) {

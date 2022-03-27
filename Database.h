@@ -24,6 +24,7 @@ public:
     void updatePosition(std::string symbol, int accountId, double amount);
     void saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
     pqxx::result cancelOrder(int orderId, int accountId);
+    pqxx::result getOrder(int orderId, int accountId);
     ~Database();
     friend class DatabaseTest;
 private:
