@@ -43,7 +43,9 @@ void DatabaseTest::testOrder() {
     assert(db.getBalance(1) == 9000);
 
     db.saveOrder(1, "SYM", 1, 18, 230);
+    assert(db.getAmount("SYM", 1) == 210.8);
     db.saveOrder(2, "BTC", 2, -5, 110);
+    assert(db.getBalance(2) == 950);
 }
 
 int main(int argc, char *argv[]) {
