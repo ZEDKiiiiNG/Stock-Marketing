@@ -34,7 +34,7 @@ private:
     bool hasPosition(std::string symbol, int accountId);
     void updateBalance(int accountId, double amount);
     double getBalance(int accountId);
-    pqxx::result getOrder(int orderId, int accountId);
+    pqxx::result getOrder(int orderId, int accountId, std::string status);
 };
 
 
