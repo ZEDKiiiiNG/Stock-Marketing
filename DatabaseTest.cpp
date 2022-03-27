@@ -57,6 +57,7 @@ void DatabaseTest::testException() {
         db.updatePosition("SYM", 5, 100);
     } catch (std::invalid_argument & e) {
         assert(e.what() == ACCOUNT_NOT_EXIST_ERROR);
+        std::cout << e.what() << '\n';
     }
 }
 
