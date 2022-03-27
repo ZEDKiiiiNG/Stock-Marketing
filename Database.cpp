@@ -140,6 +140,55 @@ double Database::getBalance(int accountId) {
     return r.begin()[0].as<double>();
 }
 
+pqxx::result Database::cancelOrder(int orderId, int accountId) {
+    pqxx::result r = getOrder(orderId, accountId, STATUS_OPEN);
+    if (r.size() == 0) {
+        throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
+    }
+
+    // refund
+    std::string symbol = r.begin()[1].as<std::string>();
+    double amount = r.begin()[2].as<double>();
+    double limit = r.begin()[3].as<double>();
+    if (amount < 0) {
+        updateAmount(symbol, accountId, -amount);  // negative amount, sell order, refund shares
+    }
+    else {
+        updateBalance(accountId, limit * amount); // buy order, refund price
+    }
+
+    updateCancelOrder(orderId, accountId);
+    return getOrder(orderId, accountId);
+}
+
+pqxx::result Database::getOrder(int orderId, int accountId, std::string status) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM trade_order"
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId;
+    if (not status.empty()) {
+        ss << " AND status = " << n.quote(status);
+    }
+    ss << ";";
+    return pqxx::result(n.exec(ss.str()));
+}
+
+pqxx::result Database::getOrder(int orderId, int accountId) {
+    return getOrder(orderId, accountId, "");
+}
+
+void Database::updateCancelOrder(int orderId, int accountId) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "UPDATE trade_order"
+       << " SET status = " << w.quote(STATUS_CANCELLED)
+       << ", update_time = " << time(NULL)
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId << ";";
+    w.exec(ss.str());
+    w.commit();
+
+}
+
 Database::~Database() {
     delete conn;
 }

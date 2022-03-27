@@ -7,6 +7,7 @@
 void DatabaseTest::testSaveAccount() {
     db.saveAccount(1, 10000);
     db.saveAccount(2, 1500);
+    db.saveAccount(12456, 1000);
 }
 
 void DatabaseTest::testHasAccount() {
@@ -91,7 +92,43 @@ void DatabaseTest::testException() {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
     }
+}
 
+void DatabaseTest::testCancel() {
+    pqxx::result r = db.getOrder(1, 1, STATUS_OPEN);
+    displayOrder(r);
+
+    // db.updateCancelOrder(1, 1);
+    db.cancelOrder(1, 1);  // buy, refund price
+    assert(db.getBalance(1) == 9000);
+    r = db.getOrder(1, 1);
+    displayOrder(r);
+
+    db.cancelOrder(2, 2); // refund share
+    assert(db.getAmount("BTC", 2) == 15);
+    r = db.getOrder(2, 2);
+    displayOrder(r);
+
+    try {
+        db.cancelOrder(2, 2);
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        assert(std::string(e.what()) == NO_OPEN_ORDER_ERROR);
+    }
+
+}
+
+void DatabaseTest::displayOrder(pqxx::result & r) {
+    for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
+        std::cout << c[0].as<int>() << " "
+                  << c[1].as<std::string>() << " "
+                  << c[2].as<double>() << " "
+                  << c[3].as<double>() << " "
+                  << c[4].as<std::string>() << " "
+                  << c[5].as<int>() << " "
+                  << c[6].as<double>() << " "
+                  << c[7].as<int>() << "\n";
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -101,5 +138,6 @@ int main(int argc, char *argv[]) {
     test.testPosition();
     test.testOrder();
     test.testException();
+    test.testCancel();
     return EXIT_SUCCESS;
 }

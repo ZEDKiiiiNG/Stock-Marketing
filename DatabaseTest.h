@@ -20,6 +20,9 @@ public:
     void testPosition();
     void testOrder();
     void testException();
+    void testCancel();
+private:
+    void displayOrder(pqxx::result & r);
 
 };
 
