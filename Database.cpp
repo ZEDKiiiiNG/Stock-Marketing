@@ -168,6 +168,7 @@ pqxx::result getOrder(int orderId, int accountId, std::string status) {
     if (status) {
         ss << "AND status = " << n.quote(status);
     }
+    ss << ";";
     return pqxx::result r(n.exec(ss.str()));
 }
 
