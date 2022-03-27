@@ -16,5 +16,6 @@
 #define INSUFFICIENT_BALANCE_ERROR "Insufficient balance are available"
 #define INSUFFICIENT_SHARE_ERROR "Insufficient shares are available"
 #define NO_OPEN_ORDER_ERROR "Does not have an open order"
+#define STATUS_OPEN "open"
 
 #endif
