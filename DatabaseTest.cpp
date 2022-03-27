@@ -96,6 +96,21 @@ void DatabaseTest::testException() {
 
 void DatabaseTest::testCancel() {
     pqxx::result r = db.getOrder(1, 1, STATUS_OPEN);
+    displayOrder(r);
+
+    // db.updateCancelOrder(1, 1);
+    db.cancelOrder(1, 1);  // buy, refund price
+    assert(db.getBalance(1) == 9000);
+    r = db.getOrder(1, 1);
+    displayOrder(r);
+
+    db.cancelOrder(2, 2); // refund share
+    assert(db.getAmount("BTC", 2) == 15);
+    r = db.getOrder(2, 2);
+    displayOrder(r);
+}
+
+void DatabaseTest::displayOrder(pqxx::result r) {
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
         std::cout << c[0].as<int>() << " "
                   << c[1].as<std::string>() << " "
@@ -106,11 +121,6 @@ void DatabaseTest::testCancel() {
                   << c[6].as<double>() << " "
                   << c[7].as<int>() << "\n";
     }
-    // db.updateCancelOrder(1, 1);
-    db.cancelOrder(1, 1);  // buy, refund price
-    assert(db.getBalance(1) == 9000);
-    db.cancelOrder(2, 2); // refund share
-    assert(db.getAmount("BTC", 2) == 15);
 }
 
 int main(int argc, char *argv[]) {
