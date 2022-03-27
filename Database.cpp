@@ -87,14 +87,14 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
 }
 
 void Database::saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit) {
-    pqxx::work w(*conn);
-    std::stringstream ss;
     if (amount < 0) {
         updateBalance(accountId, limit * amount); // buy order, deduct total cost
     }
     else {
         updateAmount(symbol, accountId, -amount);  // sell order, deduct shares
     }
+    pqxx::work w(*conn);
+    std::stringstream ss;
     ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, update_time, account_id) VALUES ("
     << orderId << "," << w.quote(symbol) << "," << amount << ","
     << limit << "," << time(NULL) << "," << accountId << ");";
