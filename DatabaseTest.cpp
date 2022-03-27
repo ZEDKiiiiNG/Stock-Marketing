@@ -112,7 +112,7 @@ void DatabaseTest::testCancel() {
      */
 }
 
-void DatabaseTest::displayOrder(pqxx::result r) {
+void DatabaseTest::displayOrder(pqxx::result & r) {
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
         std::cout << c[0].as<int>() << " "
                   << c[1].as<std::string>() << " "
