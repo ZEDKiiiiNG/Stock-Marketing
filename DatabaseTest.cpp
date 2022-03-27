@@ -99,6 +99,7 @@ void DatabaseTest::testCancel() {
     displayOrder(r);
 
     // db.updateCancelOrder(1, 1);
+    /*
     db.cancelOrder(1, 1);  // buy, refund price
     assert(db.getBalance(1) == 9000);
     r = db.getOrder(1, 1);
@@ -108,6 +109,7 @@ void DatabaseTest::testCancel() {
     assert(db.getAmount("BTC", 2) == 15);
     r = db.getOrder(2, 2);
     displayOrder(r);
+     */
 }
 
 void DatabaseTest::displayOrder(pqxx::result r) {
