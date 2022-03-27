@@ -30,6 +30,9 @@ private:
     double getAmount(std::string symbol, int accountId);
     void updateAmount(std::string symbol, int accountId, double amount);
     bool hasPosition(std::string symbol, int accountId);
+    void updateBalance(int accountId, double amount);
+    void updateShares(std::string symbol, int accountId, double amount);
+    double getBalance(int accountId);
 };
 
 
