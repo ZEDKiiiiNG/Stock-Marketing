@@ -155,7 +155,7 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
     else {
         updateBalance(accountId, limit * amount); // buy order, refund price
     }
-    updateCancleOrder(orderId, accountId);
+    updateCancelOrder(orderId, accountId);
     return getOrder(orderId, accountId);
 }
 
