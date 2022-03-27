@@ -11,5 +11,9 @@
 #define HOST "vcm-24622.vm.duke.edu"
 #define PORT "12345"
 #define DB_INFO "dbname=testdb user=postgres password=postgres"
+#define ACCOUNT_EXIST_ERROR "Account already exists"
+#define ACCOUNT_NOT_EXIST_ERROR "Account does not exist"
+#define INSUFFICIENT_BALANCE_ERROR "Insufficient balance are available"
+#define INSUFFICIENT_SHARE_ERROR "Insufficient shares are available"
 
 #endif

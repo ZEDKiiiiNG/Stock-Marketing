@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Database.h"
 #include <assert.h>
+#include "Constant.h"
 
 class DatabaseTest {
 private:
@@ -18,6 +19,7 @@ public:
     void testHasAccount();
     void testPosition();
     void testOrder();
+    void testException();
 
 };
 

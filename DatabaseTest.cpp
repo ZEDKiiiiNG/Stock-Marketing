@@ -52,11 +52,45 @@ void DatabaseTest::testOrder() {
 
 }
 
+void DatabaseTest::testException() {
+    try {
+        db.updatePosition("SYM", 5, 100);
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
+    }
+
+    try {
+        db.saveAccount(1, 200);
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        assert(std::string(e.what()) == ACCOUNT_EXIST_ERROR);
+    }
+
+    try {
+        db.saveOrder(1, "SYM", 1, 3, 1650); // buy
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        assert(std::string(e.what()) == INSUFFICIENT_BALANCE_ERROR);
+        assert(db.getBalance(1) == 4860);
+    }
+
+    try {
+        db.saveOrder(1, "BTC", 2, -11, 110); // buy
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);
+        assert(db.getAmount("BTC", 2) == 10);
+    }
+
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
     test.testHasAccount();
     test.testPosition();
     test.testOrder();
+    test.testException();
     return EXIT_SUCCESS;
 }

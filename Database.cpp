@@ -26,6 +26,9 @@ void Database::createTable(const char *fileName) {
 }
 
 void Database::saveAccount(int id, double balance) {
+    if (hasAccount(id)) {
+        throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
+    }
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO account (account_id, balance) VALUES (" << id << "," << balance << ");";
@@ -61,6 +64,9 @@ double Database::getAmount(std::string symbol, int accountId) {
 
 void Database::updateAmount(std::string symbol, int accountId, double amount) {
     double curr = getAmount(symbol, accountId);
+    if (curr + amount < 0) {
+        throw std::invalid_argument(INSUFFICIENT_SHARE_ERROR);
+    }
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "UPDATE position"
@@ -80,6 +86,9 @@ bool Database::hasPosition(std::string symbol, int accountId) {
 }
 
 void Database::updatePosition(std::string symbol, int accountId, double amount) {
+    if (not hasAccount(accountId)) {
+        throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
+    }
     if (not hasPosition(symbol, accountId)) {
         savePosition(symbol, accountId);
     }
@@ -104,6 +113,9 @@ void Database::saveOrder(int orderId, std::string symbol, int accountId, double 
 
 void Database::updateBalance(int accountId, double amount) {
     double curr = getBalance(accountId);
+    if (curr + amount < 0) {
+        throw std::invalid_argument(INSUFFICIENT_BALANCE_ERROR);
+    }
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "UPDATE account"
