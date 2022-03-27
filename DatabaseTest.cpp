@@ -104,7 +104,7 @@ void DatabaseTest::testCancel() {
                   << c[4].as<std::string>()
                   << c[5].as<int>()
                   << c[6].as<double>()
-                  << c[7].as<int>()
+                  << c[7].as<int>();
     }
 }
 
