@@ -172,7 +172,7 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
 }
 
 pqxx::result Database::getOrder(int orderId, int accountId) {
-    getOrder(orderId, accountId, "");
+    return getOrder(orderId, accountId, "");
 }
 
 void Database::updateCancelOrder(int orderId, int accountId) {
