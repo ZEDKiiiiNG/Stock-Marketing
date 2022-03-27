@@ -165,7 +165,7 @@ pqxx::result getOrder(int orderId, int accountId, std::string status) {
     std::stringstream ss;
     ss << "SELECT * FROM account"
        << " WHERE account_id = " << accountId << "AND orderId = " << orderId;
-    if (status != NULL) {
+    if (not status.empty()) {
         ss << "AND status = " << n.quote(status);
     }
     ss << ";";
