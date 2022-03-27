@@ -140,6 +140,35 @@ double Database::getBalance(int accountId) {
     return r.begin()[0].as<double>();
 }
 
+void Database::cancelOrder(int orderId, int accountId) {
+    pqxx::result r = getOrder(orderId, accountId, "open");
+    if (r.size() == 0) {
+        throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
+    }
+    std::string symbol = r.begin()[1].as<std::string>;
+    double amount = r.begin()[2].as<double>;
+    double limit = r.begin()[3].as<double>;
+    // refund
+    if (amount < 0) {
+        updateAmount(symbol, accountId, -amount);  // negative amount, sell order, refund shares
+    }
+    else {
+        updateBalance(accountId, limit * amount); // buy order, refund price
+    }
+    // update order
+}
+
+pqxx::result getOrder(int orderId, int accountId, std::string status) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM account"
+       << " WHERE account_id = " << accountId << "AND orderId = " << orderId;
+    if (status) {
+        ss << "AND status = " << n.quote(status);
+    }
+    return pqxx::result r(n.exec(ss.str()));
+}
+
 Database::~Database() {
     delete conn;
 }
