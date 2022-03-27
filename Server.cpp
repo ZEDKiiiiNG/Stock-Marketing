@@ -98,11 +98,10 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
     double amount = std::atof(pAttr->Value());
     pAttr = pAttr->Next();
     double limit = std::atof(pAttr->Value());
-    std::cout<< "sym: "<< sym<< " amount: "<< amount << " limit: " << limit << std::endl;
     try {
         //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
-        db.saveOrder( orderId, sym, accountId,  amount,  limit);
         orderId++;
+        db.saveOrder( orderId, sym, accountId,  amount,  limit);
         TiXmlElement *newChildElement = new TiXmlElement("opened");//根元素
         newChildElement->SetAttribute("sym", sym); //属性
         newChildElement->SetAttribute("amount", amount); //属性
@@ -197,14 +196,14 @@ void printXml(TiXmlElement* rootElement, bool isElement) {
         SubItem = SubItem->NextSibling();
     }
 }
-void Server::serveRequest(Socket socket, Server server){
+void Server::serveRequest(Socket socket){
     int listen_fd = socket.setupServer(PORT);
     int msg_fd = socket.acceptConn(listen_fd);
     std::vector<char> request = socket.recvMesg(msg_fd);
     std::cout << request.data() << '\n';
 
     TiXmlDocument* myDocument = new TiXmlDocument();
-    myDocument->Parse(server.getXmlContent(request.data()));
+    myDocument->Parse(getXmlContent(request.data()));
 //    myDocument->Parse(request.data());
     std::cout << "Parse Complete" << '\n';
     TiXmlElement* rootElement = myDocument->RootElement();
@@ -217,7 +216,7 @@ void Server::serveRequest(Socket socket, Server server){
     //<results>
     TiXmlElement* rootResultElement = new TiXmlElement("results");
     resDocument->LinkEndChild(rootResultElement);
-    server.handleRequest(rootElement, rootResultElement);
+    handleRequest(rootElement, rootResultElement);
     TiXmlPrinter *printer = new TiXmlPrinter();
     resDocument->Accept(printer);
     std::string stringBuffer= printer->CStr();
@@ -237,8 +236,7 @@ int main(int argc, char *argv[]) {
     Socket socket;
     Server server;
     while(true){
-        server.serveRequest(socket, server);
+        server.serveRequest(socket);
     }
-
     return EXIT_SUCCESS;
 }

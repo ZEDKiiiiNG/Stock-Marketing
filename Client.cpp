@@ -39,6 +39,6 @@ int main(int argc, char *argv[]) {
     std::vector<char> response2 = socket.recvMesg(msg_fd2);
     std::cout << response2.data() << '\n';
 
-    socket.closeConn(msg_fd);
+    socket.closeConn(msg_fd2);
     return EXIT_SUCCESS;
 }
