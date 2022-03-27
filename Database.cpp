@@ -141,8 +141,8 @@ double Database::getBalance(int accountId) {
 }
 
 /*
-void Database::cancelOrder(int orderId, int accountId) {
-    pqxx::result r = getOrder(orderId, accountId, "open");
+pqxx::result Database::cancelOrder(int orderId, int accountId) {
+    pqxx::result r = getOrder(orderId, accountId, STATUS_OPEN);
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
