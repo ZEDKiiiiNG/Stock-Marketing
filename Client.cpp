@@ -12,9 +12,19 @@ int main(int argc, char *argv[]) {
                           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                           "<create>\n"
                           "    <account id=\"123456\" balance=\"1000\"/>\n"
-                          "    <account id=\"123456\" balance=\"1000\"/>\n"
-                          "    <account id=\"1234\" balance=\"1000\"/>\n"
+                          "    <account id=\"123456\" balance=\"1000\"/>\n" // duplicate create account
+                          "    <account id=\"1234\" balance=\"1000\"/>\n"  // new account
                           "    <symbol sym=\"SPY\">\n"
+                          "        <account id=\"123456\">100000</account>\n"
+                          "        <account id=\"123456\">100000</account>\n" // add share
+                          "        <account id=\"1234\">100000</account>\n"
+                          "        <account id=\"123\">100000</account>\n"  // account dosent exits
+                          "    </symbol>\n"
+                          "    <symbol sym=\"SPY\">\n"
+                          "        <account id=\"123456\">100000</account>\n"// add share
+                          "        <account id=\"1234\">100000</account>\n"
+                          "    </symbol>\n"
+                          "    <symbol sym=\"BIT\">\n" // new Symbol
                           "        <account id=\"123456\">100000</account>\n"
                           "        <account id=\"12345\">100000</account>\n"
                           "        <account id=\"1234\">100000</account>\n"
@@ -32,7 +42,9 @@ int main(int argc, char *argv[]) {
             "13\n"
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             "<transactions id=\"123456\">\n"
-            " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n"
+            " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n" // sym anyone doesnt have
+            " <order sym=\"SPY\" amount=\"1000\" limit=\"2.5\"/>\n" // buy
+            " <order sym=\"SYM\" amount=\"-1000\" limit=\"2.3\"/>\n" // buy by ones self
             " <query id=\"TRANS_ID\">\n"
             " <cancel id=\"TRANS_ID\">\n"
             "</transactions>";
