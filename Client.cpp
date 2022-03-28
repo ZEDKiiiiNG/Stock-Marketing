@@ -32,8 +32,15 @@ int main(int argc, char *argv[]) {
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             "<transactions id=\"123456\">\n"
             " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n"
-            " <query id=\"TRANS_ID\">\n"
-            " <cancel id=\"TRANS_ID\">\n"
+            " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n"
+            " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n"
+            " <query id=\"1\"/>\n"
+            " <query id=\"1\"/>\n"
+            " <query id=\"1\"/>\n"
+            " <cancel id=\"1\"/>\n"
+            " <cancel id=\"1\"/>\n"
+            " <cancel id=\"5\"/>\n"
+            " <query id=\"1\"/>\n"
             "</transactions>";
     socket.sendMesg(msg_fd2, request2);
     std::vector<char> response2 = socket.recvMesg(msg_fd2);
