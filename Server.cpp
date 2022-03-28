@@ -98,14 +98,16 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
     double amount = std::atof(pAttr->Value());
     pAttr = pAttr->Next();
     double limit = std::atof(pAttr->Value());
+    std::string limitString = std::to_string(limit);
+    std::string amountString = std::to_string(amount);
     try {
         //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
         orderId++;
         db.saveOrder( orderId, sym, accountId,  amount,  limit);
         TiXmlElement *newChildElement = new TiXmlElement("opened");//根元素
         newChildElement->SetAttribute("sym", sym); //属性
-        newChildElement->SetAttribute("amount", amount); //属性
-        newChildElement->SetAttribute("limit", limit); //属性
+        newChildElement->SetAttribute("amount", amountString.c_str()); //属性
+        newChildElement->SetAttribute("limit", limitString.c_str()); //属性
         newChildElement->SetAttribute("id", orderId); //属性
         rootResultElement->LinkEndChild(newChildElement);
     } catch (std::invalid_argument & e) {
@@ -122,6 +124,41 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
 void Server::handleQueryTransection(TiXmlElement* rootElement, TiXmlElement* rootResultElement, int accountId){
     //handle Query Transection
     //<query id="TRANS_ID">
+    TiXmlAttribute *pAttr = rootElement->FirstAttribute();//第一个属性
+    int transId = std::atoi(pAttr->Value());
+    try{
+        /*
+         <status id="TRANS_ID">
+             <open shares=.../>
+             <canceled shares=... time=.../>
+             <executed shares=... price=... time=.../>
+         </status>
+         */
+        //TODO: database cancel
+        pqxx::result r = db.getOrder(transId, accountId);
+        TiXmlElement *newChildElement = new TiXmlElement("status");//根元素
+        newChildElement->SetAttribute("id", transId); //属性
+        for(pqxx::result::const_iterator c = r.begin(); c != r.end(); c++){
+//            std::string statusString = c[4].as<std::string>();
+            const char *status = c[4].as<std::string>().c_str();
+            TiXmlElement *newGrandChildElement = new TiXmlElement(status);//根元素
+            newGrandChildElement->SetAttribute("shares", c[2].as<double>());
+            if(std::strcmp(status, "executed") == 0){
+                newGrandChildElement->SetAttribute("price", c[6].as<double>());
+            }
+            if(std::strcmp(status, "executed") == 0 || std::strcmp(status, "cancelled") == 0){
+                newGrandChildElement->SetAttribute("time", c[5].as<int>());
+            }
+            newChildElement ->LinkEndChild(newGrandChildElement);
+        }
+        rootResultElement->LinkEndChild(newChildElement);
+    }catch (std::invalid_argument & e){
+        //<error sym="SYM" amount="AMT" limit="LMT">Message</error>
+        TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
+        newChildElement->SetAttribute("id", transId); //属性
+        newChildElement->LinkEndChild(new TiXmlText(e.what()));
+        rootResultElement->LinkEndChild(newChildElement);
+    }
 }
 void Server::handleCancelTransection(TiXmlElement* rootElement, TiXmlElement* rootResultElement, int accountId){
     //handle Cancel Transection
@@ -136,11 +173,10 @@ void Server::handleCancelTransection(TiXmlElement* rootElement, TiXmlElement* ro
          </canceled>
          */
         //TODO: database cancel
-        pqxx::result r;
+        pqxx::result r = db.cancelOrder(transId, accountId);
         TiXmlElement *newChildElement = new TiXmlElement("canceled");//根元素
         newChildElement->SetAttribute("id", transId); //属性
-
-        for(pqxx::result::  const_iterator c = r.begin(); c != r.end(); ++c){
+        for(pqxx::result::const_iterator c = r.begin(); c != r.end(); c++){
 //            std::string statusString = c[4].as<std::string>();
             const char *status = c[4].as<std::string>().c_str();
             TiXmlElement *newGrandChildElement = new TiXmlElement(status);//根元素
@@ -148,7 +184,7 @@ void Server::handleCancelTransection(TiXmlElement* rootElement, TiXmlElement* ro
             if(std::strcmp(status, "executed") == 0){
                 newGrandChildElement->SetAttribute("price", c[6].as<double>());
             }
-            if(std::strcmp(status, "executed") == 0 || std::strcmp(status, "canceled") == 0){
+            if(std::strcmp(status, "executed") == 0 || std::strcmp(status, "cancelled") == 0){
                 newGrandChildElement->SetAttribute("time", c[5].as<int>());
             }
             newChildElement ->LinkEndChild(newGrandChildElement);
