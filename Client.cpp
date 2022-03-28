@@ -13,6 +13,7 @@ int main(int argc, char *argv[]) {
                           "<create>\n"
                           "    <account id=\"123456\" balance=\"1000\"/>\n"
                           "    <account id=\"123456\" balance=\"1000\"/>\n"
+                          "    <account id=\"1234\" balance=\"1000\"/>\n"
                           "    <symbol sym=\"SPY\">\n"
                           "        <account id=\"123456\">100000</account>\n"
                           "        <account id=\"12345\">100000</account>\n"
