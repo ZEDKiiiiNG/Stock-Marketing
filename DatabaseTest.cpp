@@ -128,6 +128,7 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
                   << c[6].as<double>() << " "
                   << c[7].as<int>() << "\n";
     }
+    std::cout << '\n';
 }
 
 void DatabaseTest::testHandleSell() {
