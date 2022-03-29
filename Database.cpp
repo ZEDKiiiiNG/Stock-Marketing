@@ -98,7 +98,7 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
     updateAmount(symbol, accountId, amount);
 }
 
-void Database::placeOrder(int orderId, std::string symbol, int accountId, double amount, double limit) {
+void Database::placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice) {
     if (not hasAccount(accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
@@ -106,15 +106,9 @@ void Database::placeOrder(int orderId, std::string symbol, int accountId, double
         updateAmount(symbol, accountId, amount);  // negative amount, sell order, deduct shares
     }
     else {
-        updateBalance(accountId, -limit * amount); // buy order, deduct total cost
+        updateBalance(accountId, -limitPrice * amount); // buy order, deduct total cost
     }
-    pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, update_time, account_id) VALUES ("
-    << orderId << "," << w.quote(symbol) << "," << amount << ","
-    << limit << "," << time(NULL) << "," << accountId << ");";
-    w.exec(ss.str());
-    w.commit();
+    saveOrder(orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
 }
 
 void Database::updateBalance(int accountId, double amount) {
@@ -149,12 +143,12 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
     // refund
     std::string symbol = r.begin()[1].as<std::string>();
     double amount = r.begin()[2].as<double>();
-    double limit = r.begin()[3].as<double>();
+    double limitPrice = r.begin()[3].as<double>();
     if (amount < 0) {
         updateAmount(symbol, accountId, -amount);  // negative amount, sell order, refund shares
     }
     else {
-        updateBalance(accountId, limit * amount); // buy order, refund price
+        updateBalance(accountId, limitPrice * amount); // buy order, refund price
     }
 
     updateCancelOrder(orderId, accountId);
@@ -197,11 +191,24 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     return pqxx::result(n.exec(ss.str()));
 }
 
+/*
 void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
                                double diffPrice) {
     updatePosition(symbol, buyerAccountId, amountPurchased);
     updateBalance(buyerAccountId, amountPurchased * diffPrice);
 
+}
+ */
+
+void Database::saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status,
+                         double executePrice, int accountId) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
+       << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
+       << time(NULL) << "," << w.quote(status) << "," << executePrice << "," << accountId << ");";
+    w.exec(ss.str());
+    w.commit();
 }
 
 Database::~Database() {
