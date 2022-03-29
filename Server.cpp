@@ -101,7 +101,7 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
     try {
         //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
         orderId++;
-        db.saveOrder( orderId, sym, accountId,  amount,  limit);
+        db.placeOrder( orderId, sym, accountId,  amount,  limit);
         TiXmlElement *newChildElement = new TiXmlElement("opened");//根元素
         newChildElement->SetAttribute("sym", sym); //属性
         newChildElement->SetAttribute("amount", amount); //属性
