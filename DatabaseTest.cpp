@@ -132,14 +132,14 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
 }
 
 void DatabaseTest::testHandleSell() {
-    db.placeOrder(3, "TEA", 1, 4, 112);  // buy
+    db.placeOrder(3, "TEA", 1, 5, 112);  // buy
     db.placeOrder(4, "TEA", 1, 1, 114);
     db.placeOrder(5, "TEA", 1, 2, 113);
     pqxx::result r = db.getBuyOrder(110, "TEA");
     displayOrder(r);
 
-    db.updateOpenOrder(2, 2, 8);
-    r = db.getOrder(2, 2);
+    db.updateOpenOrder(3, 1, 4);
+    r = db.getOrder(3, 1);
     displayOrder(r);
 }
 
