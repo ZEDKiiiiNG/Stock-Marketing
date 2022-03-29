@@ -132,6 +132,7 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
 
 void DatabaseTest::testHandleSell() {
     db.saveAccount(3, 10000);
+    db.saveAccount(4, 10000);
     db.saveOrder(3, "TEA", 5, 112, STATUS_OPEN, 0, 3);  // buy
     db.saveOrder(4, "TEA", 2, 114, STATUS_OPEN, 0, 3);
     db.saveOrder(5, "TEA", 3, 113, STATUS_OPEN, 0, 3);
