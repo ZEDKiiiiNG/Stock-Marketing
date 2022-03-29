@@ -147,7 +147,7 @@ void DatabaseTest::testHandleSell() {
     // assume 6, "TEA", 4, -8, 110
     db.executeBuyOrder(4, "TEA", 3, 2, 0, 114, 110);
     assert(db.getAmount("TEA", 3) ==  2);
-    assert(db.getBalance(3) == 10000 - 110 * 2);
+    assert(db.getBalance(3) == 10008);
     r = db.getOrder(4, 3);
     displayOrder(r);
 }
