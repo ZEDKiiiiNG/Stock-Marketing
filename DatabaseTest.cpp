@@ -7,7 +7,6 @@
 void DatabaseTest::testSaveAccount() {
     db.saveAccount(1, 10000);
     db.saveAccount(2, 1500);
-    db.saveAccount(12456, 1000);
 }
 
 void DatabaseTest::testHasAccount() {
@@ -146,7 +145,7 @@ void DatabaseTest::testHandleSell() {
     // assume 6, "TEA", 2, -8, 110
     db.executeBuyOrder(4, "TEA", 3, 2, 0, 114, 110);
     assert(db.getAmount("TEA", 3) ==  2);
-    assert(db.getBalance(3) == 9780);
+    assert(db.getBalance(3) == 10000 - 112 * 5 - 113 * 3 - 110 * 2);
     r = db.getOrder(4, 3);
     displayOrder(r);
 }
