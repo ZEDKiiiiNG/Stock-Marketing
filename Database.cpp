@@ -218,7 +218,8 @@ void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) 
     std::stringstream ss;
     ss << "UPDATE trade_order"
        << " SET amount = " << remainAmount
-       << " WHERE account_id = " << accountId << " AND order_id = " << orderId << ";";
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId
+       << " AND status = " << w.quote(STATUS_OPEN) << ";";
     w.exec(ss.str());
     w.commit();
 }
