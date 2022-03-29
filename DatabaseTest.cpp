@@ -137,6 +137,10 @@ void DatabaseTest::testHandleSell() {
     db.placeOrder(5, "TEA", 1, 2, 113);
     pqxx::result r = db.getBuyOrder(110, "TEA");
     displayOrder(r);
+
+    updateOpenOrder(2, 2, 8);
+    pqxx::result r = db.getOrder(2, 2);
+    displayOrder(r);
 }
 
 int main(int argc, char *argv[]) {

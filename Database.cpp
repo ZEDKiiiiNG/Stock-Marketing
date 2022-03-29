@@ -193,10 +193,12 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
 
 /*
 void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
-                               double diffPrice) {
+                               double remainAmount, double buyLimit, double executePrice) {
     updatePosition(symbol, buyerAccountId, amountPurchased);
-    updateBalance(buyerAccountId, amountPurchased * diffPrice);
-
+    // refund if buyer's limit price is higher than execution price
+    updateBalance(buyerAccountId, amountPurchased * (buyLimit - executePrice));
+    updateOpenOrder(buyOrderId, buyerAccountId, remainAmount);
+    saveOrder(buyOrderId, symbol, amountPurchased, buyLimit, STATUS_EXECUTED, executePrice, buyerAccountId);
 }
  */
 
@@ -207,6 +209,16 @@ void Database::saveOrder(int orderId, std::string symbol, double amount, double 
     ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
        << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
        << w.quote(status) << "," << time(NULL) << "," << executePrice << "," << accountId << ");";
+    w.exec(ss.str());
+    w.commit();
+}
+
+void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "UPDATE trade_order"
+       << " SET amount = " << remainAmount
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId << ";";
     w.exec(ss.str());
     w.commit();
 }
