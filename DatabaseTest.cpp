@@ -147,5 +147,6 @@ int main(int argc, char *argv[]) {
     test.testOrder();
     test.testException();
     test.testCancel();
+    test.testHandleSell();
     return EXIT_SUCCESS;
 }
