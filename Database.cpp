@@ -188,14 +188,17 @@ void Database::updateCancelOrder(int orderId, int accountId) {
     w.commit();
 }
 
-pqxx::result Database::getBuyOrder(double limit, std::string symbol) {
+pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
-       << " WHERE symbol = " << n.quote(symbol) << " AND limit_price >= " << limit
+       << " WHERE symbol = " << n.quote(symbol) << " AND limit_price >= " << sellLimit
        << " ORDER BY limit_price DESC, update_time ASC";
     return pqxx::result(n.exec(ss.str()));
 }
+
+void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
+                               double diffPrice) {}
 
 Database::~Database() {
     delete conn;
