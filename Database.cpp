@@ -98,7 +98,7 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
     updateAmount(symbol, accountId, amount);
 }
 
-void Database::saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit) {
+void Database::placeOrder(int orderId, std::string symbol, int accountId, double amount, double limit) {
     if (not hasAccount(accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
@@ -198,7 +198,11 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
 }
 
 void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
-                               double diffPrice) {}
+                               double diffPrice) {
+    updatePosition(symbol, buyerAccountId, amountPurchased);
+    updateBalance(buyerAccountId, amountPurchased * diffPrice);
+
+}
 
 Database::~Database() {
     delete conn;

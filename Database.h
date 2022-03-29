@@ -22,7 +22,7 @@ public:
     void saveAccount(int id, double balance);
     bool hasAccount(int id);
     void updatePosition(std::string symbol, int accountId, double amount);
-    void saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
+    void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
     pqxx::result cancelOrder(int orderId, int accountId);
     pqxx::result getOrder(int orderId, int accountId);
     ~Database();
@@ -40,6 +40,7 @@ private:
     // void handleSellOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
     pqxx::result getBuyOrder(double sellLimit, std::string symbol);
     void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased, double diffPrice);
+    void saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status, double executePrice, int accountId);
     // void executeSellOrder(pqxx::result::const_iterator buyOrder, pqxx::result::const_iterator sellOrder);
 };
 

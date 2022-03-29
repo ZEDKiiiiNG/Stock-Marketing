@@ -45,11 +45,11 @@ void DatabaseTest::testOrder() {
     db.updateBalance(1, -1000);
     assert(db.getBalance(1) == 9000);
 
-    db.saveOrder(2, "BTC", 2, -5, 110);  // sell
+    db.placeOrder(2, "BTC", 2, -5, 110);  // sell
     assert(db.getAmount("BTC", 2) == 10); // deduct share
     assert(db.getBalance(2) == 1500);
 
-    db.saveOrder(1, "SYM", 1, 18, 230);  // buy
+    db.placeOrder(1, "SYM", 1, 18, 230);  // buy
     assert(db.getBalance(1) == 4860); // deduct balance
     assert(db.getAmount("SYM", 1) == 228.8);
 
@@ -71,7 +71,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveOrder(1, "SYM", 1, 3, 1650); // buy
+        db.placeOrder(1, "SYM", 1, 3, 1650); // buy
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_BALANCE_ERROR);
@@ -79,7 +79,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveOrder(1, "BTC", 2, -11, 110); // sell
+        db.placeOrder(1, "BTC", 2, -11, 110); // sell
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);
@@ -87,7 +87,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveOrder(1, "BTC", 3, -5, 110);
+        db.placeOrder(1, "BTC", 3, -5, 110);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
@@ -132,9 +132,9 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
 }
 
 void DatabaseTest::testHandleSell() {
-    db.saveOrder(3, "TEA", 1, 4, 112);  // buy
-    db.saveOrder(4, "TEA", 1, 1, 114);
-    db.saveOrder(5, "TEA", 1, 2, 113);
+    db.placeOrder(3, "TEA", 1, 4, 112);  // buy
+    db.placeOrder(4, "TEA", 1, 1, 114);
+    db.placeOrder(5, "TEA", 1, 2, 113);
     pqxx::result r = db.getBuyOrder(110, "TEA");
     displayOrder(r);
 }
