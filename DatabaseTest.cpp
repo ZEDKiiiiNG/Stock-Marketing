@@ -135,7 +135,7 @@ void DatabaseTest::testHandleSell() {
     db.saveOrder(3, "TEA", 1, 4, 112);  // buy
     db.saveOrder(4, "TEA", 1, 1, 114);
     db.saveOrder(5, "TEA", 1, 2, 113);
-    pqxx::result r = db.getBuyOrder(111, "TEA");
+    pqxx::result r = db.getBuyOrder(110, "TEA");
     displayOrder(r);
 }
 
