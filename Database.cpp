@@ -191,7 +191,6 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     return pqxx::result(n.exec(ss.str()));
 }
 
-/*
 void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
                                double remainAmount, double buyLimit, double executePrice) {
     updatePosition(symbol, buyerAccountId, amountPurchased);
@@ -200,7 +199,6 @@ void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAcco
     updateOpenOrder(buyOrderId, buyerAccountId, remainAmount);
     saveOrder(buyOrderId, symbol, amountPurchased, buyLimit, STATUS_EXECUTED, executePrice, buyerAccountId);
 }
- */
 
 void Database::saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status,
                          double executePrice, int accountId) {
