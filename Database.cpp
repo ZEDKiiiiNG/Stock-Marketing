@@ -188,7 +188,7 @@ void Database::updateCancelOrder(int orderId, int accountId) {
     w.commit();
 }
 
-pqxx::result getBuyOrder(double limit, std::string symbol) {
+pqxx::result Database::getBuyOrder(double limit, std::string symbol) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
