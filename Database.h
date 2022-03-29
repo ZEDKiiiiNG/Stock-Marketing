@@ -37,7 +37,7 @@ private:
     double getBalance(int accountId);
     pqxx::result getOrder(int orderId, int accountId, std::string status);
     void updateCancelOrder(int orderId, int accountId);
-    // void handleSellOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
+    // void handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount, double sellLimit);
     pqxx::result getBuyOrder(double sellLimit, std::string symbol);
     void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
                          double remainAmount, double buyLimit, double executePrice);
