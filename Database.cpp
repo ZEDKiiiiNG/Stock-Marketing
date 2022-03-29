@@ -25,22 +25,22 @@ void Database::createTable(const char *fileName) {
     ifs.close();
 }
 
-void Database::saveAccount(int id, double balance) {
-    if (hasAccount(id)) {
+void Database::saveAccount(int accountId, double balance) {
+    if (hasAccount(accountId)) {
         throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
     }
     pqxx::work w(*conn);
     std::stringstream ss;
-    ss << "INSERT INTO account (account_id, balance) VALUES (" << id << "," << balance << ");";
+    ss << "INSERT INTO account (account_id, balance) VALUES (" << accountId << "," << balance << ");";
     w.exec(ss.str());
     w.commit();
 }
 
-bool Database::hasAccount(int id) {
+bool Database::hasAccount(int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM account"
-        << " WHERE account_id = " << id << ";";
+        << " WHERE account_id = " << accountId << ";";
     pqxx::result r(n.exec(ss.str()));
     return r.size() > 0;
 }

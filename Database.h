@@ -19,8 +19,8 @@ private:
 
 public:
     Database();
-    void saveAccount(int id, double balance);
-    bool hasAccount(int id);
+    void saveAccount(int accountId, double balance);
+    bool hasAccount(int accountId);
     void updatePosition(std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
     pqxx::result cancelOrder(int orderId, int accountId);
