@@ -139,7 +139,7 @@ void DatabaseTest::testHandleSell() {
     displayOrder(r);
 
     updateOpenOrder(2, 2, 8);
-    pqxx::result r = db.getOrder(2, 2);
+    r = db.getOrder(2, 2);
     displayOrder(r);
 }
 
