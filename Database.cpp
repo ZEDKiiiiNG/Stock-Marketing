@@ -186,7 +186,15 @@ void Database::updateCancelOrder(int orderId, int accountId) {
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId << ";";
     w.exec(ss.str());
     w.commit();
+}
 
+pqxx::result getBuyOrder(double limit, std::string symbol) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM trade_order"
+       << " WHERE sym = " << n.quote(symbol) << " AND limit >= " << limit
+       << " ORDER BY limit_price DESC, update_time ASC";
+    return pqxx::result(n.exec(ss.str()));
 }
 
 Database::~Database() {

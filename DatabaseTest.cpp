@@ -131,6 +131,14 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
     }
 }
 
+void DatabaseTest::testHandleSell() {
+    db.saveOrder(3, "TEA", 1, 4, 112);  // buy
+    db.saveOrder(4, "TEA", 1, 1, 114);
+    db.saveOrder(5, "TEA", 1, 2, 113);
+    pqxx::result r = db.getBuyOrder(111, "TEA");
+    displayOrder(r);
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
