@@ -186,7 +186,7 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
-       << " WHERE symbol = " << n.quote(symbol) << " AND limit_price >= " << sellLimit
+       << " WHERE symbol = " << n.quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
        << " ORDER BY limit_price DESC, update_time ASC";
     return pqxx::result(n.exec(ss.str()));
 }
