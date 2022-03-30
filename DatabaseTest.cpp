@@ -265,5 +265,6 @@ int main(int argc, char *argv[]) {
     test.testCancel();
     test.testHandleSell();
     test.testHandleBuy();
+    test.testMix();
     return EXIT_SUCCESS;
 }
