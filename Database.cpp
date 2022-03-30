@@ -168,7 +168,7 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
     if (not status.empty()) {
         ss << " AND status = " << n.quote(status);
     }
-    ss << ";";
+    ss << " ORDER BY status DESC;";
     return pqxx::result(n.exec(ss.str()));
 }
 
