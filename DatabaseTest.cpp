@@ -210,7 +210,7 @@ void DatabaseTest::testHandleBuy() {
     displayOrder(r);
     r = db.getOrder(13, 8);
     displayOrder(r);
-    r = db.getOrder(14, 89);
+    r = db.getOrder(14, 9);
     displayOrder(r);
 }
 
