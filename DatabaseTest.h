@@ -22,6 +22,7 @@ public:
     void testException();
     void testCancel();
     void testHandleSell();
+    void testHandleBuy();
 private:
     void displayOrder(pqxx::result & r);
 

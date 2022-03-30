@@ -196,6 +196,16 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     return pqxx::result(n.exec(ss.str()));
 }
 
+pqxx::result Database::getSellOrder(double buyLimit, std::string symbol) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM trade_order"
+       << " WHERE symbol = " << n.quote(symbol) << " AND amount < 0 AND limit_price <= " << buyLimit
+       << " ORDER BY limit_price ASC, update_time ASC";
+    return pqxx::result(n.exec(ss.str()));
+
+}
+
 void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
                                double remainAmount, double buyLimit, double executePrice) {
     updatePosition(symbol, buyerAccountId, executeAmount);

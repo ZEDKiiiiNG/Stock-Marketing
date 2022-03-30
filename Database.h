@@ -45,6 +45,7 @@ private:
     void updateOpenOrder(int orderId, int accountId, double amount);
     void executeSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double executeAmount,
                           double remainAmount, double executePrice);
+    pqxx::result getSellOrder(double buyLimit, std::string symbol);
 };
 
 
