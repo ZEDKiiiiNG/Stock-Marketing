@@ -117,11 +117,11 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
     try {
         //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
         orderId++;
-        db.saveOrder( orderId, sym, accountId,  amount,  limit);
+        db.placeOrder( orderId, sym, accountId,  amount,  limit);
         TiXmlElement *newChildElement = new TiXmlElement("opened");//根元素
         newChildElement->SetAttribute("sym", sym); //属性
-        newChildElement->SetAttribute("amount", amount); //属性
-        newChildElement->SetAttribute("limit", limit); //属性
+        newChildElement->SetAttribute("amount", amountString.c_str()); //属性
+        newChildElement->SetAttribute("limit", limitString.c_str()); //属性
         newChildElement->SetAttribute("id", orderId); //属性
         rootResultElement->LinkEndChild(newChildElement);
     } catch (std::invalid_argument & e) {

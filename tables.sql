@@ -24,6 +24,5 @@ CREATE TABLE trade_order (
     update_time INT,
     execute_price DOUBLE PRECISION default 0,
     account_id INT,
-    PRIMARY KEY (order_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL ON UPDATE CASCADE
 );

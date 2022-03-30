@@ -7,7 +7,6 @@
 void DatabaseTest::testSaveAccount() {
     db.saveAccount(1, 10000);
     db.saveAccount(2, 1500);
-    db.saveAccount(12456, 1000);
 }
 
 void DatabaseTest::testHasAccount() {
@@ -45,11 +44,11 @@ void DatabaseTest::testOrder() {
     db.updateBalance(1, -1000);
     assert(db.getBalance(1) == 9000);
 
-    db.saveOrder(2, "BTC", 2, -5, 110);  // sell
+    db.placeOrder(2, "BTC", 2, -5, 110);  // sell
     assert(db.getAmount("BTC", 2) == 10); // deduct share
     assert(db.getBalance(2) == 1500);
 
-    db.saveOrder(1, "SYM", 1, 18, 230);  // buy
+    db.placeOrder(1, "SYM", 1, 18, 230);  // buy
     assert(db.getBalance(1) == 4860); // deduct balance
     assert(db.getAmount("SYM", 1) == 228.8);
 
@@ -71,7 +70,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveOrder(1, "SYM", 1, 3, 1650); // buy
+        db.placeOrder(1, "SYM", 1, 3, 1650); // buy
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_BALANCE_ERROR);
@@ -79,7 +78,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveOrder(1, "BTC", 2, -11, 110); // sell
+        db.placeOrder(1, "BTC", 2, -11, 110); // sell
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);
@@ -87,7 +86,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveOrder(1, "BTC", 3, -5, 110);
+        db.placeOrder(1, "BTC", 3, -5, 110);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
@@ -120,15 +119,99 @@ void DatabaseTest::testCancel() {
 
 void DatabaseTest::displayOrder(pqxx::result & r) {
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
-        std::cout << c[0].as<int>() << " "
-                  << c[1].as<std::string>() << " "
-                  << c[2].as<double>() << " "
-                  << c[3].as<double>() << " "
-                  << c[4].as<std::string>() << " "
-                  << c[5].as<int>() << " "
-                  << c[6].as<double>() << " "
-                  << c[7].as<int>() << "\n";
+        std::cout << c[0].as<int>() << " " // order_id
+                  << c[1].as<std::string>() << " "  // symbol
+                  << c[2].as<double>() << " "  // amount
+                  << c[3].as<double>() << " "  // limit_price
+                  << c[4].as<std::string>() << " "  // status
+                  << c[5].as<int>() << " "  // update_time
+                  << c[6].as<double>() << " "  // execute_price
+                  << c[7].as<int>() << "\n";  // account_id
     }
+    std::cout << '\n';
+}
+
+void DatabaseTest::testHandleSell() {
+    db.saveAccount(3, 10000);
+    db.saveAccount(4, 10000);
+    db.saveOrder(3, "TEA", 5, 112, STATUS_OPEN, 0, 3);  // buy
+    db.saveOrder(4, "TEA", 2, 114, STATUS_OPEN, 0, 3);
+    db.saveOrder(5, "TEA", 3, 113, STATUS_OPEN, 0, 3);
+    db.saveOrder(6, "TEA", -8, 110, STATUS_OPEN, 0, 4);
+    pqxx::result r = db.getBuyOrder(110, "TEA");
+    displayOrder(r);
+
+    db.updateOpenOrder(3, 3, 4);
+    r = db.getOrder(3, 3);
+    displayOrder(r);
+
+    // assume 6, "TEA", 4, -8, 110
+    db.executeBuyOrder(4, "TEA", 3, 2, 0, 114, 110);
+    assert(db.getAmount("TEA", 3) ==  2);
+    assert(db.getBalance(3) == 10008);
+    r = db.getOrder(4, 3);
+    displayOrder(r);
+
+    db.executeSellOrder(6, "TEA", 4, 2, -6, 110);
+    assert(db.getBalance(4) == 10220);
+    r = db.getOrder(6, 4);
+    displayOrder(r);
+
+    db.saveAccount(5, 10000);
+    db.saveAccount(6, 10000);
+    db.saveAccount(7, 10000);
+    db.updatePosition("HW", 6, 15);
+    db.placeOrder(7, "HW", 5, 5, 112);  // buy
+    db.placeOrder(8, "HW", 5, 3, 114);
+    db.placeOrder(9, "HW", 7, 2, 116);
+    db.placeOrder(10, "HW", 6, -8, 110);
+
+    assert(db.getBalance(7) == 10000 - 116 * 2);
+    assert(db.getAmount("HW", 7) == 2);
+    assert(db.getBalance(5) == 10000 - 114 * 3 - 112 * 5);
+    assert(db.getAmount("HW", 5) == 6);
+    assert(db.getBalance(6) == 10000 + 116 * 2 + 114 * 3 + 112 * 3);
+    assert(db.getAmount("HW", 6) == 15 - 8);
+
+    r = db.getOrder(7, 5);
+    displayOrder(r);
+    r = db.getOrder(8, 5);
+    displayOrder(r);
+    r = db.getOrder(9, 7);
+    displayOrder(r);
+    r = db.getOrder(10, 6);
+    displayOrder(r);
+}
+
+void DatabaseTest::testHandleBuy() {
+    db.saveOrder(11, "TF", -5, 116, STATUS_OPEN, 0, 3);  // sell
+    db.saveOrder(12, "TF", -2, 114, STATUS_OPEN, 0, 3);
+    db.saveOrder(13, "TF", -3, 113, STATUS_OPEN, 0, 3);
+    db.saveOrder(14, "TF", 8, 115, STATUS_OPEN, 0, 4);
+    pqxx::result r = db.getSellOrder(115, "TF");
+    displayOrder(r);
+
+    db.saveAccount(8, 10000);
+    db.saveAccount(9, 10000);
+    db.updatePosition("STAR", 8, 16);
+    db.placeOrder(11, "STAR", 8, -5, 116); // sell
+    db.placeOrder(12, "STAR", 8, -2, 114);
+    db.placeOrder(13, "STAR", 8, -3, 113);
+    db.placeOrder(14, "STAR", 9, 8, 115); // buy
+
+    assert(db.getAmount("STAR", 8) == 16 - 5 -  2 - 3);
+    assert(db.getBalance(8) == 10000 + 113 * 3 + 114 * 2);
+    assert(db.getAmount("STAR", 9) == 5);
+    assert(db.getBalance(9) == 10000 - 115 * 8 + (115 -113) * 3 + (115 - 114) * 2);
+
+    r = db.getOrder(11, 8);
+    displayOrder(r);
+    r = db.getOrder(12, 8);
+    displayOrder(r);
+    r = db.getOrder(13, 8);
+    displayOrder(r);
+    r = db.getOrder(14, 9);
+    displayOrder(r);
 }
 
 int main(int argc, char *argv[]) {
@@ -139,5 +222,7 @@ int main(int argc, char *argv[]) {
     test.testOrder();
     test.testException();
     test.testCancel();
+    test.testHandleSell();
+    test.testHandleBuy();
     return EXIT_SUCCESS;
 }
