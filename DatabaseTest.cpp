@@ -179,7 +179,7 @@ void DatabaseTest::testHandleSell() {
     displayOrder(r);
     r = db.getOrder(9, 5);
     displayOrder(r);
-    r = db.getOder(10, 6);
+    r = db.getOrder(10, 6);
     displayOrder(r);
 }
 

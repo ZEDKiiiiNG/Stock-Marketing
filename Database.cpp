@@ -241,7 +241,7 @@ void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAc
     while (sellAmount != 0 || c != r.end()) {
         int buyOrderId = c[0].as<int>();
         double buyAmount = c[2].as<double>();
-        double executeAmount = min(-sellAmount, buyAmount);
+        double executeAmount = std::min(-sellAmount, buyAmount);
         double buyLimit = c[3].as<double>();
         double executePrice = c[3].as<double>();
         int buyerAccountId = c[7].as<int>();
