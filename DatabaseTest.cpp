@@ -119,14 +119,14 @@ void DatabaseTest::testCancel() {
 
 void DatabaseTest::displayOrder(pqxx::result & r) {
     for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
-        std::cout << c[0].as<int>() << " "
-                  << c[1].as<std::string>() << " "
-                  << c[2].as<double>() << " "
-                  << c[3].as<double>() << " "
-                  << c[4].as<std::string>() << " "
-                  << c[5].as<int>() << " "
-                  << c[6].as<double>() << " "
-                  << c[7].as<int>() << "\n";
+        std::cout << c[0].as<int>() << " " // order_id
+                  << c[1].as<std::string>() << " "  // symbol
+                  << c[2].as<double>() << " "  // amount
+                  << c[3].as<double>() << " "  // limit_price
+                  << c[4].as<std::string>() << " "  // status
+                  << c[5].as<int>() << " "  // update_time
+                  << c[6].as<double>() << " "  // execute_price
+                  << c[7].as<int>() << "\n";  // account_id
     }
     std::cout << '\n';
 }
