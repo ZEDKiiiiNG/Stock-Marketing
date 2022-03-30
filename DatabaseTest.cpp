@@ -94,7 +94,7 @@ void DatabaseTest::testException() {
 }
 
 void DatabaseTest::testCancel() {
-    pqxx::result r = db.getOrder(1, 1, STATUS_OPEN);
+    pqxx::result r = db.getOrderByStatus(1, 1, STATUS_OPEN);
     displayOrder(r);
 
     // db.updateCancelOrder(1, 1);
@@ -114,6 +114,15 @@ void DatabaseTest::testCancel() {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == NO_OPEN_ORDER_ERROR);
     }
+
+    db.saveAccount(10, 10000);
+    db.saveAccount(11, 10000);
+    db.updatePosition("UME", 10, 15);
+    db.placeOrder(15, "UME", 10, -5, 100);
+    db.placeOrder(16, "UME", 11, 3, 110);
+    db.cancelOrder(15, 10);
+    r = db.getOrder(15, 10);
+    displayOrder(r);
 
 }
 
@@ -165,6 +174,12 @@ void DatabaseTest::testHandleSell() {
     db.placeOrder(8, "HW", 5, 3, 114);
     db.placeOrder(9, "HW", 7, 2, 116);
     db.placeOrder(10, "HW", 6, -8, 110);
+    std::cout << "start\n";
+    r = db.getBuyOrder(110, "HW");
+    displayOrder(r);
+    r = db.getSellOrder(115, "HW");
+    displayOrder(r);
+    std::cout <<"end\n";
 
     assert(db.getBalance(7) == 10000 - 116 * 2);
     assert(db.getAmount("HW", 7) == 2);
@@ -214,6 +229,32 @@ void DatabaseTest::testHandleBuy() {
     displayOrder(r);
 }
 
+void DatabaseTest::testMix() {
+    db.saveAccount(13, 10000);
+    db.saveAccount(12, 10000);
+    db.updatePosition("CHO", 13, 20);
+    db.placeOrder(17, "CHO", 13, -5, 116); // sell
+    db.placeOrder(18, "CHO", 13, -2, 114);
+    db.placeOrder(19, "CHO", 13, -3, 113);
+    db.placeOrder(20, "CHO", 12, 4, 115); // buy
+    db.placeOrder(21, "CHO", 13, -6, 110);
+    db.placeOrder(22, "CHO", 12, 9, 118);
+
+    pqxx::result r = db.getOrder(17, 13);
+    displayOrder(r);
+    r = db.getOrder(18, 13);
+    displayOrder(r);
+    r = db.getOrder(19, 13);
+    displayOrder(r);
+    r = db.getOrder(20, 12);
+    displayOrder(r);
+    r = db.getOrder(21, 13);
+    displayOrder(r);
+    r = db.getOrder(22, 13);
+    displayOrder(r);
+
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
@@ -224,5 +265,6 @@ int main(int argc, char *argv[]) {
     test.testCancel();
     test.testHandleSell();
     test.testHandleBuy();
+    test.testMix();
     return EXIT_SUCCESS;
 }
