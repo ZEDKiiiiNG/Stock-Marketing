@@ -192,12 +192,19 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
 }
 
 void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
-                               double remainAmount, double buyLimit, double executePrice) {
+                               double remainAmount, double executePrice) {
     updatePosition(symbol, buyerAccountId, amountPurchased);
     // refund if buyer's limit price is higher than execution price
     updateBalance(buyerAccountId, amountPurchased * (buyLimit - executePrice));
     updateOpenOrder(buyOrderId, buyerAccountId, remainAmount);
-    saveOrder(buyOrderId, symbol, amountPurchased, buyLimit, STATUS_EXECUTED, executePrice, buyerAccountId);
+    saveOrder(buyOrderId, symbol, amountPurchased, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
+}
+
+void Database::executeSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double amountSold,
+                                double remainAmount, double executePrice) {
+    updateBalance(sellerAccountId, amountSold * executePrice);
+    updateOpenOrder(sellOrderId, sellerAccountId, remainAmount);
+    saveOrder(sellOrderId, symbol, amountSold, 0, STATUS_EXECUTED, executePrice, sellerAccountId);
 }
 
 void Database::saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status,
@@ -221,6 +228,24 @@ void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) 
     w.exec(ss.str());
     w.commit();
 }
+
+void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount,
+                               double sellLimit) {
+    pqxx::result r = getBuyOrder(sellLimit, symbol);
+    pqxx::result::const_iterator c= r.begin();
+    while (sellAmount != 0 || c != r.end()) {
+        int buyOrderId = c[0].as<int>();
+        double buyAmount = c[2].as<double>();
+        double executeAmount = min(-sellAmount, buyAmount);
+        double executePrice = c[3].as<double>();
+        int buyerAccountId = c[7].as<int>();
+        executeBuyOrder(buyOrderId, symbol, buyerAccountId, executeAmount, buyAmount - executeAmount, executePrice);
+        executeSellOrder(sellOrderId, symbol, sellerAccountId, executeAmount, sellAmount - executeAmount, executePrice);
+        sellAmount += executeAmount;
+        ++c;
+    }
+}
+
 
 Database::~Database() {
     delete conn;
