@@ -192,7 +192,7 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
 }
 
 void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
-                               double remainAmount, double executePrice) {
+                               double remainAmount, double buyLimit, double executePrice) {
     updatePosition(symbol, buyerAccountId, amountPurchased);
     // refund if buyer's limit price is higher than execution price
     updateBalance(buyerAccountId, amountPurchased * (buyLimit - executePrice));
