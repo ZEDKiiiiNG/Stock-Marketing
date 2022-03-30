@@ -94,7 +94,7 @@ void DatabaseTest::testException() {
 }
 
 void DatabaseTest::testCancel() {
-    pqxx::result r = db.getOrder(1, 1, STATUS_OPEN);
+    pqxx::result r = db.getOrderByStatus(1, 1, STATUS_OPEN);
     displayOrder(r);
 
     // db.updateCancelOrder(1, 1);

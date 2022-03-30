@@ -140,7 +140,7 @@ double Database::getBalance(int accountId) {
 }
 
 pqxx::result Database::cancelOrder(int orderId, int accountId) {
-    pqxx::result r = getOrder(orderId, accountId, STATUS_OPEN);
+    pqxx::result r = getOrderByStatus(orderId, accountId, STATUS_OPEN);
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
@@ -160,7 +160,7 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
     return getOrder(orderId, accountId);
 }
 
-pqxx::result Database::getOrder(int orderId, int accountId, std::string status) {
+pqxx::result Database::getOrderByStatus(int orderId, int accountId, std::string status) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
@@ -173,7 +173,7 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
 }
 
 pqxx::result Database::getOrder(int orderId, int accountId) {
-    return getOrder(orderId, accountId, "");
+    return getOrderByStatus(orderId, accountId, "");
 }
 
 void Database::updateCancelOrder(int orderId, int accountId) {
