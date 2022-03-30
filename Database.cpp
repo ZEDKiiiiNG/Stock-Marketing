@@ -183,7 +183,7 @@ void Database::updateCancelOrder(int orderId, int accountId) {
        << " SET status = " << w.quote(STATUS_CANCELLED)
        << ", update_time = " << time(NULL)
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
-       << " AND status = " << STATUS_OPEN << ";";
+       << " AND status = " << w.quote(STATUS_OPEN) << ";";
     w.exec(ss.str());
     w.commit();
 }
