@@ -164,7 +164,7 @@ void DatabaseTest::testHandleSell() {
     db.placeOrder(7, "HW", 5, 5, 112);  // buy
     db.placeOrder(8, "HW", 5, 3, 114);
     db.placeOrder(9, "HW", 7, 2, 116);
-    db.placeOrder(10, "HW", -8, 6, 110);
+    db.placeOrder(10, "HW", 6, -8, 110);
 
     assert(db.getBalance(7) == 10000 - 116 * 2 + 6 * 2);
     assert(db.getAmount("HW", 7) == 2);
