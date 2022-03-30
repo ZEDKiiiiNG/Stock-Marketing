@@ -140,7 +140,7 @@ double Database::getBalance(int accountId) {
 }
 
 pqxx::result Database::cancelOrder(int orderId, int accountId) {
-    pqxx::result r = getOrder(orderId, accountId, STATUS_OPEN);
+    pqxx::result r = getOrderByStatus(orderId, accountId, STATUS_OPEN);
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
@@ -160,7 +160,7 @@ pqxx::result Database::cancelOrder(int orderId, int accountId) {
     return getOrder(orderId, accountId);
 }
 
-pqxx::result Database::getOrder(int orderId, int accountId, std::string status) {
+pqxx::result Database::getOrderByStatus(int orderId, int accountId, std::string status) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
@@ -168,12 +168,12 @@ pqxx::result Database::getOrder(int orderId, int accountId, std::string status) 
     if (not status.empty()) {
         ss << " AND status = " << n.quote(status);
     }
-    ss << ";";
+    ss << " ORDER BY status DESC;";
     return pqxx::result(n.exec(ss.str()));
 }
 
 pqxx::result Database::getOrder(int orderId, int accountId) {
-    return getOrder(orderId, accountId, "");
+    return getOrderByStatus(orderId, accountId, "");
 }
 
 void Database::updateCancelOrder(int orderId, int accountId) {
@@ -182,7 +182,8 @@ void Database::updateCancelOrder(int orderId, int accountId) {
     ss << "UPDATE trade_order"
        << " SET status = " << w.quote(STATUS_CANCELLED)
        << ", update_time = " << time(NULL)
-       << " WHERE account_id = " << accountId << " AND order_id = " << orderId << ";";
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId
+       << " AND status = " << w.quote(STATUS_OPEN) << ";";
     w.exec(ss.str());
     w.commit();
 }
@@ -192,7 +193,8 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << n.quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
-       << " ORDER BY limit_price DESC, update_time ASC";
+       << " AND status = " << n.quote(STATUS_OPEN)
+       << " ORDER BY limit_price DESC, update_time ASC, order_id ASC";
     return pqxx::result(n.exec(ss.str()));
 }
 
@@ -201,7 +203,8 @@ pqxx::result Database::getSellOrder(double buyLimit, std::string symbol) {
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << n.quote(symbol) << " AND amount < 0 AND limit_price <= " << buyLimit
-       << " ORDER BY limit_price ASC, update_time ASC";
+       << " AND status = " << n.quote(STATUS_OPEN)
+       << " ORDER BY limit_price ASC, update_time ASC, order_id ASC";
     return pqxx::result(n.exec(ss.str()));
 
 }

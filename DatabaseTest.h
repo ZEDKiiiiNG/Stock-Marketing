@@ -23,6 +23,7 @@ public:
     void testCancel();
     void testHandleSell();
     void testHandleBuy();
+    void testMix();
 private:
     void displayOrder(pqxx::result & r);
 

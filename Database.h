@@ -35,7 +35,7 @@ private:
     bool hasPosition(std::string symbol, int accountId);
     void updateBalance(int accountId, double amount);
     double getBalance(int accountId);
-    pqxx::result getOrder(int orderId, int accountId, std::string status);
+    pqxx::result getOrderByStatus(int orderId, int accountId, std::string status);
     void updateCancelOrder(int orderId, int accountId);
     void handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount, double sellLimit);
     void handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
