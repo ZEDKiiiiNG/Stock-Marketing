@@ -194,7 +194,7 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << n.quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
        << " AND status = " << n.quote(STATUS_OPEN)
-       << " ORDER BY limit_price DESC, update_time ASC";
+       << " ORDER BY limit_price DESC, update_time ASC, order_id ASC";
     return pqxx::result(n.exec(ss.str()));
 }
 
@@ -204,7 +204,7 @@ pqxx::result Database::getSellOrder(double buyLimit, std::string symbol) {
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << n.quote(symbol) << " AND amount < 0 AND limit_price <= " << buyLimit
        << " AND status = " << n.quote(STATUS_OPEN)
-       << " ORDER BY limit_price ASC, update_time ASC";
+       << " ORDER BY limit_price ASC, update_time ASC, order_id ASC";
     return pqxx::result(n.exec(ss.str()));
 
 }
