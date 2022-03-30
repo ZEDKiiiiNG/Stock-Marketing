@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transactions id="123456">
+    <order sym="SYM" amount="123" limit="2.3"/>
+    <order sym="SPY" amount="1000" limit="2.5"/>
+    <order sym="SYM" amount="-1000" limit="2.3"/>
+    <query id="TRANS_ID"/>
+    <cancel id="TRANS_ID"/>
+</transactions>

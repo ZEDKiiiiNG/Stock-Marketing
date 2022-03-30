@@ -12,6 +12,8 @@
 #include "tinyxml.h"
 #include <cstring>
 #include "DatabaseTest.h"
+#include <sstream>
+#include <iomanip>
 
 class Server {
 //std::string getXmlContent(const std::string& raw);

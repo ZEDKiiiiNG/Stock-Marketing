@@ -4,48 +4,42 @@
 
 #include "Client.h"
 
+
 int main(int argc, char *argv[]) {
     std::cout << "client running...\n";
-    Socket socket;
-    int msg_fd = socket.setupClient(HOST, PORT);
-    std::string request = "173\n"
-                          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                          "<create>\n"
-                          "    <account id=\"123456\" balance=\"1000\"/>\n"
-                          "    <account id=\"123456\" balance=\"1000\"/>\n"
-                          "    <symbol sym=\"SPY\">\n"
-                          "        <account id=\"123456\">100000</account>\n"
-                          "        <account id=\"12345\">100000</account>\n"
-                          "        <account id=\"1234\">100000</account>\n"
-                          "    </symbol>\n"
-                          "</create>";
 
-    socket.sendMesg(msg_fd, request);
-    std::vector<char> response = socket.recvMesg(msg_fd);
-    std::cout << response.data() << '\n';
 
-    socket.closeConn(msg_fd);
-    //second time:
-    int msg_fd2 = socket.setupClient(HOST, PORT);
-    std::string request2 =
-            "13\n"
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            "<transactions id=\"123456\">\n"
-            " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n"
-            " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n"
-            " <order sym=\"SYM\" amount=\"123\" limit=\"2.3\"/>\n"
-            " <query id=\"1\"/>\n"
-            " <query id=\"1\"/>\n"
-            " <query id=\"1\"/>\n"
-            " <cancel id=\"1\"/>\n"
-            " <cancel id=\"1\"/>\n"
-            " <cancel id=\"5\"/>\n"
-            " <query id=\"1\"/>\n"
-            "</transactions>";
-    socket.sendMesg(msg_fd2, request2);
-    std::vector<char> response2 = socket.recvMesg(msg_fd2);
-    std::cout << response2.data() << '\n';
+    //get all the path of test cases
+    std::string filePath = "testCases/testcase";
+    size_t MAX_TEST_NUM = 3;
+    ////获取该路径下的所有文件
+    std::stringstream ss;
+    for(int i =0; i< MAX_TEST_NUM; i++){
+        //notice this use of stringstream
+        ss.str("");
+        Socket socket;
+        int msg_fd = socket.setupClient(HOST, PORT);
+        ss<< filePath << i << ".xml";
+        std::string testFileName = ss.str();
+        std::cout<<"test file name : "<< testFileName <<std::endl;
+        TiXmlDocument requestDocument(testFileName.c_str());
+        bool loadOk = requestDocument.LoadFile();
+        if (!loadOk){
+                std::cout << "could load:" << requestDocument.ErrorDesc() << std::endl;
+        }
+        TiXmlPrinter *printer = new TiXmlPrinter();
+        requestDocument.Accept(printer);
+        std::string stringBuffer= printer->CStr();
+        std::string request = std::to_string(stringBuffer.length());
+        request.append("\n");
+        request.append(stringBuffer);
+        std::cout<<"request  content: "<<"\n"<< request <<std::endl;
+        socket.sendMesg(msg_fd, request);
+        std::vector<char> response = socket.recvMesg(msg_fd);
+        std::cout << response.data() << '\n';
+        socket.closeConn(msg_fd);
+    }
 
-    socket.closeConn(msg_fd2);
+
     return EXIT_SUCCESS;
 }

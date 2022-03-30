@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Socket.h"
+#include "tinyxml.h"
+#include "tinystr.h"
 
 class Client {
 

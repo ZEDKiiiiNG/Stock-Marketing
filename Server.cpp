@@ -98,8 +98,22 @@ void Server::handleOrderTransection(TiXmlElement* rootElement, TiXmlElement* roo
     double amount = std::atof(pAttr->Value());
     pAttr = pAttr->Next();
     double limit = std::atof(pAttr->Value());
-    std::string limitString = std::to_string(limit);
-    std::string amountString = std::to_string(amount);
+    // convert to string
+    std::ostringstream amountSs;
+    std::ostringstream limitSs;
+    // Set Fixed -Point Notation
+    amountSs << std::fixed;
+    limitSs << std::fixed;
+    //Add double to stream
+    amountSs << std::setprecision(2);
+    amountSs << amount;
+    limitSs << std::setprecision(2);
+    limitSs << limit;
+    // Get string from output string stream
+    std::string amountString = amountSs.str();
+    std::string limitString = limitSs.str();
+//    std::string limitString = std::to_string(limit);
+//    std::string amountString = std::to_string(amount);
     try {
         //<opened sym="SYM" amount="AMT" limit="LMT" id="TRANS_ID"/>
         orderId++;
