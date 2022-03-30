@@ -146,10 +146,15 @@ void DatabaseTest::testHandleSell() {
     displayOrder(r);
 
     // assume 6, "TEA", 4, -8, 110
-    db.executeBuyOrder(4, "TEA", 3, 2, 0, 114, 110);
+    db.executeBuyOrder(4, "TEA", 3, 2, 0, 110);
     assert(db.getAmount("TEA", 3) ==  2);
     assert(db.getBalance(3) == 10008);
     r = db.getOrder(4, 3);
+    displayOrder(r);
+
+    db.executeSellOrder(6, "TEA", 4, 2, -6, 110);
+    assert(db.getBalance(4) == 10220);
+    r = db.getOrder(6, 4);
     displayOrder(r);
 }
 

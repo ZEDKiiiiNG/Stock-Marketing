@@ -229,10 +229,11 @@ void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) 
     w.commit();
 }
 
+/*
 void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount,
                                double sellLimit) {
     pqxx::result r = getBuyOrder(sellLimit, symbol);
-    pqxx::result::const_iterator c= r.begin();
+    pqxx::result::const_iterator c = r.begin();
     while (sellAmount != 0 || c != r.end()) {
         int buyOrderId = c[0].as<int>();
         double buyAmount = c[2].as<double>();
@@ -240,11 +241,12 @@ void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAc
         double executePrice = c[3].as<double>();
         int buyerAccountId = c[7].as<int>();
         executeBuyOrder(buyOrderId, symbol, buyerAccountId, executeAmount, buyAmount - executeAmount, executePrice);
-        executeSellOrder(sellOrderId, symbol, sellerAccountId, executeAmount, sellAmount - executeAmount, executePrice);
+        executeSellOrder(sellOrderId, symbol, sellerAccountId, executeAmount, sellAmount + executeAmount, executePrice);
         sellAmount += executeAmount;
         ++c;
     }
 }
+ */
 
 
 Database::~Database() {
