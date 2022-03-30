@@ -149,8 +149,6 @@ void DatabaseTest::testHandleSell() {
     db.saveOrder(6, "TEA", -8, 110, STATUS_OPEN, 0, 4);
     pqxx::result r = db.getBuyOrder(110, "TEA");
     displayOrder(r);
-    r = db.getBuyOrder(110, "TEA");
-    displayOrder(r);
 
     db.updateOpenOrder(3, 3, 4);
     r = db.getOrder(3, 3);
@@ -176,6 +174,8 @@ void DatabaseTest::testHandleSell() {
     db.placeOrder(8, "HW", 5, 3, 114);
     db.placeOrder(9, "HW", 7, 2, 116);
     db.placeOrder(10, "HW", 6, -8, 110);
+    r = db.getBuyOrder(110, "HW");
+    displayOrder(r);
 
     assert(db.getBalance(7) == 10000 - 116 * 2);
     assert(db.getAmount("HW", 7) == 2);
