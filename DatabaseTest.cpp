@@ -240,7 +240,7 @@ void DatabaseTest::testMix() {
     db.placeOrder(21, "CHO", 13, -6, 110);
     db.placeOrder(22, "CHO", 12, 9, 118);
 
-    pqxx::result r = db.getOrder(17, 11);
+    pqxx::result r = db.getOrder(17, 13);
     displayOrder(r);
     r = db.getOrder(18, 13);
     displayOrder(r);
