@@ -115,6 +115,15 @@ void DatabaseTest::testCancel() {
         assert(std::string(e.what()) == NO_OPEN_ORDER_ERROR);
     }
 
+    db.saveAccount(10, 10000);
+    db.saveAccount(11, 10000);
+    db.updatePosition("UME", 10, 15)
+    db.placeOrder(15, "UME", 10, -5, 100);
+    db.placeOrder(16, "UME", 11, 3, 110);
+    db.cancelOrder(15, 10);
+    r = db.getOrder(15, 10);
+    displayOrder(r);
+
 }
 
 void DatabaseTest::displayOrder(pqxx::result & r) {
