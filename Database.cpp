@@ -191,20 +191,20 @@ pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
     return pqxx::result(n.exec(ss.str()));
 }
 
-void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double amountPurchased,
+void Database::executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
                                double remainAmount, double buyLimit, double executePrice) {
-    updatePosition(symbol, buyerAccountId, amountPurchased);
+    updatePosition(symbol, buyerAccountId, executeAmount);
     // refund if buyer's limit price is higher than execution price
-    updateBalance(buyerAccountId, amountPurchased * (buyLimit - executePrice));
+    updateBalance(buyerAccountId, executeAmount * (buyLimit - executePrice));
     updateOpenOrder(buyOrderId, buyerAccountId, remainAmount);
-    saveOrder(buyOrderId, symbol, amountPurchased, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
+    saveOrder(buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
 }
 
-void Database::executeSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double amountSold,
+void Database::executeSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double executeAmount,
                                 double remainAmount, double executePrice) {
-    updateBalance(sellerAccountId, amountSold * executePrice);
+    updateBalance(sellerAccountId, executeAmount * executePrice);
     updateOpenOrder(sellOrderId, sellerAccountId, remainAmount);
-    saveOrder(sellOrderId, symbol, amountSold, 0, STATUS_EXECUTED, executePrice, sellerAccountId);
+    saveOrder(sellOrderId, symbol, -executeAmount, 0, STATUS_EXECUTED, executePrice, sellerAccountId);
 }
 
 void Database::saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status,
