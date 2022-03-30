@@ -238,7 +238,7 @@ void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAc
                                double sellLimit) {
     pqxx::result r = getBuyOrder(sellLimit, symbol);
     pqxx::result::const_iterator c = r.begin();
-    while (sellAmount != 0 || c != r.end()) {
+    while (sellAmount != 0 || c == r.end()) {
         int buyOrderId = c[0].as<int>();
         double buyAmount = c[2].as<double>();
         double executeAmount = std::min(-sellAmount, buyAmount);
