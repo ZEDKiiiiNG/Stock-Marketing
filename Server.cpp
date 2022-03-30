@@ -154,13 +154,29 @@ void Server::handleQueryTransection(TiXmlElement* rootElement, TiXmlElement* roo
         newChildElement->SetAttribute("id", transId); //属性
         for(pqxx::result::const_iterator c = r.begin(); c != r.end(); c++){
 //            std::string statusString = c[4].as<std::string>();
-            const char *status = c[4].as<std::string>().c_str();
-            TiXmlElement *newGrandChildElement = new TiXmlElement(status);//根元素
-            newGrandChildElement->SetAttribute("shares", c[2].as<double>());
-            if(std::strcmp(status, "executed") == 0){
-                newGrandChildElement->SetAttribute("price", c[6].as<double>());
+            std::string status = c[4].as<std::string>();
+            //set percision
+            std::ostringstream sharesSs;
+            std::ostringstream priceSs;
+            // Set Fixed -Point Notation
+            sharesSs << std::fixed;
+            priceSs << std::fixed;
+            //Add double to stream
+            sharesSs << std::setprecision(2);
+            sharesSs << c[2].as<double>();
+            priceSs << std::setprecision(2);
+            priceSs << c[6].as<double>();
+            // Get string from output string stream
+            std::string sharesString = sharesSs.str();
+            std::string priceString = priceSs.str();
+
+            TiXmlElement *newGrandChildElement = new TiXmlElement(status.c_str());//根元素
+            newGrandChildElement->SetAttribute("shares", sharesString.c_str());
+
+            if(std::strcmp(status.c_str(), "executed") == 0){
+                newGrandChildElement->SetAttribute("price", priceString.c_str());
             }
-            if(std::strcmp(status, "executed") == 0 || std::strcmp(status, "cancelled") == 0){
+            if(std::strcmp(status.c_str(), "executed") == 0 || std::strcmp(status.c_str(), "cancelled") == 0){
                 newGrandChildElement->SetAttribute("time", c[5].as<int>());
             }
             newChildElement ->LinkEndChild(newGrandChildElement);
@@ -192,13 +208,27 @@ void Server::handleCancelTransection(TiXmlElement* rootElement, TiXmlElement* ro
         newChildElement->SetAttribute("id", transId); //属性
         for(pqxx::result::const_iterator c = r.begin(); c != r.end(); c++){
 //            std::string statusString = c[4].as<std::string>();
-            const char *status = c[4].as<std::string>().c_str();
-            TiXmlElement *newGrandChildElement = new TiXmlElement(status);//根元素
-            newGrandChildElement->SetAttribute("shares", c[2].as<double>());
-            if(std::strcmp(status, "executed") == 0){
-                newGrandChildElement->SetAttribute("price", c[6].as<double>());
+            std::string status = c[4].as<std::string>();
+            //set percision
+            std::ostringstream sharesSs;
+            std::ostringstream priceSs;
+            // Set Fixed -Point Notation
+            sharesSs << std::fixed;
+            priceSs << std::fixed;
+            //Add double to stream
+            sharesSs << std::setprecision(2);
+            sharesSs << c[2].as<double>();
+            priceSs << std::setprecision(2);
+            priceSs << c[6].as<double>();
+            // Get string from output string stream
+            std::string sharesString = sharesSs.str();
+            std::string priceString = priceSs.str();
+            TiXmlElement *newGrandChildElement = new TiXmlElement(c[4].as<std::string>().c_str());//根元素
+            newGrandChildElement->SetAttribute("shares", sharesString.c_str());
+            if(std::strcmp(status.c_str(), "executed") == 0){
+                newGrandChildElement->SetAttribute("price", priceString.c_str());
             }
-            if(std::strcmp(status, "executed") == 0 || std::strcmp(status, "cancelled") == 0){
+            if(std::strcmp(status.c_str(), "executed") == 0 || std::strcmp(status.c_str(), "cancelled") == 0){
                 newGrandChildElement->SetAttribute("time", c[5].as<int>());
             }
             newChildElement ->LinkEndChild(newGrandChildElement);

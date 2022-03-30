@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 
     //get all the path of test cases
     std::string filePath = "testCases/testcase";
-    size_t MAX_TEST_NUM = 3;
+    size_t MAX_TEST_NUM = 8;
     ////获取该路径下的所有文件
     std::stringstream ss;
     for(int i =0; i< MAX_TEST_NUM; i++){
