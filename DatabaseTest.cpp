@@ -174,7 +174,7 @@ void DatabaseTest::testHandleSell() {
     db.placeOrder(8, "HW", 5, 3, 114);
     db.placeOrder(9, "HW", 7, 2, 116);
     db.placeOrder(10, "HW", 6, -8, 110);
-    std::cout << "here\n";
+    std::cout << "start\n";
     r = db.getBuyOrder(110, "HW");
     displayOrder(r);
     r = db.getSellOrder(115, "HW");
