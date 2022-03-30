@@ -109,6 +109,11 @@ void Database::placeOrder(int orderId, std::string symbol, int accountId, double
         updateBalance(accountId, -limitPrice * amount); // buy order, deduct total cost
     }
     saveOrder(orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
+    if (amount < 0) {
+        handleSellOrder(orderId, symbol, accountId, amount, limitPrice);
+    } else {
+        // TODO
+    }
 }
 
 void Database::updateBalance(int accountId, double amount) {
@@ -229,7 +234,6 @@ void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) 
     w.commit();
 }
 
-/*
 void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount,
                                double sellLimit) {
     pqxx::result r = getBuyOrder(sellLimit, symbol);
@@ -238,15 +242,17 @@ void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAc
         int buyOrderId = c[0].as<int>();
         double buyAmount = c[2].as<double>();
         double executeAmount = min(-sellAmount, buyAmount);
+        double buyLimit = c[3].as<double>();
         double executePrice = c[3].as<double>();
         int buyerAccountId = c[7].as<int>();
-        executeBuyOrder(buyOrderId, symbol, buyerAccountId, executeAmount, buyAmount - executeAmount, executePrice);
-        executeSellOrder(sellOrderId, symbol, sellerAccountId, executeAmount, sellAmount + executeAmount, executePrice);
+        executeBuyOrder(buyOrderId, symbol, buyerAccountId, executeAmount,
+                        buyAmount - executeAmount, buyLimit, executePrice);
+        executeSellOrder(sellOrderId, symbol, sellerAccountId, executeAmount,
+                         sellAmount + executeAmount, executePrice);
         sellAmount += executeAmount;
         ++c;
     }
 }
- */
 
 
 Database::~Database() {

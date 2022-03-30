@@ -156,6 +156,31 @@ void DatabaseTest::testHandleSell() {
     assert(db.getBalance(4) == 10220);
     r = db.getOrder(6, 4);
     displayOrder(r);
+
+    db.saveAccount(5, 10000);
+    db.saveAccount(6, 10000);
+    db.saveAccount(7, 10000);
+    db.updatePosition("HW", 6, 15);
+    db.placeOrder(7, "HW", 5, 5, 112);  // buy
+    db.placeOrder(8, "HW", 5, 3, 114);
+    db.placeOrder(9, "HW", 7, 2, 116);
+    db.placeOrder(10, "HW", -8, 6, 110)
+
+    assert(db.getBalance(7) == 10000 - 116 * 2 + 6 * 2);
+    assert(db.getAmount("HW", 7) == 2);
+    assert(db.getBalance(5) == 10000 - 114 * 3 - 112 * 5 + 4 * 3 + 2 * 2);
+    assert(db.getAmount("HW", 5) == 6);
+    assert(db.getBalance(6) == 10880);
+    assert(db.getAmount("HW", 6) == 7);
+
+    r = db.getOrder(7, 5);
+    displayOrder(r);
+    r = db.getOrder(8, 5);
+    displayOrder(r);
+    r = db.getOrder(9, 5);
+    displayOrder(r);
+    r = db.getOder(10, 6);
+    displayOrder(r);
 }
 
 int main(int argc, char *argv[]) {
