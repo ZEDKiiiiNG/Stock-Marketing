@@ -19,10 +19,10 @@ private:
 
 public:
     Database();
-    void saveAccount(int id, double balance);
-    bool hasAccount(int id);
+    void saveAccount(int accountId, double balance);
+    bool hasAccount(int accountId);
     void updatePosition(std::string symbol, int accountId, double amount);
-    void saveOrder(int orderId, std::string symbol, int accountId, double amount, double limit);
+    void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
     pqxx::result cancelOrder(int orderId, int accountId);
     pqxx::result getOrder(int orderId, int accountId);
     ~Database();
@@ -37,6 +37,17 @@ private:
     double getBalance(int accountId);
     pqxx::result getOrder(int orderId, int accountId, std::string status);
     void updateCancelOrder(int orderId, int accountId);
+    void handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount, double sellLimit);
+    void handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
+    pqxx::result getBuyOrder(double sellLimit, std::string symbol);
+    void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
+                         double remainAmount, double buyLimit, double executePrice);
+    void saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status, double executePrice, int accountId);
+    void updateOpenOrder(int orderId, int accountId, double amount);
+    void executeSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double executeAmount,
+                          double remainAmount, double executePrice);
+    pqxx::result getSellOrder(double buyLimit, std::string symbol);
+
 };
 
 

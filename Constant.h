@@ -18,5 +18,6 @@
 #define NO_OPEN_ORDER_ERROR "Does not have an open order"
 #define STATUS_OPEN "open"
 #define STATUS_CANCELLED "cancelled"
+#define STATUS_EXECUTED "executed"
 
 #endif
