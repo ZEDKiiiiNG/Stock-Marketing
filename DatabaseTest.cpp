@@ -177,6 +177,8 @@ void DatabaseTest::testHandleSell() {
     std::cout << "here\n";
     r = db.getBuyOrder(110, "HW");
     displayOrder(r);
+    r = db.getSellOrder(115, "HW");
+    displayOrder(r);
 
     assert(db.getBalance(7) == 10000 - 116 * 2);
     assert(db.getAmount("HW", 7) == 2);
