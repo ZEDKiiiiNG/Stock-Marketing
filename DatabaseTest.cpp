@@ -171,7 +171,7 @@ void DatabaseTest::testHandleSell() {
     assert(db.getBalance(5) == 10000 - 114 * 3 - 112 * 5);
     assert(db.getAmount("HW", 5) == 6);
     assert(db.getBalance(6) == 10000 + 116 * 2 + 114 * 3 + 112 * 3);
-    assert(db.getAmount("HW", 6) == 7);
+    assert(db.getAmount("HW", 6) == 15 - 8);
 
     r = db.getOrder(7, 5);
     displayOrder(r);
@@ -191,6 +191,27 @@ void DatabaseTest::testHandleBuy() {
     pqxx::result r = db.getSellOrder(115, "TF");
     displayOrder(r);
 
+    db.saveAccount(8, 10000);
+    db.saveAccount(9, 10000);
+    db.updatePosition("STAR", 8, 16);
+    db.placeOrder(11, "STAR", 8, -5, 116); // sell
+    db.placeOrder(12, "STAR", 8, -2, 114);
+    db.placeOrder(13, "STAR", 8, -3, 113);
+    db.placeOrder(14, "STAR", 9, 8, 115); // buy
+
+    assert(db.getAmount("STAR", 8) == 16 - 5 -  2 - 3);
+    assert(db.getBalance(8) == 10000 + 113 * 3 + 114 * 2);
+    assert(db.getAmount("STAR", 9) == 5);
+    assert(db.getBalance(9) == 10000 - 115 * 8 + (115 -113) * 3 + (115 - 114) * 2);
+
+    pqxx::result r = db.getOrder(11, 8);
+    displayOrder(r);
+    r = db.getOrder(12, 8);
+    displayOrder(r);
+    r = db.getOrder(13, 8);
+    displayOrder(r);
+    r = db.getOrder(14, 89);
+    displayOrder(r);
 }
 
 int main(int argc, char *argv[]) {

@@ -112,7 +112,7 @@ void Database::placeOrder(int orderId, std::string symbol, int accountId, double
     if (amount < 0) {
         handleSellOrder(orderId, symbol, accountId, amount, limitPrice);
     } else {
-        // TODO
+        handleBuyOrder(orderId, symbol, accountId, amount, limitPrice);
     }
 }
 
@@ -264,6 +264,25 @@ void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAc
     }
 }
 
+void Database::handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
+                              double buyLimit) {
+    pqxx::result r = getSellOrder(buyLimit, symbol);
+    pqxx::result::const_iterator c = r.begin();
+    while (buyAmount != 0 && c != r.end()) {
+        int sellOrderId = c[0].as<int>();
+        double sellAmount = c[2].as<double>();
+        double executeAmount = std::min(-sellAmount, buyAmount);
+        double sellLimit = c[3].as<double>();
+        double executePrice = c[3].as<double>();
+        int sellerAccountId = c[7].as<int>();
+        executeBuyOrder(buyOrderId, symbol, buyerAccountId, executeAmount,
+                        buyAmount - executeAmount, buyLimit, executePrice);
+        executeSellOrder(sellOrderId, symbol, sellerAccountId, executeAmount,
+                         sellAmount + executeAmount, executePrice);
+        buyAmount -= executeAmount;
+        ++c;
+    }
+}
 
 Database::~Database() {
     delete conn;
