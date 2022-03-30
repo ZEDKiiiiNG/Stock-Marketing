@@ -204,7 +204,7 @@ void DatabaseTest::testHandleBuy() {
     assert(db.getAmount("STAR", 9) == 5);
     assert(db.getBalance(9) == 10000 - 115 * 8 + (115 -113) * 3 + (115 - 114) * 2);
 
-    pqxx::result r = db.getOrder(11, 8);
+    r = db.getOrder(11, 8);
     displayOrder(r);
     r = db.getOrder(12, 8);
     displayOrder(r);
