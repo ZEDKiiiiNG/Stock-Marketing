@@ -229,6 +229,32 @@ void DatabaseTest::testHandleBuy() {
     displayOrder(r);
 }
 
+void DatabaseTest::testMix() {
+    db.saveAccount(11, 10000);
+    db.saveAccount(12, 10000);
+    db.updatePosition("CHO", 11, 20);
+    db.placeOrder(17, "CHO", 11, -5, 116); // sell
+    db.placeOrder(18, "CHO", 11, -2, 114);
+    db.placeOrder(19, "CHO", 11, -3, 113);
+    db.placeOrder(20, "CHO", 12, 4, 115); // buy
+    db.placeOrder(21, "CHO", 11, -6, 110);
+    db.placeOrder(22, "CHO", 12, 9, 118);
+
+    pqxx::result r = db.getOrder(17, 11);
+    displayOrder(r);
+    r = db.getOrder(18, 11);
+    displayOrder(r);
+    r = db.getOrder(19, 11);
+    displayOrder(r);
+    r = db.getOrder(20, 12);
+    displayOrder(r);
+    r = db.getOrder(21, 11);
+    displayOrder(r);
+    r = db.getOrder(22, 12);
+    displayOrder(r);
+
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     test.testSaveAccount();
