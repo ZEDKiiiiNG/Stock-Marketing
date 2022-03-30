@@ -152,6 +152,9 @@ void Server::handleQueryTransection(TiXmlElement* rootElement, TiXmlElement* roo
         pqxx::result r = db.getOrder(transId, accountId);
         TiXmlElement *newChildElement = new TiXmlElement("status");//根元素
         newChildElement->SetAttribute("id", transId); //属性
+        if(r.size() == 0){
+            throw std::invalid_argument("the order Id cannot be accessed or does not exist ");
+        }
         for(pqxx::result::const_iterator c = r.begin(); c != r.end(); c++){
 //            std::string statusString = c[4].as<std::string>();
             std::string status = c[4].as<std::string>();
@@ -204,6 +207,9 @@ void Server::handleCancelTransection(TiXmlElement* rootElement, TiXmlElement* ro
          */
         //TODO: database cancel
         pqxx::result r = db.cancelOrder(transId, accountId);
+        if(r.size() == 0){
+            throw std::invalid_argument("the order Id cannot be accessed or does not exist\n");
+        }
         TiXmlElement *newChildElement = new TiXmlElement("canceled");//根元素
         newChildElement->SetAttribute("id", transId); //属性
         for(pqxx::result::const_iterator c = r.begin(); c != r.end(); c++){
