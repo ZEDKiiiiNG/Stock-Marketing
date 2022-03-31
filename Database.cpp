@@ -20,8 +20,12 @@ void Database::createTable(const char *fileName) {
         ss << line;
     }
     pqxx::work w(*conn);
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
     ifs.close();
 }
 
@@ -32,8 +36,12 @@ void Database::saveAccount(int accountId, double balance) {
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO account (account_id, balance) VALUES (" << accountId << "," << balance << ");";
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
 }
 
 bool Database::hasAccount(int accountId) {
@@ -49,8 +57,12 @@ void Database::savePosition(std::string symbol, int accountId) {
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO position (symbol, account_id) VALUES (" << w.quote(symbol) << "," << accountId << ");";
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
 }
 
 double Database::getAmount(std::string symbol, int accountId) {
@@ -75,8 +87,12 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     ss << "UPDATE position"
         << " SET amount = " << curr + amount
         << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
 }
 
 bool Database::hasPosition(std::string symbol, int accountId) {
@@ -126,8 +142,12 @@ void Database::updateBalance(int accountId, double amount) {
     ss << "UPDATE account"
        << " SET balance = " << curr + amount
        << " WHERE account_id = " << accountId  << ";";
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
 }
 
 double Database::getBalance(int accountId) {
@@ -184,8 +204,12 @@ void Database::updateCancelOrder(int orderId, int accountId) {
        << ", update_time = " << time(NULL)
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
        << " AND status = " << w.quote(STATUS_OPEN) << ";";
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
 }
 
 pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol, int sellerAccountId) {
@@ -232,8 +256,12 @@ void Database::saveOrder(int orderId, std::string symbol, double amount, double 
     ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
        << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
        << w.quote(status) << "," << time(NULL) << "," << executePrice << "," << accountId << ");";
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
 }
 
 void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) {
@@ -243,8 +271,12 @@ void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) 
        << " SET amount = " << remainAmount
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
        << " AND status = " << w.quote(STATUS_OPEN) << ";";
-    w.exec(ss.str());
-    w.commit();
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e)) {
+        w.abort();
+    }
 }
 
 void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount,
