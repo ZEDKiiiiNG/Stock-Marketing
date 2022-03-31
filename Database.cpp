@@ -188,22 +188,22 @@ void Database::updateCancelOrder(int orderId, int accountId) {
     w.commit();
 }
 
-pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol) {
+pqxx::result Database::getBuyOrder(double sellLimit, std::string symbol, int sellerAccountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << n.quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
-       << " AND status = " << n.quote(STATUS_OPEN)
+       << " AND status = " << n.quote(STATUS_OPEN) << " AND account_id != " << sellerAccountId
        << " ORDER BY limit_price DESC, update_time ASC, order_id ASC";
     return pqxx::result(n.exec(ss.str()));
 }
 
-pqxx::result Database::getSellOrder(double buyLimit, std::string symbol) {
+pqxx::result Database::getSellOrder(double buyLimit, std::string symbol, int buyerAccountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << n.quote(symbol) << " AND amount < 0 AND limit_price <= " << buyLimit
-       << " AND status = " << n.quote(STATUS_OPEN)
+       << " AND status = " << n.quote(STATUS_OPEN) " AND account_id != " << buyerAccountId
        << " ORDER BY limit_price ASC, update_time ASC, order_id ASC";
     return pqxx::result(n.exec(ss.str()));
 
@@ -249,7 +249,7 @@ void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) 
 
 void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount,
                                double sellLimit) {
-    pqxx::result r = getBuyOrder(sellLimit, symbol);
+    pqxx::result r = getBuyOrder(sellLimit, symbol, sellerAccountId);
     pqxx::result::const_iterator c = r.begin();
     while (sellAmount != 0 && c != r.end()) {
         int buyOrderId = c[0].as<int>();
@@ -269,7 +269,7 @@ void Database::handleSellOrder(int sellOrderId, std::string symbol, int sellerAc
 
 void Database::handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
                               double buyLimit) {
-    pqxx::result r = getSellOrder(buyLimit, symbol);
+    pqxx::result r = getSellOrder(buyLimit, symbol, buyerAccountId);
     pqxx::result::const_iterator c = r.begin();
     while (buyAmount != 0 && c != r.end()) {
         int sellOrderId = c[0].as<int>();

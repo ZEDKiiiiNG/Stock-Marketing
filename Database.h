@@ -39,14 +39,14 @@ private:
     void updateCancelOrder(int orderId, int accountId);
     void handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount, double sellLimit);
     void handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
-    pqxx::result getBuyOrder(double sellLimit, std::string symbol);
+    pqxx::result getBuyOrder(double sellLimit, std::string symbol, int sellAccountId);
     void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
                          double remainAmount, double buyLimit, double executePrice);
     void saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status, double executePrice, int accountId);
     void updateOpenOrder(int orderId, int accountId, double amount);
     void executeSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double executeAmount,
                           double remainAmount, double executePrice);
-    pqxx::result getSellOrder(double buyLimit, std::string symbol);
+    pqxx::result getSellOrder(double buyLimit, std::string symbol, int buyerAccountId);
 
 };
 
