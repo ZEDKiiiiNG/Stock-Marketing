@@ -12,6 +12,7 @@
 #include "iostream"
 #include <time.h>
 #include <stdexcept>
+#include <thread>
 
 class Database {
 private:
