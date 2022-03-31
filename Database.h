@@ -12,7 +12,6 @@
 #include "iostream"
 #include <time.h>
 #include <stdexcept>
-#include <thread>
 #include <unistd.h>
 
 class Database {
