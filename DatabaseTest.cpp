@@ -149,7 +149,6 @@ void DatabaseTest::testHandleSell() {
     db.saveOrder(6, "TEA", -8, 110, STATUS_OPEN, 0, 4);
     db.saveOrder(28, "TEA", 6, 110, STATUS_OPEN, 0, 4);
     pqxx::result r = db.getBuyOrder(110, "TEA", 4);
-    std::cout << "start\n";
     displayOrder(r);
 
     db.updateOpenOrder(3, 3, 4);
