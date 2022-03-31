@@ -256,8 +256,10 @@ void DatabaseTest::testUpdateAmountMulti() {
     double amount1 = 5;
     double amount2 = 6;
     db.saveAccount(accountId, 10000);
-    std::thread (&Database::updateAmount, this, symbol, accountId, amount1).detach();
-    std::thread (&Database::updateAmount, this, symbol, accountId, amount2).detach();
+    std::thread t1(&Database::updateAmount, this, symbol, accountId, amount1);
+    std::thread t2(&Database::updateAmount, this, symbol, accountId, amount2);
+    t1.detach();
+    t2.detach();
     std::cout << db.getAmount("WE", 14) << "\n";
 }
 
@@ -272,6 +274,6 @@ int main(int argc, char *argv[]) {
     test.testHandleSell();
     test.testHandleBuy();
     test.testMix();
-    // test.testUpdateAmountMulti();
+    test.testUpdateAmountMulti();
     return EXIT_SUCCESS;
 }
