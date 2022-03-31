@@ -23,7 +23,7 @@ void Database::createTable(const char *fileName) {
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
     ifs.close();
@@ -39,7 +39,7 @@ void Database::saveAccount(int accountId, double balance) {
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
 }
@@ -60,7 +60,7 @@ void Database::savePosition(std::string symbol, int accountId) {
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
 }
@@ -90,7 +90,7 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
 }
@@ -145,7 +145,7 @@ void Database::updateBalance(int accountId, double amount) {
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
 }
@@ -207,7 +207,7 @@ void Database::updateCancelOrder(int orderId, int accountId) {
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
 }
@@ -259,7 +259,7 @@ void Database::saveOrder(int orderId, std::string symbol, double amount, double 
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
 }
@@ -274,7 +274,7 @@ void Database::updateOpenOrder(int orderId, int accountId, double remainAmount) 
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (pqxx::sql_error &e)) {
+    } catch (pqxx::sql_error &e) {
         w.abort();
     }
 }
