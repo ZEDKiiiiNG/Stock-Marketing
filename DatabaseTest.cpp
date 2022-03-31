@@ -251,9 +251,13 @@ void DatabaseTest::testMix() {
 }
 
 void DatabaseTest::testUpdateAmountMulti() {
-    db.saveAccount(14, 10000);
-    std::thread (&Database::updateAmount, this, "WE", 14, 5).detach();
-    std::thread (&Database::updateAmount, this, "WE", 14, 6).detach();
+    std::string symbol = "WE";
+    int accountId = 14;
+    double amount1 = 5;
+    double amount2 = 6;
+    db.saveAccount(accountId, 10000);
+    std::thread (&Database::updateAmount, this, symbol, accountId, amount1).detach();
+    std::thread (&Database::updateAmount, this, symbol, accountId, amount2).detach();
     std::cout << db.getAmount("WE", 14) << "\n";
 }
 
