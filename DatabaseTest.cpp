@@ -147,7 +147,8 @@ void DatabaseTest::testHandleSell() {
     db.saveOrder(4, "TEA", 2, 114, STATUS_OPEN, 0, 3);
     db.saveOrder(5, "TEA", 3, 113, STATUS_OPEN, 0, 3);
     db.saveOrder(6, "TEA", -8, 110, STATUS_OPEN, 0, 4);
-    pqxx::result r = db.getBuyOrder(110, "TEA");
+    db.saveOrder(28, "TEA", 6, 110, STATUS_OPEN, 0, 4);
+    pqxx::result r = db.getBuyOrder(110, "TEA", 4);
     displayOrder(r);
 
     db.updateOpenOrder(3, 3, 4);
@@ -174,12 +175,6 @@ void DatabaseTest::testHandleSell() {
     db.placeOrder(8, "HW", 5, 3, 114);
     db.placeOrder(9, "HW", 7, 2, 116);
     db.placeOrder(10, "HW", 6, -8, 110);
-    std::cout << "start\n";
-    r = db.getBuyOrder(110, "HW");
-    displayOrder(r);
-    r = db.getSellOrder(115, "HW");
-    displayOrder(r);
-    std::cout <<"end\n";
 
     assert(db.getBalance(7) == 10000 - 116 * 2);
     assert(db.getAmount("HW", 7) == 2);
@@ -199,11 +194,12 @@ void DatabaseTest::testHandleSell() {
 }
 
 void DatabaseTest::testHandleBuy() {
-    db.saveOrder(11, "TF", -5, 116, STATUS_OPEN, 0, 3);  // sell
-    db.saveOrder(12, "TF", -2, 114, STATUS_OPEN, 0, 3);
-    db.saveOrder(13, "TF", -3, 113, STATUS_OPEN, 0, 3);
-    db.saveOrder(14, "TF", 8, 115, STATUS_OPEN, 0, 4);
-    pqxx::result r = db.getSellOrder(115, "TF");
+    db.saveOrder(23, "TF", -5, 116, STATUS_OPEN, 0, 3);  // sell
+    db.saveOrder(24, "TF", -2, 114, STATUS_OPEN, 0, 3);
+    db.saveOrder(25, "TF", -3, 113, STATUS_OPEN, 0, 3);
+    db.saveOrder(26, "TF", 8, 115, STATUS_OPEN, 0, 4);
+    db.saveOrder(27, "TF", -3, 112, STATUS_OPEN, 0, 4);
+    pqxx::result r = db.getSellOrder(115, "TF", 4);
     displayOrder(r);
 
     db.saveAccount(8, 10000);
