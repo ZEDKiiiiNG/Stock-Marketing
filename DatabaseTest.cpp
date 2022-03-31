@@ -265,6 +265,7 @@ void DatabaseTest::testUpdateAmountMulti() {
 
 int main(int argc, char *argv[]) {
     DatabaseTest test;
+    /*
     test.testSaveAccount();
     test.testHasAccount();
     test.testPosition();
@@ -274,6 +275,7 @@ int main(int argc, char *argv[]) {
     test.testHandleSell();
     test.testHandleBuy();
     test.testMix();
+     */
     test.testUpdateAmountMulti();
     return EXIT_SUCCESS;
 }
