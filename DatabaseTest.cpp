@@ -197,7 +197,7 @@ void DatabaseTest::testHandleBuy() {
     db.saveOrder(24, "TF", -2, 114, STATUS_OPEN, 0, 3);
     db.saveOrder(25, "TF", -3, 113, STATUS_OPEN, 0, 3);
     db.saveOrder(26, "TF", 8, 115, STATUS_OPEN, 0, 4);
-    db.saveOrder(27, "TF", -3, 112, STATUS_OPEN, 0, 3);
+    db.saveOrder(27, "TF", -3, 112, STATUS_OPEN, 0, 4);
     pqxx::result r = db.getSellOrder(115, "TF", 4);
     displayOrder(r);
 
