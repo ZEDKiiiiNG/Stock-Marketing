@@ -27,12 +27,13 @@ public:
     pqxx::result getOrder(int orderId, int accountId);
     ~Database();
     friend class DatabaseTest;
+    void updateAmount(std::string symbol, int accountId, double amount);  // amount in position
 private:
     bool hasAccount(int accountId);
     void createTable(const char * fileName);
     void savePosition(std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId); // amount in position
-    void updateAmount(std::string symbol, int accountId, double amount);  // amount in position
+
     bool hasPosition(std::string symbol, int accountId);
     void updateBalance(int accountId, double amount);
     double getBalance(int accountId);
