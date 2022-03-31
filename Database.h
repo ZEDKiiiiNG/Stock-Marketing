@@ -20,7 +20,6 @@ private:
 public:
     Database();
     void saveAccount(int accountId, double balance);
-    bool hasAccount(int accountId);
     void updatePosition(std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
     pqxx::result cancelOrder(int orderId, int accountId);
@@ -28,6 +27,7 @@ public:
     ~Database();
     friend class DatabaseTest;
 private:
+    bool hasAccount(int accountId);
     void createTable(const char * fileName);
     void savePosition(std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId); // amount in position

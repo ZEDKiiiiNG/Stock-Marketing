@@ -24,6 +24,7 @@ public:
     void testHandleSell();
     void testHandleBuy();
     void testMix();
+    void testUpdateAmountMulti();
 private:
     void displayOrder(pqxx::result & r);
 

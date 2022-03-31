@@ -248,7 +248,13 @@ void DatabaseTest::testMix() {
     displayOrder(r);
     r = db.getOrder(22, 13);
     displayOrder(r);
+}
 
+void DatabaseTest::testUpdateAmountMulti() {
+    db.saveAccount(14, 10000);
+    std::thread (&Database::updateAmount, this, "WE", 14, 5).detach();
+    std::thread (&Database::updateAmount, this, "WE", 14, 6).detach();
+    std::cout << db.getAmount("WE", 14) << "\n";
 }
 
 int main(int argc, char *argv[]) {
