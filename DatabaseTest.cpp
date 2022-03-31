@@ -147,6 +147,7 @@ void DatabaseTest::testHandleSell() {
     db.saveOrder(4, "TEA", 2, 114, STATUS_OPEN, 0, 3);
     db.saveOrder(5, "TEA", 3, 113, STATUS_OPEN, 0, 3);
     db.saveOrder(6, "TEA", -8, 110, STATUS_OPEN, 0, 4);
+    db.saveOrder(28, "TEA", 6, 110, STATUS_OPEN, 0, 4);
     pqxx::result r = db.getBuyOrder(110, "TEA", 4);
     displayOrder(r);
 
