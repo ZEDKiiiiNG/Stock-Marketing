@@ -91,7 +91,8 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
     }
     pqxx::work w(*conn);
     std::stringstream ss;
-    ss << "INSERT INTO position (symbol, account_id) VALUES (" << w.quote(symbol) << "," << accountId << ")"
+    ss << "INSERT INTO position (symbol, amount, account_id) VALUES ("
+    << w.quote(symbol) << "," << amount << "," << accountId << ")"
     << " ON CONFLICT (symbol, account_id) DO UPDATE"
     << " SET amount = EXCLUDED.amount + " << amount << ";";
     try {
