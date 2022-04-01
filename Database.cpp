@@ -4,10 +4,6 @@
 
 #include "Database.h"
 
-Database::Database() : conn(new pqxx::connection(DB_INFO)) {
-    createTable("tables.sql");
-}
-
 pqxx::connection * Database::connect() {
     conn = new connection("dbname=ACC_BBALL user=postgres password=passw0rd");
     if (!conn->is_open()) {
@@ -16,7 +12,7 @@ pqxx::connection * Database::connect() {
     return conn;
 }
 
-void Database::createTable(const char *fileName) {
+void Database::createTable(pqxx::connection * conn, const char *fileName) {
     std::ifstream ifs;
     ifs.open(fileName, std::ifstream::in);
     if (!ifs.is_open()) {

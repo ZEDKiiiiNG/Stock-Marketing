@@ -15,8 +15,6 @@
 #include <unistd.h>
 
 class Database {
-private:
-    pqxx::connection * conn;
 
 public:
     Database();
@@ -30,7 +28,7 @@ public:
     friend class DatabaseTest;
 private:
     bool hasAccount(int accountId);
-    void createTable(const char * fileName);
+    void createTable(pqxx::connection * conn, const char * fileName);
     void savePosition(std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId); // amount in position
     void updateAmount(pqxx::connection * conn1, std::string symbol, int accountId, double amount);  // amount in position
