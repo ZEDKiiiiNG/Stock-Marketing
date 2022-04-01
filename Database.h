@@ -38,7 +38,7 @@ private:
     void updateCancelOrder(int orderId, int accountId);
     void handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
                          double sellAmount, double sellLimit);
-    void handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
+    void handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
     pqxx::result getBuyOrder(pqxx::connection * conn, double sellLimit, std::string symbol, int sellAccountId);
     void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
                          double remainAmount, double buyLimit, double executePrice);
