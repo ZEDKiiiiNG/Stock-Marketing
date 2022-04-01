@@ -165,15 +165,16 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
     // atomically adjust and open order
+    pqxx::work w(*conn);
     std::stringstream ss;
     if (amount < 0) {
-        ss << getUpdateAmountQuery(w, symbol, accountId, amount); // negative amount, sell order, deduct shares
+        ss << getUpdateAmountQuery(&, symbol, accountId, amount); // negative amount, sell order, deduct shares
     }
     else {
-        ss << getUpdateBalanceQuery(w, accountId, -limitPrice * amount);
+        ss << getUpdateBalanceQuery(&w, accountId, -limitPrice * amount);
         ss << "WAITFOR DELAY '00:00:03';";
     }
-    ss << getSaveOrderQuery(w, orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
+    ss << getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
     std::cout << ss.str() << '\n';
     try {
         w.exec(ss.str());
