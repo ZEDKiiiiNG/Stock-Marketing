@@ -82,20 +82,6 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
     }
 }
 
-void Database::saveAccount(pqxx::connection * conn, int accountId, double balance) {
-    /*
-    if (hasAccount(accountId)) {
-        throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
-    }
-     */
-    pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "INSERT INTO account (account_id, balance) VALUES (" << accountId << "," << balance << ");";
-    w.exec(ss.str());
-    w.commit();
-}
-
-
 void Database::savePosition(pqxx::connection * conn, std::string symbol, int accountId) {
     pqxx::work w(*conn);
     std::stringstream ss;
