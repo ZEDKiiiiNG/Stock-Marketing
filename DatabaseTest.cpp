@@ -55,7 +55,6 @@ void DatabaseTest::testOrder() {
     db.placeOrder(1, "SYM", 1, 18, 230);  // buy
     assert(db.getBalance(1) == 4860); // deduct balance
     assert(db.getAmount("SYM", 1) == 228.8);
-
 }
 
 void DatabaseTest::testException() {
@@ -96,8 +95,10 @@ void DatabaseTest::testException() {
         assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
     }
 }
+*/
 
 void DatabaseTest::testCancel() {
+    /*
     pqxx::result r = db.getOrderByStatus(1, 1, STATUS_OPEN);
     displayOrder(r);
 
@@ -118,18 +119,20 @@ void DatabaseTest::testCancel() {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == NO_OPEN_ORDER_ERROR);
     }
+     */
 
-    db.createAccount(10, 10000);
-    db.createAccount(11, 10000);
-    db.updatePosition("UME", 10, 15);
-    db.placeOrder(15, "UME", 10, -5, 100);
-    db.placeOrder(16, "UME", 11, 3, 110);
+    db.createAccount(testconn, 10, 10000);
+    db.createAccount(testconn, 11, 10000);
+    db.updatePosition(testconn, "UME", 10, 15);
+    db.placeOrder(testconn, 15, "UME", 10, -5, 100);
+    db.placeOrder(testconn, 16, "UME", 11, 3, 110);
     db.cancelOrder(15, 10);
     r = db.getOrder(15, 10);
     displayOrder(r);
 
 }
 
+/*
 void DatabaseTest::testHandleSell() {
     db.createAccount(3, 10000);
     db.createAccount(4, 10000);
@@ -428,10 +431,13 @@ int main(int argc, char *argv[]) {
     /*
     test.testOrder();
     test.testException();
+     */
     test.testCancel();
+    /*
     test.testHandleSell();
     test.testHandleBuy();
     test.testMix();
+     */
     */
     // test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
