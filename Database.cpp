@@ -355,7 +355,7 @@ std::string Database::getExecuteSellOrderQuery(pqxx::work *w, int sellOrderId, s
     return ss.str();
 }
 
-std::string Database::getSellOrder(pqxx::work *w, double buyLimit, std::string symbol, int buyerAccountId) {
+std::string Database::getSellOrderQuery(pqxx::work *w, double buyLimit, std::string symbol, int buyerAccountId) {
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << w->quote(symbol) << " AND amount < 0 AND limit_price <= " << buyLimit
