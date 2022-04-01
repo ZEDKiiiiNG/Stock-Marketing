@@ -16,10 +16,8 @@
 #include <mutex>
 
 class Database {
-private:
-    std::mutex mtx;
-
 public:
+    std::mutex mtx;
     Database();
     pqxx::connection * connect();
     void createAccount(pqxx::connection * conn, int accountId, double balance);
