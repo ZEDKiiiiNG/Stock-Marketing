@@ -40,8 +40,10 @@ public:
     }
     const char * getXmlContent(const char* raw);
     void serveRequest(Socket socket);
+    void serveRequestMulti(Socket socket,int listen_fd);
     void processRequest(Socket socket, std::vector<char>  request, int msg_fd);
     void runServer(Socket & socket);
+    void runServerPreCreate(Socket & socket);
 };
 
 

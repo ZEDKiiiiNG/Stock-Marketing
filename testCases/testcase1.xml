@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--symbol create-->
 <create>
     <symbol sym="testSYM1">
         <account id="1">100000</account>

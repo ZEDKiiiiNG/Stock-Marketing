@@ -11,11 +11,15 @@
 #include "tinyxml.h"
 #include "tinystr.h"
 #include <thread>
+#include <time.h>
 
 class Client {
 public:
     void start();
     void multiThreadStart();
+    double calc_time(struct timespec start, struct timespec end);
+
+
 };
 
 

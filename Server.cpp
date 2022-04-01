@@ -319,39 +319,74 @@ void printXml(TiXmlElement* rootElement, bool isElement) {
         SubItem = SubItem->NextSibling();
     }
 }
-void Server::serveRequest(Socket socket){
-    int listen_fd = socket.setupServer(PORT);
-    int msg_fd = socket.acceptConn(listen_fd);
-    std::vector<char> request = socket.recvMesg(msg_fd);
-    std::cout << request.data() << '\n';
+void Server::serveRequest(Socket socket) {
+    while (true) {
+        int listen_fd = socket.setupServer(PORT);
+        int msg_fd = socket.acceptConn(listen_fd);
+        std::vector<char> request = socket.recvMesg(msg_fd);
+        std::cout << request.data() << '\n';
 
-    TiXmlDocument* myDocument = new TiXmlDocument();
-    myDocument->Parse(getXmlContent(request.data()));
+        TiXmlDocument *myDocument = new TiXmlDocument();
+        myDocument->Parse(getXmlContent(request.data()));
 //    myDocument->Parse(request.data());
-    std::cout << "Parse Complete" << '\n';
-    TiXmlElement* rootElement = myDocument->RootElement();
-    //Create Result document
-    TiXmlDocument* resDocument = new TiXmlDocument();
-    //Format Declare
-    //TODO: check declaration format
-    TiXmlDeclaration *decl = new TiXmlDeclaration("1.0", "UTF-8", "yes");
-    resDocument->LinkEndChild(decl); //写入文档
-    //<results>
-    TiXmlElement* rootResultElement = new TiXmlElement("results");
-    resDocument->LinkEndChild(rootResultElement);
-    handleRequest(rootElement, rootResultElement);
-    TiXmlPrinter *printer = new TiXmlPrinter();
-    resDocument->Accept(printer);
-    std::string stringBuffer= printer->CStr();
-    std::string response = std::to_string(stringBuffer.length());
-    response.append("\n");
-    response.append(stringBuffer);
+        std::cout << "Parse Complete" << '\n';
+        TiXmlElement *rootElement = myDocument->RootElement();
+        //Create Result document
+        TiXmlDocument *resDocument = new TiXmlDocument();
+        //Format Declare
+        //TODO: check declaration format
+        TiXmlDeclaration *decl = new TiXmlDeclaration("1.0", "UTF-8", "yes");
+        resDocument->LinkEndChild(decl); //写入文档
+        //<results>
+        TiXmlElement *rootResultElement = new TiXmlElement("results");
+        resDocument->LinkEndChild(rootResultElement);
+        handleRequest(rootElement, rootResultElement);
+        TiXmlPrinter *printer = new TiXmlPrinter();
+        resDocument->Accept(printer);
+        std::string stringBuffer = printer->CStr();
+        std::string response = std::to_string(stringBuffer.length());
+        response.append("\n");
+        response.append(stringBuffer);
 //    printXml(rootElement, true);
 
-    socket.sendMesg(msg_fd, response);
+        socket.sendMesg(msg_fd, response);
 
-    socket.closeConn(listen_fd);
-    socket.closeConn(msg_fd);
+        socket.closeConn(listen_fd);
+        socket.closeConn(msg_fd);
+    }
+}
+void Server::serveRequestMulti(Socket socket,int listen_fd) {
+    while (true) {
+        int msg_fd = socket.acceptConn(listen_fd);
+        std::vector<char> request = socket.recvMesg(msg_fd);
+        std::cout << request.data() << '\n';
+
+        TiXmlDocument *myDocument = new TiXmlDocument();
+        myDocument->Parse(getXmlContent(request.data()));
+//    myDocument->Parse(request.data());
+        std::cout << "Parse Complete" << '\n';
+        TiXmlElement *rootElement = myDocument->RootElement();
+        //Create Result document
+        TiXmlDocument *resDocument = new TiXmlDocument();
+        //Format Declare
+        //TODO: check declaration format
+        TiXmlDeclaration *decl = new TiXmlDeclaration("1.0", "UTF-8", "yes");
+        resDocument->LinkEndChild(decl); //写入文档
+        //<results>
+        TiXmlElement *rootResultElement = new TiXmlElement("results");
+        resDocument->LinkEndChild(rootResultElement);
+        handleRequest(rootElement, rootResultElement);
+        TiXmlPrinter *printer = new TiXmlPrinter();
+        resDocument->Accept(printer);
+        std::string stringBuffer = printer->CStr();
+        std::string response = std::to_string(stringBuffer.length());
+        response.append("\n");
+        response.append(stringBuffer);
+//    printXml(rootElement, true);
+
+        socket.sendMesg(msg_fd, response);
+        socket.closeConn(msg_fd);
+    }
 }
 
 void Server::processRequest(Socket socket, std::vector<char> request, int msg_fd){
@@ -393,6 +428,19 @@ void Server::runServer( Socket & socket){
         t.detach();
     }
     socket.closeConn(listen_fd);
+}
+void Server::runServerPreCreate(Socket &socket) {
+    size_t  numOfThread = 10;
+    int listen_fd = socket.setupServer(PORT);
+//    std::vector<std::thread> threadVector(10);
+    std::thread thArr[numOfThread];
+    for(int i =0; i< numOfThread; i++){
+//        std::thread t(&Client::start, this);
+//        threadVector.push_back(t);
+        thArr[i] = std::thread(&Server::serveRequestMulti, this, socket, listen_fd);
+    }
+    for (auto &a : thArr)
+        a.join();
 }
 
 int main(int argc, char *argv[]) {
