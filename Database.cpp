@@ -134,17 +134,19 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
     }
     else {
         ss << getUpdateBalanceQuery(&w, accountId, -limitPrice * amount);
-        // ss << "\nSELECT pg_sleep(3);";
     }
     ss << getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
-    std::cout << ss.str() << '\n';
     try {
-        //ss << "\nSELECT pg_sleep(3);";
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << e.what() << '\n';
         w.abort();
+        std::cout << e.what() << '\n';
+        if (amount < 0) {
+            throw std::invalid_argument(INSUFFICIENT_SHARE_ERROR);
+        } else {
+            throw std::invalid_argument(INSUFFICIENT_BALANCE_ERROR);
+        }
     }
     // exc order
     if (amount < 0) {
