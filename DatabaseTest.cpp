@@ -388,13 +388,13 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     pqxx::work w(*conn1);
     std::stringstream ss;
 
-    ss << db.getBuyOrderQuery(&w, 108, symbol, 35);
+    ss << db.getBuyOrderQuery(&w, 108, symbol, 36);
     if (symbol == "SYM3") {
         ss << "\nSELECT pg_sleep(3);";
     }
     pqxx::result r = w.exec(ss.str());
     w.commit();
-    std::cout << "size" << symbol << ": " << r.size() << '\n';
+    std::cout << "size " << symbol << ": " << r.size() << '\n';
     displayOrder(r);
 }
 
