@@ -26,7 +26,7 @@ public:
     pqxx::result getOrder(int orderId, int accountId);
     friend class DatabaseTest;
 private:
-    bool hasAccount(int accountId);
+    bool hasAccount(pqxx::connection * conn, int accountId);
     void createTable(pqxx::connection * conn, const char * fileName);
     void savePosition(pqxx::connection * conn, std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId); // amount in position
