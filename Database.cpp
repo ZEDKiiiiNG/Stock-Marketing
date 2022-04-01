@@ -197,6 +197,7 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
     pqxx::result r = w.exec(q);
 
     // atmoic execute
+    std::stringstream ss;
     pqxx::result::const_iterator c = r.begin();
     while (sellAmount != 0 && c != r.end()) {
         int buyOrderId = c[0].as<int>();
@@ -205,7 +206,6 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
         double buyLimit = c[3].as<double>();
         double executePrice = c[3].as<double>();
         int buyerAccountId = c[7].as<int>();
-        std::stringstream ss;
         ss << getExecuteBuyOrderQuery(&w, buyOrderId, symbol, buyerAccountId, executeAmount,
                                       buyAmount - executeAmount, buyLimit, executePrice);
         ss << "\n" << getExecuteSellOrderQuery(&w, sellOrderId, symbol, sellerAccountId, executeAmount,
@@ -229,6 +229,7 @@ void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::stri
     pqxx::result r = w.exec(q);
 
     // atomic exec
+    std::stringstream ss;
     pqxx::result::const_iterator c = r.begin();
     while (buyAmount != 0 && c != r.end()) {
         int sellOrderId = c[0].as<int>();
