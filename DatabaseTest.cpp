@@ -324,6 +324,8 @@ void DatabaseTest::testCancelOrderMuti() {
     t2.join();
     conn1->disconnect();
     conn2->disconnect();
+    r = db.getOrder(conn1, 41, 33);
+    displayOrder(r);
 }
 
 void DatabaseTest::displayOrder(pqxx::result & r) {

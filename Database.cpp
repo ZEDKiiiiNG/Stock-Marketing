@@ -141,7 +141,6 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
-    std::cout << ss1.str() << "\n";
     sleep(3);
 
     // atomic refund
@@ -158,7 +157,6 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
         ss2 << "\n" << getUpdateBalanceQuery(accountId, limitPrice * amount);
     }
     ss2 << "\n" << getUpdateCancelOrderQuery(&w, orderId, accountId);
-    std::cout << ss2.str() << "\n";
     try {
         w.exec(ss2.str());
         w.commit();
