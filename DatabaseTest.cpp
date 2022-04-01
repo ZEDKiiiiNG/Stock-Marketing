@@ -365,10 +365,36 @@ void DatabaseTest::testHandleSellMuti() {
     db.createAccount(conn1, 35, 10000);
     db.createAccount(conn1, 36, 10000);
     db.updatePosition(conn1, "SYM2", 36, 20);
-    db.saveOrder(conn1, 44, "SYM2", 5, 110, STATUS_OPEN, 0, 33);
-    db.saveOrder(conn1, 45, "SYM2", 6, 112, STATUS_OPEN, 0, 33);
-    db.saveOrder(conn1, 46, "SYM", -5, 108, STATUS_OPEN, 0, 34);
+    db.saveOrder(conn1, 44, "SYM2", 5, 110, STATUS_OPEN, 0, 35);
+    db.saveOrder(conn1, 45, "SYM2", 6, 112, STATUS_OPEN, 0, 35);
+    db.saveOrder(conn1, 46, "SYM2", -5, 108, STATUS_OPEN, 0, 36);
     db.handleSellOrder(conn1, 46, "SYM2", 36, -5, 108);
+
+    db.saveOrder(conn1, 47, "SYM3", 5, 110, STATUS_OPEN, 0, 35);
+    db.saveOrder(conn1, 48, "SYM3", 6, 112, STATUS_OPEN, 0, 35);
+    db.saveOrder(conn1, 49, "SYM4", 5, 110, STATUS_OPEN, 0, 35);
+    db.saveOrder(conn1, 50, "SYM4", 6, 112, STATUS_OPEN, 0, 35);
+
+    std::thread t1(&DatabaseTest::testBuyOrderMulti, this, "SYM3");
+    std::thread t2(&DatabaseTest::testBuyOrderMulti, this, "SYM4");
+    t1.join();
+    t2.join();
+    conn1->disconnect();
+    conn2->disconnect();
+}
+
+void DatabaseTest::testBuyOrderMulti(std::string symbol) {
+    pqxx::connection *conn1 = db.connect();
+    pqxx::work w(*conn);
+    std::stringstream ss;
+
+    ss << db.getBuyOrder(w, 108, symbol, 35);
+    if (symbol == "SYM3") {
+        ss << "\nSELECT pg_sleep(3);";
+    }
+    pqxx::result r = w.exec(ss.str());
+    w.commit();
+    displayOrder(r);
 }
 
 int main(int argc, char *argv[]) {
@@ -390,6 +416,6 @@ int main(int argc, char *argv[]) {
     test.testUpdateBalanceMuti();
     test.testCancelOrderMuti();
     test.testOpenOrderMuti();
-    test.testHandleSellMuti();
+    // test.testHandleSellMuti();
     return EXIT_SUCCESS;
 }
