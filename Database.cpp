@@ -37,6 +37,7 @@ void Database::createTable(const char *fileName) {
     ifs.close();
 }
 
+/*
 void Database::saveAccount(int accountId, double balance) {
     if (hasAccount(accountId)) {
         throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
@@ -74,11 +75,11 @@ void Database::savePosition(std::string symbol, int accountId) {
 }
 
 double Database::getAmount(std::string symbol, int accountId) {
-    /*
+
     if (not hasPosition(symbol, accountId)) {
         return 0;
     }
-     */
+
     pqxx::work n(*conn);
     std::stringstream ss;
     ss << "SELECT amount FROM position"
@@ -87,6 +88,7 @@ double Database::getAmount(std::string symbol, int accountId) {
     // w.commit();
     return r.begin()[0].as<double>();
 }
+*/
 
 /*
 void Database::updateAmount(std::string symbol, int accountId, double amount) {
@@ -131,6 +133,7 @@ void Database::updateAmount(pqxx::connection conn, std::string symbol, int accou
 
 }
 
+/*
 bool Database::hasPosition(std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
@@ -151,7 +154,6 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
 }
 
 
-/*
 void Database::updatePosition(std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);
     std::stringstream ss;
@@ -177,7 +179,6 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
     }
 
 }
-*/
 
 void Database::placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice) {
     if (not hasAccount(accountId)) {
@@ -383,6 +384,7 @@ void Database::handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccou
         ++c;
     }
 }
+*/
 
 Database::~Database() {
     conn->disconnect();
