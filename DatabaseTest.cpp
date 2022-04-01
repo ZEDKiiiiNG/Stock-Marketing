@@ -58,6 +58,7 @@ void DatabaseTest::testOrder() {
  */
 
 void DatabaseTest::testException() {
+    std::cout << "test exception start\n";
     try {
         db.updatePosition(testconn, "SYM", 5, 100);
     } catch (std::invalid_argument & e) {
@@ -94,6 +95,7 @@ void DatabaseTest::testException() {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == ACCOUNT_NOT_EXIST_ERROR);
     }
+    std::cout << "test exception end\n";
 }
 
 
