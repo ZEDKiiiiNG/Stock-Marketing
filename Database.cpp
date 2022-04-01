@@ -5,7 +5,7 @@
 #include "Database.h"
 
 pqxx::connection * Database::connect() {
-    pqxx::connection * conn = new pqxx::connection("dbname=ACC_BBALL user=postgres password=passw0rd");
+    pqxx::connection * conn = new pqxx::connection(DB_INFO);
     if (!conn->is_open()) {
         throw std::invalid_argument("Can't open database\n");
     }
@@ -16,7 +16,7 @@ void Database::createTable(pqxx::connection * conn, const char *fileName) {
     std::ifstream ifs;
     ifs.open(fileName, std::ifstream::in);
     if (!ifs.is_open()) {
-        throw std::invalid_argument("ERROR: open sql file\n");
+        throw std::invalid_argument("Can't open sql file\n");
     }
     std::stringstream ss;
     std::string line;
