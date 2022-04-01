@@ -343,6 +343,22 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
     std::cout << '\n';
 }
 
+void DatabaseTest::testOpenOrderMuti() {
+    pqxx::connection *conn1 = db.connect();
+    pqxx::connection *conn2 = db.connect();
+    db.createAccount(conn1, 34, 1000);
+    std::thread t1(&Database::placeOrder, this->db, 42, "SYM2", 34, 3, 200);
+    std::thread t2(&Database::placeOrder, this->db, 43, "SYM2", 34, 4, 200);
+    t1.join();
+    t2.join();
+    conn1->disconnect();
+    conn2->disconnect();
+    r = db.getOrder(conn1, 42, 34);
+    displayOrder(r);
+    r = db.getOrder(conn1, 43, 34);
+    displayOrder(r);
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     /*
@@ -361,5 +377,6 @@ int main(int argc, char *argv[]) {
     test.testUpdatePositionMuti();
     test.testUpdateBalanceMuti();
     test.testCancelOrderMuti();
+    test.testOpenOrderMuti();
     return EXIT_SUCCESS;
 }

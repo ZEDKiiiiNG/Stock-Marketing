@@ -159,27 +159,39 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     return getOrder(conn, orderId, accountId);
 }
 
-/*
+
 void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symbol, int accountId, double amount, double limitPrice) {
     if (not hasAccount(accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
+    // atomically adjust and open order
+    std::stringstream ss;
     if (amount < 0) {
-        updateAmount(symbol, accountId, amount);  // negative amount, sell order, deduct shares
+        ss << getUpdateAmountQuery(w, symbol, accountId, amount); // negative amount, sell order, deduct shares
     }
     else {
-        updateBalance(accountId, -limitPrice * amount); // buy order, deduct total cost
+        ss << getUpdateBalanceQuery(w, accountId, -limitPrice * amount);
+        ss << "WAITFOR DELAY '00:00:03';";
     }
-    saveOrder(orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
-
+    ss << getSaveOrderQuery(w, orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
+    std::cout << ss.str() << '\n';
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e) {
+        std::cout << e.what() << '\n';
+        w.abort();
+    }
+    /*
     if (amount < 0) {
         handleSellOrder(orderId, symbol, accountId, amount, limitPrice);
     } else {
         handleBuyOrder(orderId, symbol, accountId, amount, limitPrice);
     }
+     */
 
 }
-*/
+
 
 
 // get query
