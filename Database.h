@@ -19,7 +19,7 @@ class Database {
 public:
     Database();
     pqxx::connection * connect();
-    void saveAccount(pqxx::connection * conn, int accountId, double balance);
+    void createAccount(pqxx::connection * conn, int accountId, double balance);
     void updatePosition(std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
     pqxx::result cancelOrder(int orderId, int accountId);
@@ -31,7 +31,7 @@ private:
     void savePosition(pqxx::connection * conn, std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId); // amount in position
     void updateAmount(pqxx::connection * conn1, std::string symbol, int accountId, double amount);  // amount in position
-    bool hasPosition(std::string symbol, int accountId);
+    bool hasPosition(pqxx::connection * conn, std::string symbol, int accountId);
     void updateBalance(int accountId, double amount);
     double getBalance(int accountId);
     pqxx::result getOrderByStatus(int orderId, int accountId, std::string status);

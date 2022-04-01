@@ -26,6 +26,7 @@ public:
     void testHandleBuy();
     void testMix();
     void testUpdateAmountMulti();
+    void testCreateAccountMulti();
 private:
     void displayOrder(pqxx::result & r);
 

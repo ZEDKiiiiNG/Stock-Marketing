@@ -39,6 +39,33 @@ void Database::createTable(pqxx::connection * conn, const char *fileName) {
     ifs.close();
 }
 
+bool Database::hasAccount(pqxx::connection * conn, int accountId) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM account"
+       << " WHERE account_id = " << accountId << ";";
+    pqxx::result r(n.exec(ss.str()));
+    return r.size() > 0;
+}
+
+
+void Database::createAccount(pqxx::connection * conn, int accountId, double balance) {
+    if (hasAccount(accountId)) {
+        throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
+    }
+    sleep(3);
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "INSERT INTO account (account_id, balance) VALUES (" << accountId << "," << balance << ");";
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e) {
+        std::cout << "error\n";
+        w.abort();
+    }
+}
+
 
 void Database::updateAmount(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);

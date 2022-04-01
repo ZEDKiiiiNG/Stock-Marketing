@@ -6,8 +6,8 @@
 
 /*
 void DatabaseTest::testSaveAccount() {
-    db.saveAccount(1, 10000);
-    db.saveAccount(2, 1500);
+    db.createAccount(1, 10000);
+    db.createAccount(2, 1500);
 }
 
 void DatabaseTest::testHasAccount() {
@@ -64,7 +64,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.saveAccount(1, 200);
+        db.createAccount(1, 200);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == ACCOUNT_EXIST_ERROR);
@@ -116,8 +116,8 @@ void DatabaseTest::testCancel() {
         assert(std::string(e.what()) == NO_OPEN_ORDER_ERROR);
     }
 
-    db.saveAccount(10, 10000);
-    db.saveAccount(11, 10000);
+    db.createAccount(10, 10000);
+    db.createAccount(11, 10000);
     db.updatePosition("UME", 10, 15);
     db.placeOrder(15, "UME", 10, -5, 100);
     db.placeOrder(16, "UME", 11, 3, 110);
@@ -142,8 +142,8 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
 }
 
 void DatabaseTest::testHandleSell() {
-    db.saveAccount(3, 10000);
-    db.saveAccount(4, 10000);
+    db.createAccount(3, 10000);
+    db.createAccount(4, 10000);
     db.saveOrder(3, "TEA", 5, 112, STATUS_OPEN, 0, 3);  // buy
     db.saveOrder(4, "TEA", 2, 114, STATUS_OPEN, 0, 3);
     db.saveOrder(5, "TEA", 3, 113, STATUS_OPEN, 0, 3);
@@ -168,9 +168,9 @@ void DatabaseTest::testHandleSell() {
     r = db.getOrder(6, 4);
     displayOrder(r);
 
-    db.saveAccount(5, 10000);
-    db.saveAccount(6, 10000);
-    db.saveAccount(7, 10000);
+    db.createAccount(5, 10000);
+    db.createAccount(6, 10000);
+    db.createAccount(7, 10000);
     db.updatePosition("HW", 6, 15);
     db.placeOrder(7, "HW", 5, 5, 112);  // buy
     db.placeOrder(8, "HW", 5, 3, 114);
@@ -203,8 +203,8 @@ void DatabaseTest::testHandleBuy() {
     pqxx::result r = db.getSellOrder(115, "TF", 4);
     displayOrder(r);
 
-    db.saveAccount(8, 10000);
-    db.saveAccount(9, 10000);
+    db.createAccount(8, 10000);
+    db.createAccount(9, 10000);
     db.updatePosition("STAR", 8, 16);
     db.placeOrder(11, "STAR", 8, -5, 116); // sell
     db.placeOrder(12, "STAR", 8, -2, 114);
@@ -227,8 +227,8 @@ void DatabaseTest::testHandleBuy() {
 }
 
 void DatabaseTest::testMix() {
-    db.saveAccount(13, 10000);
-    db.saveAccount(12, 10000);
+    db.createAccount(13, 10000);
+    db.createAccount(12, 10000);
     db.updatePosition("CHO", 13, 20);
     db.placeOrder(17, "CHO", 13, -5, 116); // sell
     db.placeOrder(18, "CHO", 13, -2, 114);
@@ -258,7 +258,7 @@ void DatabaseTest::testUpdateAmountMulti() {
     int accountId = 14;
     double amount1 = 5;
     double amount2 = 6;
-    db.saveAccount(conn1, accountId, 10000);
+    db.createAccount(conn1, accountId, 10000);
     db.savePosition(conn1, symbol, accountId);
     // db.updateAmount(symbol, accountId, 5);
 
@@ -268,11 +268,13 @@ void DatabaseTest::testUpdateAmountMulti() {
     t1.join();
     t2.join();
     conn1->disconnect();
-    conn2->disconnect();
-    // std::thread t2(&Database::updateAmount, this->db, symbol, accountId, amount2);
-    // t1.detach();
-    // t2.detach();
-    // std::cout << db.getAmount("WE", 14) << "\n";
+}
+
+void DatabaseTest::testCreateAccountMulti() {
+    pqxx::connection * conn1 = db.connect();
+    pqxx::connection * conn2 = db.connect();
+    std::thread t1(&Database::createAccount, this->db, conn1, 31, 1000);
+    std::thread t1(&Database::createAccount, this->db, conn2, 31, 2000);
 }
 
 int main(int argc, char *argv[]) {
@@ -289,5 +291,6 @@ int main(int argc, char *argv[]) {
     test.testMix();
      */
     test.testUpdateAmountMulti();
+    test.testCreateAccountMulti();
     return EXIT_SUCCESS;
 }
