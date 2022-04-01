@@ -353,7 +353,7 @@ void DatabaseTest::testOpenOrderMuti() {
     t2.join();
     conn1->disconnect();
     conn2->disconnect();
-    r = db.getOrder(conn1, 42, 34);
+    pqxx::result r = db.getOrder(conn1, 42, 34);
     displayOrder(r);
     r = db.getOrder(conn1, 43, 34);
     displayOrder(r);
