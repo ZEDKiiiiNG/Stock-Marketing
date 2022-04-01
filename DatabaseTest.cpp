@@ -442,7 +442,6 @@ int main(int argc, char *argv[]) {
     test.testHandleBuy();
     test.testMix();
 
-
     // test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
