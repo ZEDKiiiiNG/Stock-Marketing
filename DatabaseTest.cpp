@@ -5,14 +5,14 @@
 #include "DatabaseTest.h"
 
 void DatabaseTest::testSaveAccount() {
-    db.createAccount(1, 10000);
-    db.createAccount(2, 1500);
+    db.createAccount(testconn, 1, 10000);
+    db.createAccount(testconn, 2, 1500);
 }
 
 void DatabaseTest::testHasAccount() {
-    bool ans1 = db.hasAccount(1);
+    bool ans1 = db.hasAccount(testconn, 1);
     assert(ans1);
-    bool ans2 = db.hasAccount(3);
+    bool ans2 = db.hasAccount(testconn, test, 3);
     assert(not ans2);
 }
 
@@ -31,13 +31,13 @@ void DatabaseTest::testPosition() {
     assert(db.getAmount("SYM", 1) == 218.8);
      */
 
-    db.updatePosition("BTC", 2, 15);
-    assert(db.getAmount("BTC", 2) == 15);
-    db.updatePosition("BTC", 1, 22.2);
-    assert(db.getAmount("BTC", 1) == 22.2);
-    db.updatePosition("SYM", 1, 10);
-    assert(db.getAmount("SYM", 1) == 228.8);
-    assert(db.getAmount("ABC", 1) == 0);
+    db.updatePosition(testconn, "BTC", 2, 15);
+    assert(db.getAmount(testconn, "BTC", 2) == 15);
+    db.updatePosition(testconn, "BTC", 1, 22.2);
+    assert(db.getAmount(testconn, "BTC", 1) == 22.2);
+    db.updatePosition(testconn, "SYM", 1, 10);
+    assert(db.getAmount(testconn, "SYM", 1) == 228.8);
+    assert(db.getAmount(testconn, "ABC", 1) == 0);
 }
 
 /*

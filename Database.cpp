@@ -386,7 +386,7 @@ pqxx::result Database::getBuyOrder(pqxx::connection * conn, double sellLimit, st
 }
 */
 
-double Database::getAmount(std::string symbol, int accountId) {
+double Database::getAmount(pqxx::connection * conn, std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT amount FROM position"

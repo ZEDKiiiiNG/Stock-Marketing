@@ -29,7 +29,7 @@ private:
     bool hasAccount(pqxx::connection * conn, int accountId);
     void createTable(pqxx::connection * conn, const char * fileName);
     void savePosition(pqxx::connection * conn, std::string symbol, int accountId);
-    double getAmount(std::string symbol, int accountId); // amount in position
+
     void updateAmount(pqxx::connection * conn1, std::string symbol, int accountId, double amount);  // amount in position
     bool hasPosition(pqxx::connection * conn, std::string symbol, int accountId);
     void updateBalance(pqxx::connection * conn, int accountId, double amount);
@@ -69,6 +69,7 @@ private:
     // fort test
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
                    std::string status, double executePrice, int accountId);
+    double getAmount(pqxx::connection * conn, std::string symbol, int accountId); // amount in position
 
 };
 

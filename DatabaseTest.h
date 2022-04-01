@@ -15,6 +15,7 @@
 class DatabaseTest {
 private:
     Database db;
+    pqxx::connection * testconn = db.connect();
 public:
     void testSaveAccount();
     void testHasAccount();
