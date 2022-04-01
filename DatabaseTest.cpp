@@ -12,7 +12,7 @@ void DatabaseTest::testSaveAccount() {
 void DatabaseTest::testHasAccount() {
     bool ans1 = db.hasAccount(testconn, 1);
     assert(ans1);
-    bool ans2 = db.hasAccount(testconn, test, 3);
+    bool ans2 = db.hasAccount(testconn, 3);
     assert(not ans2);
 }
 
