@@ -56,8 +56,3 @@ void Database::updateAmount(pqxx::connection * conn1, std::string symbol, int ac
 
 }
 
-Database::~Database() {
-    conn->disconnect();
-    // delete conn;
-}
-
