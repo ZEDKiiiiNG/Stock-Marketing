@@ -288,6 +288,17 @@ void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbo
     w.commit();
 }
 
+pqxx::result Database::getBuyOrder(pqxx::connection * conn, double sellLimit, std::string symbol, int sellerAccountId) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM trade_order"
+       << " WHERE symbol = " << n.quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
+       << " AND status = " << n.quote(STATUS_OPEN) << " AND account_id != " << sellerAccountId
+       << " ORDER BY limit_price DESC, update_time ASC, order_id ASC";
+    return pqxx::result(n.exec(ss.str()));
+}
+
+
 
 
 

@@ -387,6 +387,7 @@ void DatabaseTest::testHandleSellMuti() {
 
 void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     pqxx::connection *conn1 = db.connect();
+    /*
     pqxx::work w(*conn1);
     std::stringstream ss;
 
@@ -396,6 +397,8 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     }
     pqxx::result r = w.exec(ss.str());
     w.commit();
+     */
+    pqxx::result r = db.getBuyOrder(conn1, 108, "SYM3", 36);
     std::cout << "size " << symbol << ": " << r.size() << '\n';
     displayOrder(r);
 }
