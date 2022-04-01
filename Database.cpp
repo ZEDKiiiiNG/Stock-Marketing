@@ -103,7 +103,7 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
     }
     pqxx::work w(*conn);
     try {
-        w.exec(getUpdatePositionQuery(w, symbol, accountId, amount));
+        w.exec(getUpdatePositionQuery(&w, symbol, accountId, amount));
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << e.what() << '\n';
