@@ -319,6 +319,7 @@ void DatabaseTest::testCancelOrderMuti() {
      */
 
     // add sleep after get open order, work
+    /*
     std::thread t1(&Database::cancelOrder, this->db, conn1, 41, 33);
     std::thread t2(&Database::cancelOrder, this->db, conn2, 41, 33);
     t1.join();
@@ -327,6 +328,7 @@ void DatabaseTest::testCancelOrderMuti() {
     conn2->disconnect();
     r = db.getOrder(conn1, 41, 33);
     displayOrder(r);
+     */
 }
 
 void DatabaseTest::displayOrder(pqxx::result & r) {
