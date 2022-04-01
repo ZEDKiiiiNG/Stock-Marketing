@@ -141,7 +141,7 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
         w.commit();
     } catch (pqxx::sql_error &e) {
         w.abort();
-        std::cout << e.what() << '\n';
+        std::cout << "here!!!!!!" << e.what() << '\n';
         if (amount < 0) {
             throw std::invalid_argument(INSUFFICIENT_SHARE_ERROR);
         } else {
