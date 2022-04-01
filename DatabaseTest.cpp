@@ -390,5 +390,6 @@ int main(int argc, char *argv[]) {
     test.testUpdateBalanceMuti();
     test.testCancelOrderMuti();
     test.testOpenOrderMuti();
+    test.testHandleSellMuti();
     return EXIT_SUCCESS;
 }
