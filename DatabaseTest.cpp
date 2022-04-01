@@ -295,7 +295,7 @@ void DatabaseTest::testUpdatePositionMuti() {
     pqxx::connection * conn1 = db.connect();
     pqxx::connection * conn2 = db.connect();
     pqxx::connection * conn3 = db.connect();
-    //db.createAccount(conn1, 32, 10000);
+    db.createAccount(conn1, 32, 10000);
     std::thread t1(&Database::updatePosition, this->db, conn1, "SYM1", 32, 2);
     std::thread t2(&Database::updatePosition, this->db, conn2, "SYM1", 32, 3);
     std::thread t3(&Database::updatePosition, this->db, conn3, "SYM1", 32, 5);
@@ -307,10 +307,12 @@ void DatabaseTest::testUpdatePositionMuti() {
     conn3->disconnect();
 }
 
+/*
 void DatabaseTest::testUpdateBalanceMuti() {
     pqxx::connection * conn1 = db.connect();
     db.updateBalance(conn1, 32, -10001);
 }
+ */
 
 int main(int argc, char *argv[]) {
     DatabaseTest test;
@@ -328,6 +330,6 @@ int main(int argc, char *argv[]) {
     // test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
-    test.testUpdateBalanceMuti();
+    //test.testUpdateBalanceMuti();
     return EXIT_SUCCESS;
 }

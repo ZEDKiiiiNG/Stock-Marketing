@@ -6,7 +6,6 @@ CREATE TABLE account (
     account_id INT,
     balance DOUBLE PRECISION DEFAULT 0,
     PRIMARY KEY (account_id)
-    CHECK (balance >= 0)
 );
 
 CREATE TABLE position (
