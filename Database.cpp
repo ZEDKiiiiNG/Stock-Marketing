@@ -182,7 +182,7 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
     }
     /*
     if (amount < 0) {
-        handleSellOrder(orderId, symbol, accountId, amount, limitPrice);
+        handleSellOrder(conn, orderId, symbol, accountId, amount, limitPrice);
     } else {
         handleBuyOrder(orderId, symbol, accountId, amount, limitPrice);
     }
@@ -195,9 +195,9 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
     pqxx::work w(*conn);
     std::string q = getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId);
     pqxx::result r = w.exec(q);
-    std::cout << getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId) << '\n';
+
+    // atmoic execute
     pqxx::result::const_iterator c = r.begin();
-    /*
     while (sellAmount != 0 && c != r.end()) {
         int buyOrderId = c[0].as<int>();
         double buyAmount = c[2].as<double>();
@@ -205,17 +205,55 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
         double buyLimit = c[3].as<double>();
         double executePrice = c[3].as<double>();
         int buyerAccountId = c[7].as<int>();
-        executeBuyOrder(buyOrderId, symbol, buyerAccountId, executeAmount,
-                        buyAmount - executeAmount, buyLimit, executePrice);
-        executeSellOrder(sellOrderId, symbol, sellerAccountId, executeAmount,
-                         sellAmount + executeAmount, executePrice);
+        std::stringstream ss;
+        ss << getExecuteBuyOrderQuery(&w, buyOrderId, symbol, buyerAccountId, executeAmount,
+                                      buyAmount - executeAmount, buyLimit, executePrice);
+        ss << "\n" << getExecuteSellOrderQuery(&w, sellOrderId, symbol, sellerAccountId, executeAmount,
+                                       sellAmount + executeAmount, executePrice);
         sellAmount += executeAmount;
         ++c;
     }
-     */
-    w.commit();
-
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e) {
+        std::cout << e.what() << '\n';
+        w.abort();
+    }
 }
+
+void Database::handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
+                              double buyLimit) {
+    pqxx::work w(*conn);
+    std::string q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
+    pqxx::result r = w.exec(q);
+
+    // atomic exec
+    pqxx::result::const_iterator c = r.begin();
+    while (buyAmount != 0 && c != r.end()) {
+        int sellOrderId = c[0].as<int>();
+        double sellAmount = c[2].as<double>();
+        double executeAmount = std::min(-sellAmount, buyAmount);
+        double sellLimit = c[3].as<double>();
+        double executePrice = c[3].as<double>();
+        int sellerAccountId = c[7].as<int>();
+        ss << getExecuteBuyOrderQuery(&w, buyOrderId, symbol, buyerAccountId, executeAmount,
+                                      buyAmount - executeAmount, buyLimit, executePrice);
+        ss << "\n" << getExecuteSellOrderQuery(&w, sellOrderId, symbol, sellerAccountId, executeAmount,
+                                               sellAmount + executeAmount, executePrice);
+        buyAmount -= executeAmount;
+        ++c;
+    }
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e) {
+        std::cout << e.what() << '\n';
+        w.abort();
+    }
+}
+
+
 
 // get query
 std::string Database::getUpdateBalanceQuery(pqxx::work * w, int accountId, double amount) {
@@ -278,10 +316,10 @@ std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std
                                               int buyerAccountId, double executeAmount,
                                               double remainAmount, double buyLimit, double executePrice) {
     std::stringstream ss;
-    ss << getUpdatePositionQuery(w, symbol, buyerAccountId, executeAmount)
-        << "\n" << getUpdateBalanceQuery(w, buyerAccountId, executeAmount * (buyLimit - executePrice))
-        << "\n" << getUpdateOpenOrderQuery(w, buyOrderId, buyerAccountId, remainAmount)
-        << "\n" << getSaveOrderQuery(w, buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED,
+    ss << getUpdatePositionQuery(w, symbol, buyerAccountId, executeAmount);
+    ss << "\n" << getUpdateBalanceQuery(w, buyerAccountId, executeAmount * (buyLimit - executePrice));
+    ss << "\n" << getUpdateOpenOrderQuery(w, buyOrderId, buyerAccountId, remainAmount);
+    ss << "\n" << getSaveOrderQuery(w, buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED,
                                      executePrice, buyerAccountId);
     return ss.str();
 }
@@ -309,13 +347,22 @@ std::string Database::getExecuteSellOrderQuery(pqxx::work *w, int sellOrderId, s
                                                int sellerAccountId, double executeAmount,
                                                double remainAmount, double executePrice) {
     std::stringstream ss;
-    ss << getUpdateBalanceQuery(w, sellerAccountId, executeAmount * executePrice)
-            << "\n" << getUpdateOpenOrderQuery(w, sellOrderId, sellerAccountId, remainAmount)
-            << "\n" << getSaveOrderQuery(w, sellOrderId, symbol, -executeAmount, 0, STATUS_EXECUTED,
+    ss << getUpdateBalanceQuery(w, sellerAccountId, executeAmount * executePrice);
+    ss << "\n" << getUpdateOpenOrderQuery(w, sellOrderId, sellerAccountId, remainAmount);
+    ss << "\n" << getSaveOrderQuery(w, sellOrderId, symbol, -executeAmount, 0, STATUS_EXECUTED,
                                          executePrice, sellerAccountId);
     return ss.str();
 }
 
+std::string Database::getSellOrder(pqxx::work *w, double buyLimit, std::string symbol, int buyerAccountId) {
+    std::stringstream ss;
+    ss << "SELECT * FROM trade_order"
+       << " WHERE symbol = " << w->quote(symbol) << " AND amount < 0 AND limit_price <= " << buyLimit
+       << " AND status = " << w->quote(STATUS_OPEN) << " AND account_id != " << buyerAccountId
+       << " ORDER BY limit_price ASC, update_time ASC, order_id ASC"
+       << " FOR UPDATE";
+    return ss.str();
+}
 
 
 
