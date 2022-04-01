@@ -274,8 +274,9 @@ std::string Database::getBuyOrderQuery(pqxx::work *w, double sellLimit, std::str
 }
 
 
-std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
-                               double remainAmount, double buyLimit, double executePrice) {
+std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std::string symbol,
+                                              int buyerAccountId, double executeAmount,
+                                              double remainAmount, double buyLimit, double executePrice) {
     std::stringstream ss;
     ss << getUpdatePositionQuery(&w, symbol, buyerAccountId, executeAmount)
         << "\n" << getUpdateBalanceQuery(&w, executeAmount * (buyLimit - executePrice))
