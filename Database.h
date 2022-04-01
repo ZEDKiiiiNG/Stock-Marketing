@@ -17,7 +17,6 @@
 class Database {
 
 public:
-    Database();
     pqxx::connection * connect();
     void saveAccount(pqxx::connection * conn, int accountId, double balance);
     void updatePosition(std::string symbol, int accountId, double amount);
