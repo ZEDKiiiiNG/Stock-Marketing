@@ -171,13 +171,13 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
         updateBalance(accountId, -limitPrice * amount); // buy order, deduct total cost
     }
     saveOrder(orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
-    /*
+
     if (amount < 0) {
         handleSellOrder(orderId, symbol, accountId, amount, limitPrice);
     } else {
         handleBuyOrder(orderId, symbol, accountId, amount, limitPrice);
     }
-     */
+
 }
 */
 
