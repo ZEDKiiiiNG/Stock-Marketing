@@ -377,23 +377,26 @@ void DatabaseTest::testHandleSellMuti() {
     db.saveOrder(conn1, 49, "SYM4", 5, 110, STATUS_OPEN, 0, 35);
     db.saveOrder(conn1, 50, "SYM4", 6, 112, STATUS_OPEN, 0, 35);
 
-    std::thread t1(&DatabaseTest::testBuyOrderMulti, this, "SYM3");
-    std::thread t2(&DatabaseTest::testBuyOrderMulti, this, "SYM4");
+    // t2 will not blocked by t1 if no row overlap
+    std::thread t1(&DatabaseTest::testBuyOrderMulti, this, "SYM3", 36, 108);
+    std::thread t2(&DatabaseTest::testBuyOrderMulti, this, "SYM4", 36, 108);
+    std::thread t3(&DatabaseTest::testBuyOrderMulti, this, "SYM3", 36, 111);
     t1.join();
     t2.join();
+    t3.join();
     conn1->disconnect();
     conn2->disconnect();
 }
 
-void DatabaseTest::testBuyOrderMulti(std::string symbol) {
+void DatabaseTest::testBuyOrderMulti(std::string symbol, int accountId, double sellLimitPrice) {
     pqxx::connection *conn1 = db.connect();
     pqxx::work w(*conn1);
     std::stringstream ss;
 
-    ss << db.getBuyOrderQuery(&w, 108, symbol, 36);
+    ss << db.getBuyOrderQuery(&w, sellLimitPrice, symbol, accountId);
     std::cout << ss.str() << '\n';
     pqxx::result r = w.exec(ss.str());
-    if (symbol == "SYM3") {
+    if (symbol == "SYM3" && sellLimitPrice == 108) {
         w.exec("SELECT pg_sleep(3);");
     }
     w.commit();

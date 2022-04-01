@@ -35,7 +35,7 @@ public:
 private:
     void displayOrder(pqxx::result & r);
     void handleCreateAccount(pqxx::connection * conn, int accountId, double balance);
-    void testBuyOrderMulti(std::string symbol);
+    void testBuyOrderMulti(std::string symbol, int accountId, double sellLimitPrice);
 
 };
 
