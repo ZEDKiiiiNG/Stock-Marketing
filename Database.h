@@ -69,7 +69,7 @@ private:
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
                    std::string status, double executePrice, int accountId);
     double getAmount(pqxx::connection * conn, std::string symbol, int accountId); // amount in position
-    double getBalance(qxx::connection * conn, int accountId);
+    double getBalance(pqxx::connection * conn, int accountId);
 
 };
 
