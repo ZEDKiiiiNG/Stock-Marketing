@@ -221,33 +221,31 @@ void DatabaseTest::testHandleBuy() {
     displayOrder(r);
 }
 
-/*
 
 void DatabaseTest::testMix() {
-    db.createAccount(13, 10000);
-    db.createAccount(12, 10000);
-    db.updatePosition("CHO", 13, 20);
-    db.placeOrder(17, "CHO", 13, -5, 116); // sell
-    db.placeOrder(18, "CHO", 13, -2, 114);
-    db.placeOrder(19, "CHO", 13, -3, 113);
-    db.placeOrder(20, "CHO", 12, 4, 115); // buy
-    db.placeOrder(21, "CHO", 13, -6, 110);
-    db.placeOrder(22, "CHO", 12, 9, 118);
+    db.createAccount(testconn, 13, 10000);
+    db.createAccount(testconn, 12, 10000);
+    db.updatePosition(testconn, "CHO", 13, 20);
+    db.placeOrder(testconn, 17, "CHO", 13, -5, 116); // sell
+    db.placeOrder(testconn, 18, "CHO", 13, -2, 114);
+    db.placeOrder(testconn, 19, "CHO", 13, -3, 113);
+    db.placeOrder(testconn, 20, "CHO", 12, 4, 115); // buy
+    db.placeOrder(testconn, 21, "CHO", 13, -6, 110);
+    db.placeOrder(testconn, 22, "CHO", 12, 9, 118);
 
-    pqxx::result r = db.getOrder(17, 13);
+    pqxx::result r = db.getOrder(testconn, 17, 13);
     displayOrder(r);
-    r = db.getOrder(18, 13);
+    r = db.getOrder(testconn, 18, 13);
     displayOrder(r);
-    r = db.getOrder(19, 13);
+    r = db.getOrder(testconn, 19, 13);
     displayOrder(r);
-    r = db.getOrder(20, 12);
+    r = db.getOrder(testconn, 20, 12);
     displayOrder(r);
-    r = db.getOrder(21, 13);
+    r = db.getOrder(testconn, 21, 13);
     displayOrder(r);
-    r = db.getOrder(22, 13);
+    r = db.getOrder(testconn, 22, 13);
     displayOrder(r);
 }
- */
 
 /*
 void DatabaseTest::testUpdateAmountMulti() {
@@ -442,7 +440,7 @@ int main(int argc, char *argv[]) {
     test.testHandleSell();
 
     test.testHandleBuy();
-    // test.testMix();
+    test.testMix();
 
 
     // test.testUpdateAmountMulti();
