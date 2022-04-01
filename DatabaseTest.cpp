@@ -69,7 +69,7 @@ void DatabaseTest::testException() {
     try {
         db.createAccount(testconn, 1, 200);
     } catch (std::invalid_argument & e) {
-        std::cout << e.what() << '\n';
+        std::cout << "dddd" << e.what() << '\n';
         assert(std::string(e.what()) == ACCOUNT_EXIST_ERROR);
     }
 
