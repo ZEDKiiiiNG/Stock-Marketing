@@ -441,7 +441,7 @@ int main(int argc, char *argv[]) {
     test.testPosition();
 
     // test.testOrder();
-    //test.testException();
+    test.testException();
 
     test.testCancel();
 
