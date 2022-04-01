@@ -136,7 +136,7 @@ pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accoun
 pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int accountId) {
     pqxx::work w(*conn);
     std::stringstream ss1;
-    ss1 << getOpenOrderQuery(&w, orderId, accountId) << ";";
+    ss1 << getOpenOrderQuery(&w, orderId, accountId);
     pqxx::result r = w.exec(ss1.str());
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
@@ -156,7 +156,7 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
         // buy order, refund price
         ss2 << "\n" << getUpdateBalanceQuery(accountId, limitPrice * amount);
     }
-    ss2 << "\n" << getUpdateCancelOrderQuery(&w, orderId, accountId) << ";";
+    ss2 << "\n" << getUpdateCancelOrderQuery(&w, orderId, accountId);
     std::cout << ss2.str() << "\n";
     try {
         w.exec(ss2.str());
@@ -168,21 +168,21 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     return getOrder(conn, orderId, accountId);
 }
 
+// get query
 std::string Database::getUpdateBalanceQuery(int accountId, double amount) {
     std::stringstream ss;
     ss << "UPDATE account"
        << " SET balance = balance +" << amount
-       << " WHERE account_id = " << accountId;
+       << " WHERE account_id = " << accountId << ";";
     return ss.str();
 }
-
 
 std::string Database::getUpdateAmountQuery(pqxx::work * w, std::string symbol, int accountId, double amount) {
     std::stringstream ss;
     ss << "UPDATE position"
        << " SET amount = amount + " << amount
        << " WHERE account_id = " << accountId
-       << " AND symbol = " << w->quote(symbol);
+       << " AND symbol = " << w->quote(symbol) << ";";
     return  ss.str();
 }
 
@@ -192,7 +192,7 @@ std::string Database::getUpdateCancelOrderQuery(pqxx::work * w, int orderId, int
        << " SET status = " << w->quote(STATUS_CANCELLED)
        << ", update_time = " << time(NULL)
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
-       << " AND status = " << w->quote(STATUS_OPEN);
+       << " AND status = " << w->quote(STATUS_OPEN) << ";";
     return ss.str();
 }
 
@@ -201,7 +201,7 @@ std::string Database::getOpenOrderQuery(pqxx::work * w, int orderId, int account
     ss << "SELECT * FROM trade_order"
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
        << " AND status = " << w->quote(STATUS_OPEN)
-       << " FOR UPDATE";
+       << " FOR UPDATE" << ";";
     return ss.str();
 }
 
