@@ -66,14 +66,17 @@ void Database::savePosition(std::string symbol, int accountId) {
 }
 
 double Database::getAmount(std::string symbol, int accountId) {
+    /*
     if (not hasPosition(symbol, accountId)) {
         return 0;
     }
-    pqxx::nontransaction n(*conn);
+     */
+    pqxx::work w(*conn);
     std::stringstream ss;
     ss << "SELECT amount FROM position"
         << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) << ";";
-    pqxx::result r(n.exec(ss.str()));
+    pqxx::result r(w.exec(ss.str()););
+    w.commit();
     return r.begin()[0].as<double>();
 }
 
