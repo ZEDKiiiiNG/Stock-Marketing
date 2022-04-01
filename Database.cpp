@@ -62,6 +62,7 @@ void Database::createAccount(pqxx::connection * conn, int accountId, double bala
     }
 }
 
+/*
 void Database::updateAmount(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);
     try {
@@ -75,6 +76,7 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
         w.abort();
     }
 }
+ */
 
 void Database::updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     if (not hasAccount(conn, accountId)) {
