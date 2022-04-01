@@ -71,12 +71,12 @@ double Database::getAmount(std::string symbol, int accountId) {
         return 0;
     }
      */
-    pqxx::work w(*conn);
+    pqxx::work n(*conn);
     std::stringstream ss;
     ss << "SELECT amount FROM position"
-        << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
-    pqxx::result r(w.exec(ss.str()));
-    w.commit();
+        << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) << ";";
+    pqxx::result r(n.exec(ss.str()));
+    // w.commit();
     return r.begin()[0].as<double>();
 }
 
