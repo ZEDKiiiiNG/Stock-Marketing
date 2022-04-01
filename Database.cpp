@@ -59,7 +59,7 @@ void Database::createAccount(pqxx::connection * conn, int accountId, double bala
     } catch (pqxx::sql_error &e) {
         std::cout << e.what() << '\n';
         w.abort();
-        throw std::invalid_argument(ACCOUNT_EXI ST_ERROR);
+        throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
     }
 }
 
