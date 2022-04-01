@@ -82,12 +82,13 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.placeOrder(testconn, 1, "BTC", 25, -11, 110); // sell
+        db.placeOrder(testconn, 1, "BTC", -2, -11, 110); // sell
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);
-        assert(db.getAmount(testconn, "BTC", 2) == 22.2);
+        assert(db.getAmount(testconn, "BTC", 1) == 22.2);
     }
+    assert(db.getAmount(testconn, "BTC", 1) == 20.2);
 
     try {
         db.placeOrder(testconn, 1, "BTC", 3, -5, 110);
