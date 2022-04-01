@@ -159,7 +159,9 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
 void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
                                double sellAmount, double sellLimit) {
     pqxx::work w(*conn);
-    std::string q = getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId);
+    std::string q = getLockOrderQuery(&w, sellOrderId, sellerAccountId);
+    w.exec(q);
+    q = getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId);
     pqxx::result r = w.exec(q);
 
     // atmoic execute
@@ -191,7 +193,9 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
 void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
                               double buyLimit) {
     pqxx::work w(*conn);
-    std::string q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
+    std::string q = getLockOrderQuery(&w, buyOrderId, buyerAccountId);
+    w.exec(q);
+    q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
     pqxx::result r = w.exec(q);
 
     // atomic exec
@@ -326,6 +330,14 @@ std::string Database::getSellOrderQuery(pqxx::work *w, double buyLimit, std::str
        << " AND status = " << w->quote(STATUS_OPEN) << " AND account_id != " << buyerAccountId
        << " ORDER BY limit_price ASC, update_time ASC, order_id ASC"
        << " FOR UPDATE";
+    return ss.str();
+}
+
+std::string Database::getLockOrderQuery(pqxx::work *w, int orderId, int accountId) {
+    std::stringstream ss;
+    ss << "SELECT * FROM trade_order"
+    << " WHERE order_id = " << orderId << " AND account_id = " << accountId
+    << " FOR UPDATE;";
     return ss.str();
 }
 
