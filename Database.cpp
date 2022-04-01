@@ -102,6 +102,7 @@ void Database::updatePosition(qxx::connection * conn, std::string symbol, int ac
 
 }
 
+/*
 bool Database::hasPosition(std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
