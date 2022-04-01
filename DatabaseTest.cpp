@@ -231,7 +231,7 @@ void DatabaseTest::testMix() {
     db.placeOrder(testconn, 19, "CHO", 13, -3, 113);
     db.placeOrder(testconn, 20, "CHO", 12, 4, 115); // buy
     db.placeOrder(testconn, 21, "CHO", 13, -6, 110);
-    //db.placeOrder(testconn, 22, "CHO", 12, 9, 118);
+    db.placeOrder(testconn, 22, "CHO", 12, 9, 118);
 
     pqxx::result r = db.getOrder(testconn, 17, 13);
     displayOrder(r);
