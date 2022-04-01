@@ -219,7 +219,7 @@ std::string Database::getOpenOrderQuery(pqxx::work * w, int orderId, int account
     return ss.str();
 }
 
-std::string Database::getSaveOrderQuery(int *w, int orderId, std::string symbol, double amount, double limitPrice,
+std::string Database::getSaveOrderQuery(pqxx::work *w, int orderId, std::string symbol, double amount, double limitPrice,
                                         std::string status, double executePrice, int accountId) {
     std::stringstream ss;
     ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
