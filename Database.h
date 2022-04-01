@@ -19,7 +19,6 @@ class Database {
 public:
     std::mutex *  mtx;
     Database();
-    ~Database();
     pqxx::connection * connect();
     void createAccount(pqxx::connection * conn, int accountId, double balance);
     void updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount);
