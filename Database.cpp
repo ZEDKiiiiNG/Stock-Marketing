@@ -107,7 +107,7 @@ void Database::updateBalance(pqxx::connection * conn, int accountId, double amou
     try {
         w.exec(ss.str());
         w.commit();
-    } catch (std::exception &e) {
+    } catch (pqxx::sql_error &e) {
         std::cout << e.what();
         w.abort();
     }
