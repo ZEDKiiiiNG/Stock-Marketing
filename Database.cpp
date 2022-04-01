@@ -203,7 +203,7 @@ std::string Database::getOpenOrderQuery(pqxx::work * w, int orderId, int account
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
-       << " AND status = " << w->quote(status)
+       << " AND status = " << w->quote(STATUS_OPEN)
        << " FOR UPDATE";
     return ss.str();
 }
