@@ -73,7 +73,6 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << "error\n";
         w.abort();
     }
 }
