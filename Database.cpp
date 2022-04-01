@@ -103,7 +103,8 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
     }
     pqxx::work w(*conn);
     try {
-        w.exec(getUpdatePositionQuery(&w, symbol, accountId, amount));
+        std::string q = getUpdatePositionQuery(&w, symbol, accountId, amount);
+        w.exec(q);
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << e.what() << '\n';
@@ -123,7 +124,8 @@ pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accoun
 
 pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int accountId) {
     pqxx::work w(*conn);
-    pqxx::result r = w.exec(getOpenOrderQuery(&w, orderId, accountId));
+    std::string q = getOpenOrderQuery(&w, orderId, accountId);
+    pqxx::result r = w.exec(q);
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
@@ -191,7 +193,8 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
 void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
                                double sellAmount, double sellLimit) {
     pqxx::work w(*conn);
-    pqxx::result r = w.exec(getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId));
+    std::string q = etBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId)''
+    pqxx::result r = w.exec(q);
     std::cout << getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId) << '\n';
     pqxx::result::const_iterator c = r.begin();
     /*
@@ -270,17 +273,16 @@ std::string Database::getBuyOrderQuery(pqxx::work *w, double sellLimit, std::str
     return ss.str();
 }
 
-/*
 std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
                                double remainAmount, double buyLimit, double executePrice) {
     std::stringstream ss;
-    updatePosition(symbol, buyerAccountId, executeAmount);
+    ss << getUpdatePositionQuery(w, symbol, buyerAccountId, executeAmount)
+        << "\n" << getUpdateBalanceQuery(w, executeAmount * (buyLimit - executePrice))
     // refund if buyer's limit price is higher than execution price
     updateBalance(buyerAccountId, executeAmount * (buyLimit - executePrice));
     updateOpenOrder(buyOrderId, buyerAccountId, remainAmount);
     saveOrder(buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
 }
- */
 
 std::string Database::getUpdatePositionQuery(pqxx::work *w, std::string symbol, int accountId, double amount) {
     std::stringstream ss;
@@ -297,11 +299,8 @@ std::string Database::getUpdatePositionQuery(pqxx::work *w, std::string symbol, 
 void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
                          std::string status, double executePrice, int accountId) {
     pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
-       << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
-       << w.quote(status) << "," << time(NULL) << "," << executePrice << "," << accountId << ");";
-    w.exec(getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, status, executePrice, accountId));
+    std::string q = getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, status, executePrice, accountId);
+    w.exec(q);
     w.commit();
 }
 
