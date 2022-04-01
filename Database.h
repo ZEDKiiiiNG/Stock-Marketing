@@ -28,24 +28,10 @@ public:
 private:
     bool hasAccount(pqxx::connection * conn, int accountId);
     void createTable(pqxx::connection * conn, const char * fileName);
-    void savePosition(pqxx::connection * conn, std::string symbol, int accountId);
-
-    void updateAmount(pqxx::connection * conn1, std::string symbol, int accountId, double amount);  // amount in position
     bool hasPosition(pqxx::connection * conn, std::string symbol, int accountId);
-    void updateBalance(pqxx::connection * conn, int accountId, double amount);
-    pqxx::result getOrderByStatus(pqxx::connection * conn, int orderId, int accountId, std::string status);
-    void updateCancelOrder(int orderId, int accountId);
     void handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
                          double sellAmount, double sellLimit);
     void handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
-    pqxx::result getBuyOrder(pqxx::connection * conn, double sellLimit, std::string symbol, int sellAccountId);
-    void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
-                         double remainAmount, double buyLimit, double executePrice);
-    void saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status, double executePrice, int accountId);
-    void updateOpenOrder(int orderId, int accountId, double amount);
-    void executeSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double executeAmount,
-                          double remainAmount, double executePrice);
-    pqxx::result getSellOrder(double buyLimit, std::string symbol, int buyerAccountId);
 
     // get query
     std::string getUpdateAmountQuery(pqxx::work * w, std::string symbol, int accountId, double amount);

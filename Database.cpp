@@ -63,40 +63,6 @@ void Database::createAccount(pqxx::connection * conn, int accountId, double bala
     }
 }
 
-
-void Database::updateAmount(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
-    pqxx::work w(*conn);
-    try {
-        std::stringstream ss;
-        ss << "UPDATE position"
-           << " SET amount = amount + " << amount
-           << " WHERE account_id = " << accountId
-           << " AND symbol = " << w.quote(symbol) << ";";
-        w.exec(ss.str());
-        w.commit();
-    } catch (pqxx::sql_error &e) {
-        std::cout << e.what();
-        w.abort();
-        throw std::invalid_argument(INSUFFICIENT_SHARE_ERROR);
-    }
-}
-
-void Database::updateBalance(pqxx::connection * conn, int accountId, double amount) {
-    pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "UPDATE account"
-       << " SET balance = balance +" << amount
-       << " WHERE account_id = " << accountId << ";";
-    try {
-        w.exec(ss.str());
-        w.commit();
-    } catch (pqxx::sql_error &e) {
-        std::cout << e.what();
-        w.abort();
-        // throw std::invalid_argument(INSUFFICIENT_BALANCE_ERROR);
-    }
-}
-
 void Database::updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     if (not hasAccount(conn, accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
@@ -253,8 +219,6 @@ void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::stri
     }
 }
 
-
-
 // get query
 std::string Database::getUpdateBalanceQuery(pqxx::work * w, int accountId, double amount) {
     std::stringstream ss;
@@ -375,18 +339,6 @@ void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbo
     w.commit();
 }
 
-/*
-pqxx::result Database::getBuyOrder(pqxx::connection * conn, double sellLimit, std::string symbol, int sellerAccountId) {
-    pqxx::nontransaction n(*conn);
-    std::stringstream ss;
-    ss << "SELECT * FROM trade_order"
-       << " WHERE symbol = " << n.quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
-       << " AND status = " << n.quote(STATUS_OPEN) << " AND account_id != " << sellerAccountId
-       << " ORDER BY limit_price DESC, update_time ASC, order_id ASC";
-    return pqxx::result(n.exec(ss.str()));
-}
-*/
-
 double Database::getAmount(pqxx::connection * conn, std::string symbol, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
@@ -404,7 +356,6 @@ double Database::getBalance(pqxx::connection * conn, int accountId) {
     pqxx::result r(n.exec(ss.str()));
     return r.begin()[0].as<double>();
 }
-
 
 
 
