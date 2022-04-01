@@ -198,7 +198,7 @@ void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::stri
     pqxx::work w(*conn);
     // std::string q = getLockOrderQuery(&w, buyOrderId, buyerAccountId);
     // w.exec(q);
-    q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
+    std::string q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
     pqxx::result r = w.exec(q);
 
     // atomic exec
