@@ -21,7 +21,7 @@ public:
     pqxx::connection * connect();
     void createAccount(pqxx::connection * conn, int accountId, double balance);
     void updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount);
-    void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
+    void placeOrder(pqxx::connection * conn, int orderId, std::string symbol, int accountId, double amount, double limitPrice);
     pqxx::result cancelOrder(pqxx::connection * conn, int orderId, int accountId);
     pqxx::result getOrder(pqxx::connection * conn, int orderId, int accountId);
     friend class DatabaseTest;
@@ -52,6 +52,8 @@ private:
     std::string getUpdateBalanceQuery(int accountId, double amount);
     std::string getUpdateCancelOrderQuery(pqxx::work * w, int orderId, int accountId);
     std::string getOpenOrderQuery(pqxx::work * w, int orderId, int accountId);
+    std::string getSaveOrderQuery(pqxx::work * w, int orderId, std::string symbol, double amount, double limitPrice,
+                                  std::string status, double executePrice, int accountId);
 
     // fort test
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,

@@ -159,6 +159,29 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     return getOrder(conn, orderId, accountId);
 }
 
+/*
+void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symbol, int accountId, double amount, double limitPrice) {
+    if (not hasAccount(accountId)) {
+        throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
+    }
+    if (amount < 0) {
+        updateAmount(symbol, accountId, amount);  // negative amount, sell order, deduct shares
+    }
+    else {
+        updateBalance(accountId, -limitPrice * amount); // buy order, deduct total cost
+    }
+    saveOrder(orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
+    /*
+    if (amount < 0) {
+        handleSellOrder(orderId, symbol, accountId, amount, limitPrice);
+    } else {
+        handleBuyOrder(orderId, symbol, accountId, amount, limitPrice);
+    }
+     */
+}
+*/
+
+
 // get query
 std::string Database::getUpdateBalanceQuery(int accountId, double amount) {
     std::stringstream ss;
@@ -196,6 +219,14 @@ std::string Database::getOpenOrderQuery(pqxx::work * w, int orderId, int account
     return ss.str();
 }
 
+std::string Database::getSaveOrderQuery(int *w, int orderId, std::string symbol, double amount, double limitPrice,
+                                        std::string status, double executePrice, int accountId) {
+    std::stringstream ss;
+    ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
+       << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
+       << w.quote(status) << "," << time(NULL) << "," << executePrice << "," << accountId << ");";
+    return ss.str();
+}
 
 // for test
 void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice, std::string status,
@@ -205,7 +236,7 @@ void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbo
     ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
        << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
        << w.quote(status) << "," << time(NULL) << "," << executePrice << "," << accountId << ");";
-    w.exec(ss.str());
+    w.exec(getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, executePrice, accountId));
     w.commit();
 }
 
