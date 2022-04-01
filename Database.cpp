@@ -282,7 +282,7 @@ std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std
 }
  */
 
-std::string Database::getUpdatePositionQuery(int *w, std::string symbol, int accountId, double amount) {
+std::string Database::getUpdatePositionQuery(pqxx::work *w, std::string symbol, int accountId, double amount) {
     std::stringstream ss;
     ss << "INSERT INTO position (symbol, amount, account_id) VALUES ("
        << w->quote(symbol) << "," << amount << "," << accountId << ")"
