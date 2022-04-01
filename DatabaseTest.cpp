@@ -302,6 +302,7 @@ void DatabaseTest::testUpdatePositionMuti() {
     conn3->disconnect();
 }
 
+/*
 void DatabaseTest::testUpdateBalanceMuti() {
     pqxx::connection * conn1 = db.connect();
     pqxx::connection * conn2 = db.connect();
@@ -314,6 +315,7 @@ void DatabaseTest::testUpdateBalanceMuti() {
     conn1->disconnect();
     conn2->disconnect();
 }
+ */
 
 void DatabaseTest::testCancelOrderMuti() {
     pqxx::connection * conn1 = db.connect();
