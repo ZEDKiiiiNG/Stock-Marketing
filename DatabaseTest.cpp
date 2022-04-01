@@ -328,6 +328,6 @@ int main(int argc, char *argv[]) {
     // test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
-    //test.testUpdateBalanceMuti();
+    test.testUpdateBalanceMuti();
     return EXIT_SUCCESS;
 }
