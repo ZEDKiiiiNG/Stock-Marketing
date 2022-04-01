@@ -159,13 +159,13 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     ss2 << getUpdateCancelOrderQuery(&w, orderId, accountId) << ";";
     std::cout << ss2.str() << "\n";
     try {
-        w.exec(ss.str());
+        w.exec(ss2.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << e.what() << '\n';
         w.abort();
     }
-    return getOrder(conn, orderId, accountId);
+    return getOrder(conn1, orderId, accountId);
 }
 
 std::string Database::getUpdateBalanceQuery(int accountId, double amount) {
