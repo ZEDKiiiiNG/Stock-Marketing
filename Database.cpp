@@ -77,26 +77,9 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
     } catch (pqxx::sql_error &e) {
         std::cout << e.what();
         w.abort();
+        throw std::invalid_argument(INSUFFICIENT_SHARE_ERROR);
     }
 }
-
-/*
-void Database::updateBalance(pqxx::connection * conn, int accountId, double amount) {
-    pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "UPDATE account"
-       << " SET balance = balance +" << amount
-       << " WHERE account_id = " << accountId
-       << " AND balance + " << amount << ">= 0;";
-    try {
-        w.exec(ss.str());
-        w.commit();
-    } catch (pqxx::sql_error &e) {
-        std::cout << e.what();
-        w.abort();
-    }
-}
- */
 
 void Database::updateBalance(pqxx::connection * conn, int accountId, double amount) {
     pqxx::work w(*conn);
@@ -110,6 +93,7 @@ void Database::updateBalance(pqxx::connection * conn, int accountId, double amou
     } catch (pqxx::sql_error &e) {
         std::cout << e.what();
         w.abort();
+        throw std::invalid_argument(INSUFFICIENT_BALANCE_ERROR);
     }
 }
 

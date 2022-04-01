@@ -10,7 +10,7 @@ CREATE TABLE account (
 
 CREATE TABLE position (
     symbol VARCHAR(256),
-    amount DOUBLE PRECISION DEFAULT 0,
+    amount DOUBLE PRECISION DEFAULT 0 CHECK (amount >= 0),
     account_id INT,
     PRIMARY KEY (symbol, account_id),
     FOREIGN KEY (account_id) REFERENCES account(account_id) ON DELETE SET NULL ON UPDATE CASCADE
