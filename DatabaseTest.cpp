@@ -311,6 +311,7 @@ void DatabaseTest::testUpdateBalanceMuti() {
     pqxx::connection * conn1 = db.connect();
     pqxx::connection * conn2 = db.connect();
     db.updateBalance(conn1, 32, -10005);
+    // add sleep before commit, work
     std::thread t1(&Database::updateBalance, this->db, conn1, 32, 10);
     std::thread t2(&Database::updateBalance, this->db, conn2, 32, 5);
     t1.join();

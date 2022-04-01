@@ -47,6 +47,12 @@ private:
                           double remainAmount, double executePrice);
     pqxx::result getSellOrder(double buyLimit, std::string symbol, int buyerAccountId);
 
+    // get query
+    std::string Database::getUpdateAmountQuery(std::string symbol, int accountId, double amount);
+    std::string Database::getUpdateBalanceQuery(int accountId, double amount);
+    std::string Database::getUpdateCancelOrderQuery(int orderId, int accountId);
+    std::string Database::getOpenOrderQuery(int orderId, int accountId);
+
 };
 
 
