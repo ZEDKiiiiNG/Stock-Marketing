@@ -23,7 +23,7 @@ public:
     void updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
     pqxx::result cancelOrder(int orderId, int accountId);
-    pqxx::result getOrder(int orderId, int accountId);
+    pqxx::result getOrder(pqxx::connection * conn, int orderId, int accountId);
     friend class DatabaseTest;
 private:
     bool hasAccount(pqxx::connection * conn, int accountId);
@@ -38,7 +38,7 @@ private:
     void updateCancelOrder(int orderId, int accountId);
     void handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount, double sellLimit);
     void handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
-    pqxx::result getBuyOrder(double sellLimit, std::string symbol, int sellAccountId);
+    pqxx::result getBuyOrder(pqxx::connection * conn, double sellLimit, std::string symbol, int sellAccountId);
     void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
                          double remainAmount, double buyLimit, double executePrice);
     void saveOrder(int orderId, std::string symbol, double amount, double limitPrice, std::string status, double executePrice, int accountId);
