@@ -378,9 +378,9 @@ void DatabaseTest::testHandleSellMuti() {
     db.saveOrder(conn1, 50, "SYM4", 6, 112, STATUS_OPEN, 0, 35);
 
     std::thread t1(&DatabaseTest::testBuyOrderMulti, this, "SYM3");
-    //std::thread t2(&DatabaseTest::testBuyOrderMulti, this, "SYM4");
+    std::thread t2(&DatabaseTest::testBuyOrderMulti, this, "SYM4");
     t1.join();
-    //t2.join();
+    t2.join();
     conn1->disconnect();
     conn2->disconnect();
 }
