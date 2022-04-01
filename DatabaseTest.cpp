@@ -309,7 +309,7 @@ void DatabaseTest::testUpdatePositionMuti() {
 
 void DatabaseTest::testUpdateBalanceMuti() {
     pqxx::connection * conn1 = db.connect();
-    db.updateBalance(conn1, 32, -10001);
+    db.updateBalance(conn1, 32, -10005);
 }
 
 int main(int argc, char *argv[]) {
