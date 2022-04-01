@@ -307,6 +307,11 @@ void DatabaseTest::testUpdatePositionMuti() {
     conn3->disconnect();
 }
 
+void DatabaseTest::testUpdateBalanceMuti() {
+    pqxx::connection * conn1 = db.connect();
+    db.updateBalance(conn1, 32, -10001);
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     /*
@@ -319,9 +324,10 @@ int main(int argc, char *argv[]) {
     test.testHandleSell();
     test.testHandleBuy();
     test.testMix();
-     */
-    //test.testUpdateAmountMulti();
+    */
+    test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
+    test.testUpdateBalanceMuti();
     return EXIT_SUCCESS;
 }

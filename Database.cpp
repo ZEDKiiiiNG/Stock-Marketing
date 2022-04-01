@@ -62,7 +62,7 @@ void Database::createAccount(pqxx::connection * conn, int accountId, double bala
     }
 }
 
-/*
+
 void Database::updateAmount(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);
     try {
@@ -73,10 +73,25 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
+        std::cout << e.what();
         w.abort();
     }
 }
- */
+
+void Database::updateBalance(pqxx::connection * conn, int accountId, double amount) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "UPDATE account"
+       << " SET balance = balance +" << amount
+       << " WHERE account_id = " << accountId  << ";";
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e) {
+        std::cout << e.what();
+        w.abort();
+    }
+}
 
 void Database::updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     if (not hasAccount(conn, accountId)) {
