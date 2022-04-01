@@ -252,7 +252,6 @@ void DatabaseTest::testMix() {
 }
  */
 
-/*
 void DatabaseTest::testUpdateAmountMulti() {
     pqxx::connection * conn1 = db.connect();
     std::string symbol = "WE";
@@ -270,7 +269,6 @@ void DatabaseTest::testUpdateAmountMulti() {
     conn1->disconnect();
     conn2->disconnect();
 }
-*/
 
 void DatabaseTest::testCreateAccountMulti() {
     pqxx::connection * conn1 = db.connect();
