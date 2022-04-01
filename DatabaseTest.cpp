@@ -284,7 +284,7 @@ void DatabaseTest::testCreateAccountMulti() {
 
 void DatabaseTest::handleCreateAccount(pqxx::connection *conn, int accountId, double balance) {
     try {
-        db.createAccount(conn, accountId, balance)
+        db.createAccount(conn, accountId, balance);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << " " << accountId << '\n';
     }
