@@ -4,6 +4,7 @@
 
 #include "DatabaseTest.h"
 
+/*
 void DatabaseTest::testSaveAccount() {
     db.saveAccount(1, 10000);
     db.saveAccount(2, 1500);
@@ -249,6 +250,7 @@ void DatabaseTest::testMix() {
     r = db.getOrder(22, 13);
     displayOrder(r);
 }
+ */
 
 void DatabaseTest::testUpdateAmountMulti() {
     std::string symbol = "WE";
