@@ -313,10 +313,8 @@ void DatabaseTest::testCancelOrderMuti() {
     db.saveOrder(conn1, 41, "SYM1", 5, 110, STATUS_OPEN, 0, 33);
     pqxx::result r = db.getOrder(conn1, 41, 33);
     displayOrder(r);
-    /*
     r = db.cancelOrder(conn1, 41, 33);
     displayOrder(r);
-     */
 
     // add sleep after get open order, work
     /*

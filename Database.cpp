@@ -116,20 +116,13 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
     }
 }
 
-pqxx::result Database::getOrderByStatus(pqxx::connection * conn, int orderId, int accountId, std::string status) {
+pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
-       << " WHERE account_id = " << accountId << " AND order_id = " << orderId;
-    if (not status.empty()) {
-        ss << " AND status = " << n.quote(status);
-    }
-    ss << " ORDER BY status DESC;";
+       << " WHERE account_id = " << accountId << " AND order_id = " << orderId
+       << " ORDER BY status DESC;";
     return pqxx::result(n.exec(ss.str()));
-}
-
-pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accountId) {
-    return getOrderByStatus(conn, orderId, accountId, "");
 }
 
 
