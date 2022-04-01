@@ -50,6 +50,7 @@ private:
                                                    int sellerAccountId, double executeAmount,
                                                    double remainAmount, double executePrice);
     std::string getSellOrderQuery(pqxx::work *w, double buyLimit, std::string symbol, int buyerAccountId);
+    std::string getLockOrderQuery(pqxx::work *w, int orderId, int accountId);
 
     // fort test
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
