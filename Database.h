@@ -20,7 +20,7 @@ private:
 
 public:
     Database();
-    pqxx::conection * connect();
+    pqxx::connection * connect();
     void saveAccount(int accountId, double balance);
     void updatePosition(std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
