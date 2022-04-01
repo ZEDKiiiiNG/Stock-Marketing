@@ -273,16 +273,18 @@ std::string Database::getBuyOrderQuery(pqxx::work *w, double sellLimit, std::str
     return ss.str();
 }
 
+/*
 std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
                                double remainAmount, double buyLimit, double executePrice) {
     std::stringstream ss;
     ss << getUpdatePositionQuery(w, symbol, buyerAccountId, executeAmount)
-        << "\n" << getUpdateBalanceQuery(w, executeAmount * (buyLimit - executePrice))
+        << "\n" << getUpdateBalanceQuery(w, executeAmount * (buyLimit - executePrice));
     // refund if buyer's limit price is higher than execution price
     updateBalance(buyerAccountId, executeAmount * (buyLimit - executePrice));
     updateOpenOrder(buyOrderId, buyerAccountId, remainAmount);
     saveOrder(buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
 }
+ */
 
 std::string Database::getUpdatePositionQuery(pqxx::work *w, std::string symbol, int accountId, double amount) {
     std::stringstream ss;
