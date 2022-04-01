@@ -375,6 +375,8 @@ double Database::getBalance(pqxx::connection * conn, int accountId) {
     return r.begin()[0].as<double>();
 }
 
-
+Database::~Database() {
+    delete mtx;
+}
 
 
