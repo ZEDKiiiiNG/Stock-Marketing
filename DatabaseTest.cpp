@@ -394,7 +394,7 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     }
     pqxx::result r = w.exec(ss.str());
     w.commit();
-    std::cout << r.size() << '\n';
+    std::cout << "size" << symbol << ": " r.size() << '\n';
     displayOrder(r);
 }
 
