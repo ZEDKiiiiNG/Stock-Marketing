@@ -92,7 +92,7 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO position (symbol, account_id) VALUES (" << w.quote(symbol) << "," << accountId << ")"
-    << "ON DUPLICATE KEY UPDATE amount = amount + " << amount << ";";
+    << " ON DUPLICATE KEY UPDATE amount = amount + " << amount << ";";
     try {
         w.exec(ss.str());
         w.commit();
