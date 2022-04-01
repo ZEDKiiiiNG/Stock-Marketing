@@ -10,7 +10,7 @@ Database::Database() : conn(new pqxx::connection(DB_INFO)) {
 
 pqxx::connection * Database::connect() {
     conn = new connection("dbname=ACC_BBALL user=postgres password=passw0rd");
-    if (!C->is_open()) {
+    if (!conn->is_open()) {
         throw std::invalid_argument("Can't open database\n");
     }
     return conn;
