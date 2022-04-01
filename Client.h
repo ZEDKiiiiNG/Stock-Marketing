@@ -10,9 +10,12 @@
 #include "Socket.h"
 #include "tinyxml.h"
 #include "tinystr.h"
+#include <thread>
 
 class Client {
-
+public:
+    void start();
+    void multiThreadStart();
 };
 
 

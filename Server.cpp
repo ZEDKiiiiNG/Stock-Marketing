@@ -354,12 +354,59 @@ void Server::serveRequest(Socket socket){
     socket.closeConn(msg_fd);
 }
 
+void Server::processRequest(Socket socket, std::vector<char> request, int msg_fd){
+    TiXmlDocument* myDocument = new TiXmlDocument();
+    myDocument->Parse(getXmlContent(request.data()));
+//    myDocument->Parse(request.data());
+    std::cout << "Parse Complete" << '\n';
+    TiXmlElement* rootElement = myDocument->RootElement();
+    //Create Result document
+    TiXmlDocument* resDocument = new TiXmlDocument();
+    //Format Declare
+    //TODO: check declaration format
+    TiXmlDeclaration *decl = new TiXmlDeclaration("1.0", "UTF-8", "yes");
+    resDocument->LinkEndChild(decl); //写入文档
+    //<results>
+    TiXmlElement* rootResultElement = new TiXmlElement("results");
+    resDocument->LinkEndChild(rootResultElement);
+    handleRequest(rootElement, rootResultElement);
+    TiXmlPrinter *printer = new TiXmlPrinter();
+    resDocument->Accept(printer);
+    std::string stringBuffer= printer->CStr();
+    std::string response = std::to_string(stringBuffer.length());
+    response.append("\n");
+    response.append(stringBuffer);
+//    printXml(rootElement, true);
+
+    socket.sendMesg(msg_fd, response);
+
+    socket.closeConn(msg_fd);
+}
+void Server::runServer( Socket & socket){
+    int listen_fd = socket.setupServer(PORT);
+    while(true) {
+        int msg_fd = socket.acceptConn(listen_fd);
+        std::vector<char> request = socket.recvMesg(msg_fd);
+        std::cout << request.data() << '\n';
+//        processRequest(socket, request, listen_fd, msg_fd);
+        std::thread t(&Server::processRequest, this, socket, request, msg_fd);
+        t.detach();
+    }
+    socket.closeConn(listen_fd);
+}
+
 int main(int argc, char *argv[]) {
+//    std::cout << "server running\n";
+//    Socket socket;
+//    Server server;
+//    while(true){
+//
+//        server.serveRequest(socket);
+//    }
+//    return EXIT_SUCCESS;
     std::cout << "server running\n";
     Socket socket;
     Server server;
-    while(true){
-        server.serveRequest(socket);
-    }
+    server.runServer(socket);
     return EXIT_SUCCESS;
 }

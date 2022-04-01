@@ -4,10 +4,8 @@
 
 #include "Client.h"
 
-
-int main(int argc, char *argv[]) {
+void Client::start() {
     std::cout << "client running...\n";
-
 
     //get all the path of test cases
     std::string filePath = "testCases/testcase";
@@ -25,7 +23,7 @@ int main(int argc, char *argv[]) {
         TiXmlDocument requestDocument(testFileName.c_str());
         bool loadOk = requestDocument.LoadFile();
         if (!loadOk){
-                std::cout << "could load:" << requestDocument.ErrorDesc() << std::endl;
+            std::cout << "could load:" << requestDocument.ErrorDesc() << std::endl;
         }
         TiXmlPrinter *printer = new TiXmlPrinter();
         requestDocument.Accept(printer);
@@ -39,7 +37,23 @@ int main(int argc, char *argv[]) {
         std::cout << response.data() << '\n';
         socket.closeConn(msg_fd);
     }
+}
 
+void Client::multiThreadStart(){
+    size_t  numOfThread = 10;
+//    std::vector<std::thread> threadVector(10);
+    std::thread thArr[numOfThread];
+    for(int i =0; i< numOfThread; i++){
+//        std::thread t(&Client::start, this);
+//        threadVector.push_back(t);
+        thArr[i] = std::thread(&Client::start, this);
+    }
+    for (auto &a : thArr)
+        a.join();
+}
 
+int main(int argc, char *argv[]) {
+    Client client;
+    client.multiThreadStart();
     return EXIT_SUCCESS;
 }

@@ -14,6 +14,7 @@
 #include "DatabaseTest.h"
 #include <sstream>
 #include <iomanip>
+#include <thread>
 
 class Server {
 //std::string getXmlContent(const std::string& raw);
@@ -38,9 +39,9 @@ public:
         orderId = 0;
     }
     const char * getXmlContent(const char* raw);
-
     void serveRequest(Socket socket);
-
+    void processRequest(Socket socket, std::vector<char>  request, int msg_fd);
+    void runServer(Socket & socket);
 };
 
 
