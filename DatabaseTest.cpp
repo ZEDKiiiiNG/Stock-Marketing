@@ -39,7 +39,6 @@ void DatabaseTest::testPosition() {
     assert(db.getAmount(testconn, "SYM", 1) == 10);
     db.updatePosition(testconn, "SYM", 1, 200);
     assert(db.getAmount(testconn, "SYM", 1) == 210);
-    assert(db.getAmount(testconn, "ABC", 1) == 0);
 }
 
 /*
