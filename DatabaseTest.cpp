@@ -392,7 +392,7 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol) {
 
     ss << db.getBuyOrderQuery(&w, 108, symbol, 36);
     if (symbol == "SYM3") {
-        ss << "\nSELECT pg_sleep(3);";
+        // ss << "\nSELECT pg_sleep(3);";
     }
     std::cout << ss.str() << '\n';
     pqxx::result r = w.exec(ss.str());
