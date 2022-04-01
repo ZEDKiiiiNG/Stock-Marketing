@@ -133,8 +133,9 @@ pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accoun
     return getOrderByStatus(conn, orderId, accountId, "");
 }
 
+/*
 pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int accountId) {
-    pqxx::result r = getOrderByStatus(orderId, accountId, STATUS_OPEN);
+    pqxx::result r = getOrderByStatus(conn, orderId, accountId, STATUS_OPEN);
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
@@ -159,8 +160,9 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
            << " WHERE account_id = " << accountId << ";";
     }
     updateCancelOrder(orderId, accountId);
-    return getOrder(orderId, accountId);
+    return getOrder(conn, orderId, accountId);
 }
+ */
 
 
 
