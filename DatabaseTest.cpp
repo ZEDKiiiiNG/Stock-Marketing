@@ -257,7 +257,7 @@ void DatabaseTest::testUpdateAmountMulti() {
     std::string symbol = "WE";
     int accountId = 14;
     double amount1 = 5;
-    double amount2 = 6;
+    double amount2 = -2;
     db.createAccount(conn1, accountId, 10000);
     db.savePosition(conn1, symbol, accountId);
     // db.updateAmount(symbol, accountId, 5);

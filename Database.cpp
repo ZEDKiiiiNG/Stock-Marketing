@@ -86,5 +86,27 @@ void Database::savePosition(pqxx::connection * conn, std::string symbol, int acc
     w.commit();
 }
 
+/*
+void Database::updatePosition(std::string symbol, int accountId, double amount) {
+    if (not hasAccount(accountId)) {
+        throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
+    }
+    if (not hasPosition(symbol, accountId)) {
+        savePosition(symbol, accountId);
+    }
+    updateAmount(symbol, accountId, amount);
+}
+
+bool Database::hasPosition(std::string symbol, int accountId) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM position"
+       << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) << ";";
+    pqxx::result r(n.exec(ss.str()));
+    return r.size() > 0;
+}
+ */
+
+
 
 
