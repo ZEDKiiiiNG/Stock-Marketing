@@ -98,10 +98,10 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << ss.str() << '\n';
         std::cout << e.what() << '\n';
         w.abort();
     }
+    std::cout << ss.str() << '\n';
 
 }
 
