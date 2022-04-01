@@ -127,20 +127,6 @@ void DatabaseTest::testCancel() {
 
 }
 
-void DatabaseTest::displayOrder(pqxx::result & r) {
-    for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
-        std::cout << c[0].as<int>() << " " // order_id
-                  << c[1].as<std::string>() << " "  // symbol
-                  << c[2].as<double>() << " "  // amount
-                  << c[3].as<double>() << " "  // limit_price
-                  << c[4].as<std::string>() << " "  // status
-                  << c[5].as<int>() << " "  // update_time
-                  << c[6].as<double>() << " "  // execute_price
-                  << c[7].as<int>() << "\n";  // account_id
-    }
-    std::cout << '\n';
-}
-
 void DatabaseTest::testHandleSell() {
     db.createAccount(3, 10000);
     db.createAccount(4, 10000);
@@ -327,6 +313,20 @@ void DatabaseTest::testCancelOrderMuti() {
     pqxx::result r = db.getOrder(conn1, 41, 33);
     displayOrder(r);
 
+}
+
+void DatabaseTest::displayOrder(pqxx::result & r) {
+    for (pqxx::result::const_iterator c = r.begin(); c != r.end(); ++c) {
+        std::cout << c[0].as<int>() << " " // order_id
+                  << c[1].as<std::string>() << " "  // symbol
+                  << c[2].as<double>() << " "  // amount
+                  << c[3].as<double>() << " "  // limit_price
+                  << c[4].as<std::string>() << " "  // status
+                  << c[5].as<int>() << " "  // update_time
+                  << c[6].as<double>() << " "  // execute_price
+                  << c[7].as<int>() << "\n";  // account_id
+    }
+    std::cout << '\n';
 }
 
 int main(int argc, char *argv[]) {
