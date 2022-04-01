@@ -13,10 +13,11 @@
 #include <time.h>
 #include <stdexcept>
 #include <unistd.h>
+#include <mutex>
 
 class Database {
-
 public:
+    std::mutex *  mtx;
     Database();
     pqxx::connection * connect();
     void createAccount(pqxx::connection * conn, int accountId, double balance);
