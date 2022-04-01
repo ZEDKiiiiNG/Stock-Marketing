@@ -31,6 +31,7 @@ public:
     void testUpdateBalanceMuti();
     void testCancelOrderMuti();
     void testOpenOrderMuti();
+    void testHandleSellMuti();
 private:
     void displayOrder(pqxx::result & r);
     void handleCreateAccount(pqxx::connection * conn, int accountId, double balance);

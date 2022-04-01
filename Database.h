@@ -36,7 +36,7 @@ private:
     double getBalance(int accountId);
     pqxx::result getOrderByStatus(pqxx::connection * conn, int orderId, int accountId, std::string status);
     void updateCancelOrder(int orderId, int accountId);
-    void handleSellOrder(int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount, double sellLimit);
+    void handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId, double sellAmount, double sellLimit);
     void handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount, double buyLimit);
     pqxx::result getBuyOrder(double sellLimit, std::string symbol, int sellAccountId);
     void executeBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
@@ -54,6 +54,7 @@ private:
     std::string getOpenOrderQuery(pqxx::work * w, int orderId, int accountId);
     std::string getSaveOrderQuery(pqxx::work * w, int orderId, std::string symbol, double amount, double limitPrice,
                                   std::string status, double executePrice, int accountId);
+    std::string getBuyOrderQuery(pqxx::work *w, double sellLimit, std::string symbol, int sellerAccountId)
 
     // fort test
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
