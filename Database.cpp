@@ -176,7 +176,7 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
     ss << getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
     std::cout << ss.str() << '\n';
     try {
-        ss << "\nSELECT pg_sleep(3);";
+        //ss << "\nSELECT pg_sleep(3);";
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
