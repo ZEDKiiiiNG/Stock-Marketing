@@ -151,7 +151,7 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     double limitPrice = r.begin()[3].as<double>();
     if (amount < 0) {
         // negative amount, sell order, refund shares
-        ss2 << getUpdateAmountQuery(&w, symbol, accountId, -amount);
+        ss2 << getUpdateAmountQuery(symbol, accountId, -amount);
     }
     else {
         // buy order, refund price
@@ -192,7 +192,7 @@ std::string Database::getUpdateAmountQuery(pqxx::work * w, std::string symbol, i
 std::string Database::getUpdateCancelOrderQuery(pqxx::work * w, int orderId, int accountId) {
     std::stringstream ss;
     ss << "UPDATE trade_order"
-       << " SET status = " << w.quote(STATUS_CANCELLED)
+       << " SET status = " << w->quote(STATUS_CANCELLED)
        << ", update_time = " << time(NULL)
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
        << " AND status = " << w->quote(STATUS_OPEN);
