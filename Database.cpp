@@ -222,7 +222,7 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
     }
 }
 
-void Database::handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
+void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
                               double buyLimit) {
     pqxx::work w(*conn);
     std::string q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
