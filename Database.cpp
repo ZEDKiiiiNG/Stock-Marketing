@@ -4,6 +4,12 @@
 
 #include "Database.h"
 
+Database::Database() {
+    pqxx::connection * conn = connect();
+    createTable(conn, "tables.sql");
+    conn->disconnect();
+}
+
 pqxx::connection * Database::connect() {
     pqxx::connection * conn = new pqxx::connection(DB_INFO);
     if (!conn->is_open()) {

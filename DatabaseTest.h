@@ -16,6 +16,7 @@ class DatabaseTest {
 private:
     Database db;
 public:
+    Database();
     void testSaveAccount();
     void testHasAccount();
     void testPosition();

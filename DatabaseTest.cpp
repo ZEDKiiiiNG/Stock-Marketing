@@ -254,7 +254,6 @@ void DatabaseTest::testMix() {
 
 void DatabaseTest::testUpdateAmountMulti() {
     pqxx::connection * conn1 = db.connect();
-    db.createTable(conn1, "tables.sql");
     std::string symbol = "WE";
     int accountId = 14;
     double amount1 = 5;
