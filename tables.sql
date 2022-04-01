@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS trade_order CASCADE;
 
 CREATE TABLE account (
     account_id INT,
-    balance DOUBLE PRECISION DEFAULT 0,
+    balance DOUBLE PRECISION DEFAULT 0 CHECK (balance >= 0),
     PRIMARY KEY (account_id)
 );
 
