@@ -263,7 +263,7 @@ void DatabaseTest::testUpdateAmountMulti() {
     // std::thread t2(&Database::updateAmount, this->db, symbol, accountId, amount2);
     // t1.detach();
     // t2.detach();
-    // std::cout << db.getAmount("WE", 14) << "\n";
+    std::cout << db.getAmount("WE", 14) << "\n";
 }
 
 int main(int argc, char *argv[]) {
