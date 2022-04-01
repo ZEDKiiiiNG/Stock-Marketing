@@ -85,7 +85,7 @@ void Database::savePosition(pqxx::connection * conn, std::string symbol, int acc
     w.commit();
 }
 
-void Database::updatePosition(qxx::connection * conn, std::string symbol, int accountId, double amount) {
+void Database::updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     if (not hasAccount(accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
