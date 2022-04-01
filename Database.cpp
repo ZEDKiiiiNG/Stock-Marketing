@@ -86,7 +86,7 @@ void Database::savePosition(pqxx::connection * conn, std::string symbol, int acc
 }
 
 void Database::updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
-    if (not hasAccount(accountId)) {
+    if (not hasAccount(conn, accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
     pqxx::work w(*conn);
