@@ -4,8 +4,7 @@
 
 #include "Database.h"
 
-Database::Database() {
-    mtx = new std::mutex();
+Database::Database() : mtx(new std::mutex()){
     pqxx::connection * conn = connect();
     createTable(conn, "tables.sql");
     conn->disconnect();
@@ -375,5 +374,8 @@ double Database::getBalance(pqxx::connection * conn, int accountId) {
     return r.begin()[0].as<double>();
 }
 
+Database::~Database() {
+    delete mtx;
+}
 
 
