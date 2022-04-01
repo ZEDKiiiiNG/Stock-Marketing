@@ -173,12 +173,13 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
     }
     else {
         ss << getUpdateBalanceQuery(&w, accountId, -limitPrice * amount);
-        ss << "\nSELECT pg_sleep(3);";
+        // ss << "\nSELECT pg_sleep(3);";
     }
     ss << getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
     std::cout << ss.str() << '\n';
     try {
         w.exec(ss.str());
+        ss << "\nSELECT pg_sleep(3);";
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << e.what() << '\n';
