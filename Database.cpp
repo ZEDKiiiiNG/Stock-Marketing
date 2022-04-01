@@ -271,7 +271,7 @@ std::string Database::getBuyOrderQuery(pqxx::work *w, double sellLimit, std::str
        << " WHERE symbol = " << w->quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
        << " AND status = " << w->quote(STATUS_OPEN) << " AND account_id != " << sellerAccountId
        << " ORDER BY limit_price DESC, update_time ASC, order_id ASC"
-       << " FOR UPDATE";
+       << " FOR UPDATE;";
     return ss.str();
 }
 
