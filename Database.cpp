@@ -85,7 +85,7 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     if (curr + amount < 0) {
         throw std::invalid_argument(INSUFFICIENT_SHARE_ERROR);
     }
-    sleep(3);
+    sleep(2);
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "UPDATE position"
