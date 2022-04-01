@@ -77,7 +77,7 @@ void DatabaseTest::testException() {
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_BALANCE_ERROR);
-        assert(db.getBalance(1) == 4860);
+        assert(db.getBalance(testconn, 1) == 4860);
     }
 
     try {
@@ -85,7 +85,7 @@ void DatabaseTest::testException() {
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);
-        assert(db.getAmount("BTC", 2) == 10);
+        assert(db.getAmount(testconn, "BTC", 2) == 10);
     }
 
     try {
