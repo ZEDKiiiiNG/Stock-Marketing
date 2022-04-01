@@ -126,8 +126,8 @@ void DatabaseTest::testCancel() {
     db.updatePosition(testconn, "UME", 10, 15);
     db.placeOrder(testconn, 15, "UME", 10, -5, 100);
     db.placeOrder(testconn, 16, "UME", 11, 3, 110);
-    db.cancelOrder(15, 10);
-    r = db.getOrder(15, 10);
+    db.cancelOrder(testconn, 15, 10);
+    r = db.getOrder(testconn, 15, 10);
     displayOrder(r);
 
 }
