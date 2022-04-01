@@ -385,7 +385,7 @@ void DatabaseTest::testHandleSellMuti() {
 
 void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     pqxx::connection *conn1 = db.connect();
-    pqxx::work w(*conn);
+    pqxx::work w(*conn1);
     std::stringstream ss;
 
     ss << db.getBuyOrderQuery(&w, 108, symbol, 35);
