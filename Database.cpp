@@ -38,17 +38,10 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
     pqxx::work w(*conn);
     try {
         std::stringstream ss;
-        ss << "SELECT amount FROM position"
+        ss << "UPDATE amount"
+           << " SET amount = amount + " << amount
            << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
-        pqxx::result r(w.exec(ss.str()));
-        double curr = r.begin()[0].as<double>();
-        sleep(3);
-
-        std::stringstream ss1;
-        ss1 << "UPDATE position"
-           << " SET amount = " << curr + amount
-           << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
-        w.exec(ss1.str());
+        w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << "error\n";
