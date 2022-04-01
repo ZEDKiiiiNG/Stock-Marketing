@@ -324,7 +324,7 @@ void DatabaseTest::testCancelOrderMuti() {
     pqxx::connection * conn1 = db.connect();
     db.createAccount(conn1, 33, 10000);
     db.saveOrder(conn1, 41, "SYM1", 5, 110, STATUS_OPEN, 0, 33);
-    r = db.getOrder(conn1, 41, 33);
+    pqxx::result r = db.getOrder(conn1, 41, 33);
     displayOrder(r);
 
 }
