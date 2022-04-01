@@ -142,8 +142,9 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
     std::cout << ss1.str() << "\n";
+    sleep(3);
 
-    // refund
+    // atomic refund
     std::stringstream ss2;
     std::string symbol = r.begin()[1].as<std::string>();
     double amount = r.begin()[2].as<double>();

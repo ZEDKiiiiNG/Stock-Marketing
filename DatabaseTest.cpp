@@ -308,12 +308,22 @@ void DatabaseTest::testUpdateBalanceMuti() {
 
 void DatabaseTest::testCancelOrderMuti() {
     pqxx::connection * conn1 = db.connect();
+    pqxx::connection * conn2 = db.connect();
     db.createAccount(conn1, 33, 10000);
     db.saveOrder(conn1, 41, "SYM1", 5, 110, STATUS_OPEN, 0, 33);
     pqxx::result r = db.getOrder(conn1, 41, 33);
     displayOrder(r);
+    /*
     r = db.cancelOrder(conn1, 41, 33);
     displayOrder(r);
+     */
+
+    std::thread t1(&Database::cancelOrder, this->db, conn1, 41, 33);
+    std::thread t2(&Database::cancelOrder, this->db, conn2, 41, 33);
+    t1.join();
+    t2.join();
+    conn1->disconnect();
+    conn2->disconnect();
 }
 
 void DatabaseTest::displayOrder(pqxx::result & r) {
