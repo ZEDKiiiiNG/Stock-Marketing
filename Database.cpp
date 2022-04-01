@@ -62,7 +62,6 @@ void Database::createAccount(pqxx::connection * conn, int accountId, double bala
     }
 }
 
-
 void Database::updateAmount(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);
     try {
@@ -75,14 +74,6 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
     } catch (pqxx::sql_error &e) {
         w.abort();
     }
-}
-
-void Database::savePosition(pqxx::connection * conn, std::string symbol, int accountId) {
-    pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "INSERT INTO position (symbol, account_id) VALUES (" << w.quote(symbol) << "," << accountId << ");";
-    w.exec(ss.str());
-    w.commit();
 }
 
 void Database::updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount) {
@@ -102,19 +93,7 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
         std::cout << e.what() << '\n';
         w.abort();
     }
-    std::cout << ss.str() << '\n';
 }
-
-/*
-bool Database::hasPosition(std::string symbol, int accountId) {
-    pqxx::nontransaction n(*conn);
-    std::stringstream ss;
-    ss << "SELECT * FROM position"
-       << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) << ";";
-    pqxx::result r(n.exec(ss.str()));
-    return r.size() > 0;
-}
- */
 
 
 
