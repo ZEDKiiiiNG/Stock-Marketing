@@ -89,7 +89,6 @@ void Database::updateBalance(pqxx::connection * conn, int accountId, double amou
        << " WHERE account_id = " << accountId << ";";
     try {
         w.exec(ss.str());
-        sleep(3);
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << e.what();
