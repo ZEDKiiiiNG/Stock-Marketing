@@ -102,13 +102,8 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
     pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "INSERT INTO position (symbol, amount, account_id) VALUES ("
-    << w.quote(symbol) << "," << amount << "," << accountId << ")"
-    << " ON CONFLICT (symbol, account_id) DO UPDATE"
-    << " SET amount = position.amount + " << amount << ";";
     try {
-        w.exec(ss.str());
+        w.exec(getUpdatePositionQuery(w, symbol, accountId, amount));
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << e.what() << '\n';
@@ -275,6 +270,28 @@ std::string Database::getBuyOrderQuery(pqxx::work *w, double sellLimit, std::str
     return ss.str();
 }
 
+/*
+std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std::string symbol, int buyerAccountId, double executeAmount,
+                               double remainAmount, double buyLimit, double executePrice) {
+    std::stringstream ss;
+    updatePosition(symbol, buyerAccountId, executeAmount);
+    // refund if buyer's limit price is higher than execution price
+    updateBalance(buyerAccountId, executeAmount * (buyLimit - executePrice));
+    updateOpenOrder(buyOrderId, buyerAccountId, remainAmount);
+    saveOrder(buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
+}
+ */
+
+std::string Database::getUpdatePositionQuery(int *w, std::string symbol, int accountId, double amount) {
+    std::stringstream ss;
+    ss << "INSERT INTO position (symbol, amount, account_id) VALUES ("
+       << w->quote(symbol) << "," << amount << "," << accountId << ")"
+       << " ON CONFLICT (symbol, account_id) DO UPDATE"
+       << " SET amount = position.amount + " << amount << ";";
+    return ss.str();
+}
+
+
 
 // for test
 void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
@@ -288,6 +305,7 @@ void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbo
     w.commit();
 }
 
+/*
 pqxx::result Database::getBuyOrder(pqxx::connection * conn, double sellLimit, std::string symbol, int sellerAccountId) {
     pqxx::nontransaction n(*conn);
     std::stringstream ss;
@@ -297,7 +315,7 @@ pqxx::result Database::getBuyOrder(pqxx::connection * conn, double sellLimit, st
        << " ORDER BY limit_price DESC, update_time ASC, order_id ASC";
     return pqxx::result(n.exec(ss.str()));
 }
-
+*/
 
 
 
