@@ -50,7 +50,7 @@ bool Database::hasAccount(pqxx::connection * conn, int accountId) {
 
 
 void Database::createAccount(pqxx::connection * conn, int accountId, double balance) {
-    if (hasAccount(accountId)) {
+    if (hasAccount(conn, accountId)) {
         throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
     }
     sleep(3);
