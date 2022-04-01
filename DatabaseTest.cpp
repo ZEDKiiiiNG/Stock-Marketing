@@ -368,7 +368,7 @@ void DatabaseTest::testHandleSellMuti() {
     /*
     db.saveOrder(conn1, 44, "SYM2", 5, 110, STATUS_OPEN, 0, 35);
     db.saveOrder(conn1, 45, "SYM2", 6, 112, STATUS_OPEN, 0, 35);
-    db.saveOrder(conn1, 46, "SYM2", -5, 108, STATUS_OPEN, 0, 36);
+    db.saveOrder(conn1, 46, "SYM2", -8, 108, STATUS_OPEN, 0, 36);
     db.handleSellOrder(conn1, 46, "SYM2", 36, -5, 108);
      */
 
@@ -387,7 +387,8 @@ void DatabaseTest::testHandleSellMuti() {
     t3.join();
 
     pqxx::work w(*conn1);
-    std::cout << db.getExecuteBuyOrderQuery(&w, 43, "SYM2", 35, 5, 0, 110, 110);
+    std::cout << db.getExecuteBuyOrderQuery(&w, 44, "SYM2", 35, 5, 0, 110, 110);
+    std::cout << db.getExecuteSellOrderQuery(&w, 44, "SYM2", 46, 5, 5, 110);
 
     conn1->disconnect();
     conn2->disconnect();

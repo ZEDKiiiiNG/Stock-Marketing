@@ -281,7 +281,8 @@ std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std
     ss << getUpdatePositionQuery(w, symbol, buyerAccountId, executeAmount)
         << "\n" << getUpdateBalanceQuery(w, buyerAccountId, executeAmount * (buyLimit - executePrice))
         << "\n" << getUpdateOpenOrderQuery(w, buyOrderId, buyerAccountId, remainAmount)
-        << "\n" << getSaveOrderQuery(w, buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
+        << "\n" << getSaveOrderQuery(w, buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED,
+                                     executePrice, buyerAccountId);
     return ss.str();
 }
 
@@ -301,6 +302,17 @@ std::string Database::getUpdateOpenOrderQuery(pqxx::work *w, int orderId, int ac
        << " SET amount = " << remainAmount
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
        << " AND status = " << w->quote(STATUS_OPEN) << ";";
+    return ss.str();
+}
+
+std::string Database::getExecuteSellOrderQuery(pqxx::work *w, int sellOrderId, std::string symbol,
+                                               int sellerAccountId, double executeAmount,
+                                               double remainAmount, double executePrice) {
+    std::stringstream ss;
+    ss << getUpdateBalanceQuery(w, sellerAccountId, executeAmount * executePrice)
+            << "\n" << getUpdateOpenOrderQuery(w, sellOrderId, sellerAccountId, remainAmount)
+            << "\n" << getSaveOrderQuery(w, sellOrderId, symbol, -executeAmount, 0, STATUS_EXECUTED,
+                                         executePrice, sellerAccountId);
     return ss.str();
 }
 
