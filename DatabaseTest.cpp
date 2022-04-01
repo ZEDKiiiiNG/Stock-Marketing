@@ -279,7 +279,6 @@ void DatabaseTest::testCreateAccountMulti() {
         t1 = std::thread(&Database::createAccount, this->db, conn1, 31, 1000);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
-        t1.join();
     }
 
     std::thread t2;
@@ -287,8 +286,9 @@ void DatabaseTest::testCreateAccountMulti() {
         t2 = std::thread(&Database::createAccount, this->db, conn2, 31, 2000);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
-        t2.join();
     }
+    t1.join();
+    t2.join();
 
 
     conn1->disconnect();
