@@ -13,8 +13,11 @@
 #include <time.h>
 #include <stdexcept>
 #include <unistd.h>
+#include <mutex>
 
 class Database {
+private:
+    std::mutex mtx;
 
 public:
     Database();
