@@ -229,14 +229,14 @@ std::string Database::getSaveOrderQuery(int *w, int orderId, std::string symbol,
 }
 
 // for test
-void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice, std::string status,
-                         double executePrice, int accountId) {
+void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
+                         std::string status, double executePrice, int accountId) {
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
        << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
        << w.quote(status) << "," << time(NULL) << "," << executePrice << "," << accountId << ");";
-    w.exec(getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, executePrice, accountId));
+    w.exec(getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, status, executePrice, accountId));
     w.commit();
 }
 
