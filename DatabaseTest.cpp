@@ -387,7 +387,6 @@ void DatabaseTest::testHandleSellMuti() {
 
 void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     pqxx::connection *conn1 = db.connect();
-    /*
     pqxx::work w(*conn1);
     std::stringstream ss;
 
@@ -395,12 +394,14 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     if (symbol == "SYM3") {
         ss << "\nSELECT pg_sleep(3);";
     }
+    std::cout << ss.str() << '\n';
     pqxx::result r = w.exec(ss.str());
     w.commit();
-     */
+    /*
     pqxx::result r = db.getBuyOrder(conn1, 108, "SYM3", 36);
     std::cout << "size " << symbol << ": " << r.size() << '\n';
     displayOrder(r);
+     */
 }
 
 int main(int argc, char *argv[]) {
