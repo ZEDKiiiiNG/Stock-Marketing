@@ -48,10 +48,10 @@ private:
     pqxx::result getSellOrder(double buyLimit, std::string symbol, int buyerAccountId);
 
     // get query
-    std::string Database::getUpdateAmountQuery(pqxx::work * w, std::string symbol, int accountId, double amount);
-    std::string Database::getUpdateBalanceQuery(int accountId, double amount);
-    std::string Database::getUpdateCancelOrderQuery(pqxx::work * w, int orderId, int accountId);
-    std::string Database::getOpenOrderQuery(pqxx::work * w, int orderId, int accountId);
+    std::string getUpdateAmountQuery(pqxx::work * w, std::string symbol, int accountId, double amount);
+    std::string getUpdateBalanceQuery(int accountId, double amount);
+    std::string getUpdateCancelOrderQuery(pqxx::work * w, int orderId, int accountId);
+    std::string getOpenOrderQuery(pqxx::work * w, int orderId, int accountId);
 
     // fort test
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
