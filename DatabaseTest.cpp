@@ -310,5 +310,6 @@ int main(int argc, char *argv[]) {
      */
     test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
+    test.testUpdatePositionMuti();
     return EXIT_SUCCESS;
 }
