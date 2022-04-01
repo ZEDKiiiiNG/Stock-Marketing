@@ -268,13 +268,18 @@ void DatabaseTest::testUpdateAmountMulti() {
     t1.join();
     t2.join();
     conn1->disconnect();
+    conn2->disconnect();
 }
 
 void DatabaseTest::testCreateAccountMulti() {
     pqxx::connection * conn1 = db.connect();
     pqxx::connection * conn2 = db.connect();
     std::thread t1(&Database::createAccount, this->db, conn1, 31, 1000);
-    std::thread t1(&Database::createAccount, this->db, conn2, 31, 2000);
+    std::thread t2(&Database::createAccount, this->db, conn2, 31, 2000);
+    t1.join();
+    t2.join();
+    conn1->disconnect();
+    conn2->disconnect();
 }
 
 int main(int argc, char *argv[]) {
