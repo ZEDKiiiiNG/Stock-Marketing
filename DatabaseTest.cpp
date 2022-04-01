@@ -368,7 +368,7 @@ void DatabaseTest::testHandleSellMuti() {
     db.saveOrder(conn1, 44, "SYM2", 5, 110, STATUS_OPEN, 0, 33);
     db.saveOrder(conn1, 45, "SYM2", 6, 112, STATUS_OPEN, 0, 33);
     db.saveOrder(conn1, 46, "SYM", -5, 108, STATUS_OPEN, 0, 34);
-    db.handleSellOrder(w, 46, "SYM2", 36, -5, 108);
+    db.handleSellOrder(conn1, 46, "SYM2", 36, -5, 108);
 }
 
 int main(int argc, char *argv[]) {
