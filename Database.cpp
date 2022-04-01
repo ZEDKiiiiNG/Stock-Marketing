@@ -171,7 +171,7 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
 std::string Database::getUpdateBalanceQuery(int accountId, double amount) {
     std::stringstream ss;
     ss << "UPDATE account"
-       << " SET balance = balance +" << amount
+       << " SET balance = balance + " << amount
        << " WHERE account_id = " << accountId << ";";
     return ss.str();
 }
