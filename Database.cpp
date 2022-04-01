@@ -183,7 +183,7 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
     if (amount < 0) {
         handleSellOrder(conn, orderId, symbol, accountId, amount, limitPrice);
     } else {
-        handleBuyOrder(orderId, symbol, accountId, amount, limitPrice);
+        handleBuyOrder(conn, orderId, symbol, accountId, amount, limitPrice);
     }
 
 }
