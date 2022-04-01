@@ -36,7 +36,9 @@ void DatabaseTest::testPosition() {
     db.updatePosition(testconn, "BTC", 1, 22.2);
     assert(db.getAmount(testconn, "BTC", 1) == 22.2);
     db.updatePosition(testconn, "SYM", 1, 10);
-    assert(db.getAmount(testconn, "SYM", 1) == 228.8);
+    assert(db.getAmount(testconn, "SYM", 1) == 10);
+    db.updatePosition(testconn, "SYM", 1, 200);
+    assert(db.getAmount(testconn, "SYM", 1) == 210);
     assert(db.getAmount(testconn, "ABC", 1) == 0);
 }
 
