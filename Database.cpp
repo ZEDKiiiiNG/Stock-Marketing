@@ -150,23 +150,22 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
         }
     }
     // exc order
+    mtx.lock();
     if (amount < 0) {
         handleSellOrder(conn, orderId, symbol, accountId, amount, limitPrice);
     } else {
         handleBuyOrder(conn, orderId, symbol, accountId, amount, limitPrice);
     }
-
+    mtx.unlock();
 }
 
 void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
                                double sellAmount, double sellLimit) {
     pqxx::work w(*conn);
-    mtx.lock();
     std::string q = getLockOrderQuery(&w, sellOrderId, sellerAccountId);
     w.exec(q);
     q = getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId);
     pqxx::result r = w.exec(q);
-    mtx.unlock();
 
     // atmoic execute
     std::stringstream ss;
@@ -197,12 +196,10 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
 void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
                               double buyLimit) {
     pqxx::work w(*conn);
-    mtx.lock();
-    std::string q = getLockOrderQuery(&w, buyOrderId, buyerAccountId);
-    w.exec(q);
+    // std::string q = getLockOrderQuery(&w, buyOrderId, buyerAccountId);
+    // w.exec(q);
     q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
     pqxx::result r = w.exec(q);
-    mtx.unlock();
 
     // atomic exec
     std::stringstream ss;
@@ -281,8 +278,7 @@ std::string Database::getBuyOrderQuery(pqxx::work *w, double sellLimit, std::str
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << w->quote(symbol) << " AND amount > 0 AND limit_price >= " << sellLimit
        << " AND status = " << w->quote(STATUS_OPEN) << " AND account_id != " << sellerAccountId
-       << " ORDER BY limit_price DESC, update_time ASC, order_id ASC"
-       << " FOR UPDATE;";
+       << " ORDER BY limit_price DESC, update_time ASC, order_id ASC;";
     return ss.str();
 }
 
@@ -334,8 +330,7 @@ std::string Database::getSellOrderQuery(pqxx::work *w, double buyLimit, std::str
     ss << "SELECT * FROM trade_order"
        << " WHERE symbol = " << w->quote(symbol) << " AND amount < 0 AND limit_price <= " << buyLimit
        << " AND status = " << w->quote(STATUS_OPEN) << " AND account_id != " << buyerAccountId
-       << " ORDER BY limit_price ASC, update_time ASC, order_id ASC"
-       << " FOR UPDATE";
+       << " ORDER BY limit_price ASC, update_time ASC, order_id ASC;";
     return ss.str();
 }
 
