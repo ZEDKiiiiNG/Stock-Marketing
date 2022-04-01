@@ -33,7 +33,6 @@ private:
     void updateAmount(pqxx::connection * conn1, std::string symbol, int accountId, double amount);  // amount in position
     bool hasPosition(pqxx::connection * conn, std::string symbol, int accountId);
     void updateBalance(pqxx::connection * conn, int accountId, double amount);
-    double getBalance(int accountId);
     pqxx::result getOrderByStatus(pqxx::connection * conn, int orderId, int accountId, std::string status);
     void updateCancelOrder(int orderId, int accountId);
     void handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
@@ -70,6 +69,7 @@ private:
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
                    std::string status, double executePrice, int accountId);
     double getAmount(pqxx::connection * conn, std::string symbol, int accountId); // amount in position
+    double getBalance(qxx::connection * conn, int accountId);
 
 };
 

@@ -396,6 +396,16 @@ double Database::getAmount(pqxx::connection * conn, std::string symbol, int acco
     return r.begin()[0].as<double>();
 }
 
+double Database::getBalance(pqxx::connection * conn, int accountId) {
+    pqxx::nontransaction n(*conn);
+    std::stringstream ss;
+    ss << "SELECT balance FROM account"
+       << " WHERE account_id = " << accountId << ";";
+    pqxx::result r(n.exec(ss.str()));
+    return r.begin()[0].as<double>();
+}
+
+
 
 
 

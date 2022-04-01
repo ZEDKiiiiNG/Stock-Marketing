@@ -177,7 +177,7 @@ void DatabaseTest::testHandleSell() {
     assert(db.getBalance(testconn, 6) == 10000 + 116 * 2 + 114 * 3 + 112 * 3);
     assert(db.getAmount(testconn, "HW", 6) == 15 - 8);
 
-    r = db.getOrder(testconn, 7, 5);
+    pqxx::result r = db.getOrder(testconn, 7, 5);
     displayOrder(testconn, r);
     r = db.getOrder(testconn, 8, 5);
     displayOrder(testconn, r);
