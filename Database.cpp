@@ -103,18 +103,23 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
 
 void Database::updateAmount(std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);
-    std::stringstream ss;
-    ss << "SELECT amount FROM position"
-       << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
-    pqxx::result r(w.exec(ss.str()));
-    double curr = r.begin()[0].as<double>();
+    try {
+        std::stringstream ss;
+        ss << "SELECT amount FROM position"
+           << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
+        pqxx::result r(w.exec(ss.str()));
+        double curr = r.begin()[0].as<double>();
 
-    std::stringstream ss1;
-    ss1 << "UPDATE position"
-       << " SET amount = " << curr + amount
-       << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
-    w.exec(ss1.str());
-    w.commit();
+        std::stringstream ss1;
+        ss1 << "UPDATE position"
+           << " SET amount = " << curr + amount
+           << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
+        w.exec(ss1.str());
+        w.commit();
+    } catch (pqxx::sql_error &e) {
+        std::cout << "error\n";
+        w.abort();
+    }
 
 }
 
