@@ -398,7 +398,7 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol, int accountId, double s
     std::cout << ss.str() << '\n';
     pqxx::result r = w.exec(ss.str());
     if (symbol == "SYM3" && sellLimitPrice == 108) {
-        std::cout << "delay 3s";
+        std::cout << "delay 3s\n";
         w.exec("SELECT pg_sleep(3);");
     }
     w.commit();
