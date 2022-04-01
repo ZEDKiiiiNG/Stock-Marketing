@@ -86,7 +86,7 @@ void Database::updateBalance(pqxx::connection * conn, int accountId, double amou
     ss << "UPDATE account"
        << " SET balance = balance +" << amount
        << " WHERE account_id = " << accountId
-       << " AND balance + " amount << ">= 0;";
+       << " AND balance + " << amount << ">= 0;";
     try {
         w.exec(ss.str());
         w.commit();
