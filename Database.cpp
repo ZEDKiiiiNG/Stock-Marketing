@@ -50,10 +50,6 @@ bool Database::hasAccount(pqxx::connection * conn, int accountId) {
 
 
 void Database::createAccount(pqxx::connection * conn, int accountId, double balance) {
-    if (hasAccount(conn, accountId)) {
-        throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
-    }
-    sleep(3);
     pqxx::work w(*conn);
     std::stringstream ss;
     ss << "INSERT INTO account (account_id, balance) VALUES (" << accountId << "," << balance << ");";
@@ -61,7 +57,7 @@ void Database::createAccount(pqxx::connection * conn, int accountId, double bala
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << "error: " << balance << '\n';
+        throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
         w.abort();
     }
 }
