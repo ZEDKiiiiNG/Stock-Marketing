@@ -5,6 +5,7 @@
 #include "Database.h"
 
 Database::Database() {
+    mtx = new std::mutex();
     pqxx::connection * conn = connect();
     createTable(conn, "tables.sql");
     conn->disconnect();
@@ -159,12 +160,12 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
 void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
                                double sellAmount, double sellLimit) {
     pqxx::work w(*conn);
-    mtx.lock();
+    mtx->lock();
     std::string q = getLockOrderQuery(&w, sellOrderId, sellerAccountId);
     w.exec(q);
     q = getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId);
     pqxx::result r = w.exec(q);
-    mtx.unlock();
+    mtx->unlock();
 
     // atmoic execute
     std::stringstream ss;
@@ -195,12 +196,12 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
 void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::string symbol, int buyerAccountId, double buyAmount,
                               double buyLimit) {
     pqxx::work w(*conn);
-    mtx.lock();
+    mtx->lock();
     std::string q = getLockOrderQuery(&w, buyOrderId, buyerAccountId);
     w.exec(q);
     q = getSellOrderQuery(&w, buyLimit, symbol, buyerAccountId);
     pqxx::result r = w.exec(q);
-    mtx.unlock();
+    mtx->unlock();
 
     // atomic exec
     std::stringstream ss;
