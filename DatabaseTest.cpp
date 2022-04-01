@@ -320,7 +320,7 @@ int main(int argc, char *argv[]) {
     test.testHandleBuy();
     test.testMix();
      */
-    test.testUpdateAmountMulti();
+    //test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
     return EXIT_SUCCESS;
