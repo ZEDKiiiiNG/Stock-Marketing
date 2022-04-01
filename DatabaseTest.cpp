@@ -260,8 +260,8 @@ void DatabaseTest::testUpdateAmountMulti() {
     db.saveAccount(accountId, 10000);
     db.savePosition(symbol, accountId);
     // db.updateAmount(symbol, accountId, 5);
-    pqxx::connection conn1 = db.connect();
-    pqxx::connection conn2 = db.connect();
+    pqxx::connection * conn1 = db.connect();
+    pqxx::connection * conn2 = db.connect();
     std::thread t1(&Database::updateAmount, this->db, conn1, symbol, accountId, amount1);
     std::thread t2(&Database::updateAmount, this->db, conn2, symbol, accountId, amount2);
     t1.join();
