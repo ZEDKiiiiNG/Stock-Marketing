@@ -80,6 +80,7 @@ double Database::getAmount(std::string symbol, int accountId) {
     return r.begin()[0].as<double>();
 }
 
+/*
 void Database::updateAmount(std::string symbol, int accountId, double amount) {
     double curr = getAmount(symbol, accountId);
     if (curr + amount < 0) {
@@ -97,6 +98,24 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
     } catch (pqxx::sql_error &e) {
         w.abort();
     }
+}
+ */
+
+void Database::updateAmount(std::string symbol, int accountId, double amount) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "SELECT amount FROM position"
+       << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
+    pqxx::result r(w.exec(ss.str()));
+    double curr = r.begin()[0].as<double>();
+
+    std::stringstream ss1;
+    ss1 << "UPDATE position"
+       << " SET amount = " << curr + amount
+       << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";"
+    w.exec(ss1.str());
+    w.commit();
+
 }
 
 bool Database::hasPosition(std::string symbol, int accountId) {
@@ -117,6 +136,35 @@ void Database::updatePosition(std::string symbol, int accountId, double amount) 
     }
     updateAmount(symbol, accountId, amount);
 }
+
+
+/*
+void Database::updatePosition(std::string symbol, int accountId, double amount) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "SELECT * FROM account"
+       << " WHERE account_id = " << accountId << ";";
+    pqxx::result r(w.exec(ss.str()));
+    if (r.size() < 0) {
+        throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
+    }
+
+    std::stringstream ss1;
+    ss1 << "SELECT * FROM position"
+       << " WHERE account_id = " << accountId << "AND symbol = " << n.quote(symbol) << ";";
+    r(w.exec(ss1.str()));
+    std::stringstream ss2;
+    if (r.size() < 0) {
+        ss2 << "INSERT INTO position (symbol, amount, account_id) VALUES (" << w.quote(symbol) << ","
+        << amount << ","<< accountId << ");";
+    } else {
+        ss << "UPDATE position"
+           << " SET amount = " << curr + amount
+           << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
+    }
+
+}
+*/
 
 void Database::placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice) {
     if (not hasAccount(accountId)) {
