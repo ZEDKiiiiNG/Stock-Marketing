@@ -19,17 +19,16 @@ class Database {
 public:
     Database();
     pqxx::connection * connect();
-    void saveAccount(int accountId, double balance);
+    void saveAccount(pqxx::connection * conn, int accountId, double balance);
     void updatePosition(std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
     pqxx::result cancelOrder(int orderId, int accountId);
     pqxx::result getOrder(int orderId, int accountId);
-    ~Database();
     friend class DatabaseTest;
 private:
     bool hasAccount(int accountId);
     void createTable(pqxx::connection * conn, const char * fileName);
-    void savePosition(std::string symbol, int accountId);
+    void savePosition(pqxx::connection * conn, std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId); // amount in position
     void updateAmount(pqxx::connection * conn1, std::string symbol, int accountId, double amount);  // amount in position
     bool hasPosition(std::string symbol, int accountId);
