@@ -278,10 +278,10 @@ std::string Database::getExecuteBuyOrderQuery(pqxx::work *w, int buyOrderId, std
                                               int buyerAccountId, double executeAmount,
                                               double remainAmount, double buyLimit, double executePrice) {
     std::stringstream ss;
-    ss << getUpdatePositionQuery(&w, symbol, buyerAccountId, executeAmount)
-        << "\n" << getUpdateBalanceQuery(&w, executeAmount * (buyLimit - executePrice))
-        << "\n" << getUpdateOpenOrdeQuery(&w, buyOrderId, buyerAccountId, remainAmount)
-        << "\n" << getSaveOrderQuery(&w, buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
+    ss << getUpdatePositionQuery(w, symbol, buyerAccountId, executeAmount)
+        << "\n" << getUpdateBalanceQuery(w, executeAmount * (buyLimit - executePrice))
+        << "\n" << getUpdateOpenOrdeQuery(w, buyOrderId, buyerAccountId, remainAmount)
+        << "\n" << getSaveOrderQuery(w, buyOrderId, symbol, executeAmount, 0, STATUS_EXECUTED, executePrice, buyerAccountId);
     return ss.str();
 }
 
