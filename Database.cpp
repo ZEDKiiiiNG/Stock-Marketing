@@ -330,6 +330,7 @@ std::string Database::getUpdatePositionQuery(pqxx::work *w, std::string symbol, 
        << w->quote(symbol) << "," << amount << "," << accountId << ")"
        << " ON CONFLICT (symbol, account_id) DO UPDATE"
        << " SET amount = position.amount + " << amount << ";";
+    std::cout << ss.str() << "\n";
     return ss.str();
 }
 
