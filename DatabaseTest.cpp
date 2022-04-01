@@ -400,8 +400,8 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol) {
     /*
     pqxx::result r = db.getBuyOrder(conn1, 108, "SYM3", 36);
     std::cout << "size " << symbol << ": " << r.size() << '\n';
-    displayOrder(r);
      */
+    displayOrder(r);
 }
 
 int main(int argc, char *argv[]) {
