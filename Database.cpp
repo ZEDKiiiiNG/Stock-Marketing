@@ -93,7 +93,7 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
     std::stringstream ss;
     ss << "INSERT INTO position (symbol, account_id) VALUES (" << w.quote(symbol) << "," << accountId << ")"
     << " ON CONFLICT (symbol, account_id) DO UPDATE"
-    << " SET amount = amount + " << amount << ";";
+    << " SET amount = EXCLUDED.amount + " << amount << ";";
     try {
         w.exec(ss.str());
         w.commit();
