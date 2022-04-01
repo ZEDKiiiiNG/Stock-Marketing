@@ -5,7 +5,7 @@
 #include "Database.h"
 
 pqxx::connection * Database::connect() {
-    pqxx::connection conn = new connection("dbname=ACC_BBALL user=postgres password=passw0rd");
+    pqxx::connection * conn = new connection("dbname=ACC_BBALL user=postgres password=passw0rd");
     if (!conn->is_open()) {
         throw std::invalid_argument("Can't open database\n");
     }
