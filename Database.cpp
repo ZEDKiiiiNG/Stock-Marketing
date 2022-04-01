@@ -103,7 +103,6 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
         w.abort();
     }
     std::cout << ss.str() << '\n';
-
 }
 
 /*
