@@ -160,7 +160,8 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
 }
 
 
-void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symbol, int accountId, double amount, double limitPrice) {
+void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symbol, int accountId,
+                          double amount, double limitPrice) {
     if (not hasAccount(conn, accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }

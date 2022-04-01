@@ -347,8 +347,8 @@ void DatabaseTest::testOpenOrderMuti() {
     pqxx::connection *conn1 = db.connect();
     pqxx::connection *conn2 = db.connect();
     db.createAccount(conn1, 34, 1000);
-    std::thread t1(&Database::placeOrder, this->db, 42, "SYM2", 34, 3, 200);
-    std::thread t2(&Database::placeOrder, this->db, 43, "SYM2", 34, 4, 200);
+    std::thread t1(&Database::placeOrder, this->db, conn1, 42, "SYM2", 34, 3, 200);
+    std::thread t2(&Database::placeOrder, this->db, conn2, 43, "SYM2", 34, 4, 200);
     t1.join();
     t2.join();
     conn1->disconnect();
