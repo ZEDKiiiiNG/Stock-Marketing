@@ -160,7 +160,7 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
     if (not hasAccount(conn, accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
-    // atomically adjust and open order
+    // atomically place order
     pqxx::work w(*conn);
     std::stringstream ss;
     if (amount < 0) {
@@ -180,6 +180,7 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
         std::cout << e.what() << '\n';
         w.abort();
     }
+    // exc order
     if (amount < 0) {
         handleSellOrder(conn, orderId, symbol, accountId, amount, limitPrice);
     } else {

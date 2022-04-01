@@ -131,8 +131,9 @@ void DatabaseTest::testCancel() {
 
 }
 
-/*
+
 void DatabaseTest::testHandleSell() {
+    /*
     db.createAccount(3, 10000);
     db.createAccount(4, 10000);
     db.saveOrder(3, "TEA", 5, 112, STATUS_OPEN, 0, 3);  // buy
@@ -158,33 +159,34 @@ void DatabaseTest::testHandleSell() {
     assert(db.getBalance(4) == 10220);
     r = db.getOrder(6, 4);
     displayOrder(r);
+     */
 
-    db.createAccount(5, 10000);
-    db.createAccount(6, 10000);
-    db.createAccount(7, 10000);
-    db.updatePosition("HW", 6, 15);
-    db.placeOrder(7, "HW", 5, 5, 112);  // buy
-    db.placeOrder(8, "HW", 5, 3, 114);
-    db.placeOrder(9, "HW", 7, 2, 116);
-    db.placeOrder(10, "HW", 6, -8, 110);
+    db.createAccount(testconn, 5, 10000);
+    db.createAccount(testconn, 6, 10000);
+    db.createAccount(testconn, 7, 10000);
+    db.updatePosition(testconn, "HW", 6, 15);
+    db.placeOrder(testconn, 7, "HW", 5, 5, 112);  // buy
+    db.placeOrder(testconn, 8, "HW", 5, 3, 114);
+    db.placeOrder(testconn, 9, "HW", 7, 2, 116);
+    db.placeOrder(testconn, 10, "HW", 6, -8, 110);
 
-    assert(db.getBalance(7) == 10000 - 116 * 2);
-    assert(db.getAmount("HW", 7) == 2);
-    assert(db.getBalance(5) == 10000 - 114 * 3 - 112 * 5);
-    assert(db.getAmount("HW", 5) == 6);
-    assert(db.getBalance(6) == 10000 + 116 * 2 + 114 * 3 + 112 * 3);
-    assert(db.getAmount("HW", 6) == 15 - 8);
+    assert(db.getBalance(testconn, 7) == 10000 - 116 * 2);
+    assert(db.getAmount(testconn, "HW", 7) == 2);
+    assert(db.getBalance(testconn, 5) == 10000 - 114 * 3 - 112 * 5);
+    assert(db.getAmount(testconn, "HW", 5) == 6);
+    assert(db.getBalance(testconn, 6) == 10000 + 116 * 2 + 114 * 3 + 112 * 3);
+    assert(db.getAmount(testconn, "HW", 6) == 15 - 8);
 
-    r = db.getOrder(7, 5);
+    r = db.getOrder(testconn, 7, 5);
+    displayOrder(testconn, r);
+    r = db.getOrder(testconn, 8, 5);
+    displayOrder(testconn, r);
+    r = db.getOrder(testconn, 9, 7);
     displayOrder(r);
-    r = db.getOrder(8, 5);
-    displayOrder(r);
-    r = db.getOrder(9, 7);
-    displayOrder(r);
-    r = db.getOrder(10, 6);
+    r = db.getOrder(testconn, 10, 6);
     displayOrder(r);
 }
-
+/*
 void DatabaseTest::testHandleBuy() {
     db.saveOrder(23, "TF", -5, 116, STATUS_OPEN, 0, 3);  // sell
     db.saveOrder(24, "TF", -2, 114, STATUS_OPEN, 0, 3);
@@ -432,8 +434,9 @@ int main(int argc, char *argv[]) {
     test.testException();
      */
     test.testCancel();
-    /*
+
     test.testHandleSell();
+    /*
     test.testHandleBuy();
     test.testMix();
      */
