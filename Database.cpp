@@ -337,7 +337,7 @@ std::string Database::getLockOrderQuery(pqxx::work *w, int orderId, int accountI
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
     << " WHERE order_id = " << orderId << " AND account_id = " << accountId
-    << " FOR UPDATE;"
+    << " FOR UPDATE;";
     return ss.str();
 }
 
