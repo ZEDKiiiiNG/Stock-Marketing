@@ -260,7 +260,6 @@ void DatabaseTest::testUpdateAmountMulti() {
     double amount2 = -2;
     db.createAccount(conn1, accountId, 10000);
     db.savePosition(conn1, symbol, accountId);
-    // db.updateAmount(symbol, accountId, 5);
 
     pqxx::connection * conn2 = db.connect();
     std::thread t1(&Database::updateAmount, this->db, conn1, symbol, accountId, amount1);
@@ -292,7 +291,15 @@ void DatabaseTest::handleCreateAccount(pqxx::connection *conn, int accountId, do
 
 void DatabaseTest::testUpdatePositionMuti() {
     pqxx::connection * conn1 = db.connect();
-    db.savePosition(conn1, "SYM1", 32);
+    pqxx::connection * conn2 = db.connect();
+    db.createAccount(conn1, 32, 10000);
+    db.createAccount(conn1, 32, 10000);
+    std::thread t1(&Database::updatePosition, this->db, conn1, "SYM1", 32, 2);
+    std::thread t2(&Database::uupdatePosition, this->db, conn2, "SYM1", 32, 3);
+    t1.join();
+    t2.join();
+    conn1->disconnect();
+    conn2->disconnect();
 }
 
 int main(int argc, char *argv[]) {

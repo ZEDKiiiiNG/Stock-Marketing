@@ -85,15 +85,21 @@ void Database::savePosition(pqxx::connection * conn, std::string symbol, int acc
     w.commit();
 }
 
-/*
-void Database::updatePosition(std::string symbol, int accountId, double amount) {
+void Database::updatePosition(qxx::connection * conn, std::string symbol, int accountId, double amount) {
     if (not hasAccount(accountId)) {
         throw std::invalid_argument(ACCOUNT_NOT_EXIST_ERROR);
     }
-    if (not hasPosition(symbol, accountId)) {
-        savePosition(symbol, accountId);
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "INSERT INTO position (symbol, account_id) VALUES (" << w.quote(symbol) << "," << accountId << ");"
+    << "ON DUPLICATE KEY UPDATE amount = amount + " << "amount";
+    try {
+        w.exec(ss.str());
+        w.commit();
+    } catch (pqxx::sql_error &e) {
+        w.abort();
     }
-    updateAmount(symbol, accountId, amount);
+
 }
 
 bool Database::hasPosition(std::string symbol, int accountId) {
