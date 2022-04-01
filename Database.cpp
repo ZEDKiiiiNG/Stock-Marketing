@@ -154,9 +154,9 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     }
     else {
         // buy order, refund price
-        ss2 << getUpdateBalanceQuery(accountId, limitPrice * amount);
+        ss2 << "\n" << getUpdateBalanceQuery(accountId, limitPrice * amount);
     }
-    ss2 << getUpdateCancelOrderQuery(&w, orderId, accountId) << ";";
+    ss2 << "\n" << getUpdateCancelOrderQuery(&w, orderId, accountId) << ";";
     std::cout << ss2.str() << "\n";
     try {
         w.exec(ss2.str());
