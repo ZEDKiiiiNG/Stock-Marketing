@@ -211,7 +211,7 @@ void DatabaseTest::testHandleBuy() {
     assert(db.getAmount(testconn, "STAR", 9) == 5);
     assert(db.getBalance(testconn, 9) == 10000 - 115 * 8 + (115 -113) * 3 + (115 - 114) * 2);
 
-    r = db.getOrder(testconn, 11, 8);
+    pqxx::result r = db.getOrder(testconn, 11, 8);
     displayOrder(r);
     r = db.getOrder(testconn, 12, 8);
     displayOrder(r);
