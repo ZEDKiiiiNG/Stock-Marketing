@@ -373,6 +373,6 @@ void Database::handleBuyOrder(int buyOrderId, std::string symbol, int buyerAccou
 
 Database::~Database() {
     conn->disconnect();
-    delete conn;
+    // delete conn;
 }
 
