@@ -378,6 +378,7 @@ void DatabaseTest::testHandleSellMuti() {
     db.saveOrder(conn1, 50, "SYM4", 6, 112, STATUS_OPEN, 0, 35);
 
     // t2 will not blocked by t1 if no row overlap
+    // t3 will be block by t1
     std::thread t1(&DatabaseTest::testBuyOrderMulti, this, "SYM3", 36, 108);
     std::thread t2(&DatabaseTest::testBuyOrderMulti, this, "SYM4", 36, 108);
     std::thread t3(&DatabaseTest::testBuyOrderMulti, this, "SYM3", 36, 111);
@@ -397,6 +398,7 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol, int accountId, double s
     std::cout << ss.str() << '\n';
     pqxx::result r = w.exec(ss.str());
     if (symbol == "SYM3" && sellLimitPrice == 108) {
+        std::cout << "delay 3s";
         w.exec("SELECT pg_sleep(3);");
     }
     w.commit();
