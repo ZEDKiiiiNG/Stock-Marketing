@@ -259,8 +259,8 @@ void DatabaseTest::testUpdateAmountMulti() {
     int accountId = 14;
     double amount1 = 5;
     double amount2 = 6;
-    db.saveAccount(accountId, 10000);
-    db.savePosition(symbol, accountId);
+    db.saveAccount(conn1, accountId, 10000);
+    db.savePosition(conn1, symbol, accountId);
     // db.updateAmount(symbol, accountId, 5);
 
     pqxx::connection * conn2 = db.connect();
