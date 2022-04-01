@@ -8,6 +8,14 @@ Database::Database() : conn(new pqxx::connection(DB_INFO)) {
     createTable("tables.sql");
 }
 
+pqxx::connection * Database::connect() {
+    conn = new connection("dbname=ACC_BBALL user=postgres password=passw0rd");
+    if (!C->is_open()) {
+        throw std::invalid_argument("Can't open database\n");
+    }
+    return conn;
+}
+
 void Database::createTable(const char *fileName) {
     std::ifstream ifs;
     ifs.open(fileName, std::ifstream::in);
@@ -101,7 +109,7 @@ void Database::updateAmount(std::string symbol, int accountId, double amount) {
 }
  */
 
-void Database::updateAmount(std::string symbol, int accountId, double amount) {
+void Database::updateAmount(pqxx::connection conn, std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn);
     try {
         std::stringstream ss;

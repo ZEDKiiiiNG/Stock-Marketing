@@ -20,6 +20,7 @@ private:
 
 public:
     Database();
+    pqxx::conection * connect();
     void saveAccount(int accountId, double balance);
     void updatePosition(std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
@@ -32,7 +33,7 @@ private:
     void createTable(const char * fileName);
     void savePosition(std::string symbol, int accountId);
     double getAmount(std::string symbol, int accountId); // amount in position
-    void updateAmount(std::string symbol, int accountId, double amount);  // amount in position
+    void updateAmount(pqxx::connection * conn, std::string symbol, int accountId, double amount);  // amount in position
     bool hasPosition(std::string symbol, int accountId);
     void updateBalance(int accountId, double amount);
     double getBalance(int accountId);
