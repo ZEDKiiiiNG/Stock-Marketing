@@ -60,6 +60,7 @@ private:
                                         double executeAmount, double remainAmount, double buyLimit,
                                         double executePrice);
     std::string getUpdatePositionQuery(pqxx::work *w, std::string symbol, int accountId, double amount);
+    std::string getUpdateOpenOrdeQuery(pqxx::work *w, int orderId, int accountId, double remainAmount);
 
     // fort test
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,

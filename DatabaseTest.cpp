@@ -385,8 +385,14 @@ void DatabaseTest::testHandleSellMuti() {
     t1.join();
     t2.join();
     t3.join();
+
+    pqxx::work w(*conn);
+    std::cout << db.getExecuteBuyOrderQuery(w, 43, "SYM2", 0, 110, 110);
+
     conn1->disconnect();
     conn2->disconnect();
+
+
 }
 
 void DatabaseTest::testBuyOrderMulti(std::string symbol, int accountId, double sellLimitPrice) {
