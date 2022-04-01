@@ -386,7 +386,7 @@ void DatabaseTest::testHandleSellMuti() {
     t2.join();
     t3.join();
 
-    pqxx::work w(*conn);
+    pqxx::work w(*conn1);
     std::cout << db.getExecuteBuyOrderQuery(w, 43, "SYM2", 0, 110, 110);
 
     conn1->disconnect();
