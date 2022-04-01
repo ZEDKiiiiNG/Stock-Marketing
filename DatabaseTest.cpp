@@ -127,7 +127,7 @@ void DatabaseTest::testCancel() {
     db.placeOrder(testconn, 15, "UME", 10, -5, 100);
     db.placeOrder(testconn, 16, "UME", 11, 3, 110);
     db.cancelOrder(testconn, 15, 10);
-    r = db.getOrder(testconn, 15, 10);
+    pqxx::result r = db.getOrder(testconn, 15, 10);
     displayOrder(r);
 
 }
@@ -438,7 +438,7 @@ int main(int argc, char *argv[]) {
     test.testHandleBuy();
     test.testMix();
      */
-    */
+
     // test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
