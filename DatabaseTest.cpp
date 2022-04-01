@@ -243,10 +243,8 @@ void DatabaseTest::testMix() {
     displayOrder(r);
     r = db.getOrder(testconn, 21, 13);
     displayOrder(r);
-    /*
     r = db.getOrder(testconn, 22, 12);
     displayOrder(r);
-     */
 }
 
 /*
