@@ -197,7 +197,7 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
                                double sellAmount, double sellLimit) {
     pqxx::work w(*conn);
     pqxx::result r = w.exec(getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId));
-    std::cout << getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId); << '\n';
+    std::cout << getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId) << '\n';
     pqxx::result::const_iterator c = r.begin();
     /*
     while (sellAmount != 0 && c != r.end()) {
