@@ -257,8 +257,7 @@ void DatabaseTest::testUpdateAmountMulti() {
     double amount2 = 6;
     db.saveAccount(accountId, 10000);
     db.updateAmount(symbol, accountId, 5);
-    double ans = std::thread (&Database::getAmount, this->db, symbol, accountId);
-    std:: cout << ans << '\n';
+    std::thread t1(&Database::updateAmount, this->db, symbol, accountId, amount1);
     // std::thread t1(&Database::updateAmount, this->db, symbol, accountId, amount1);
     // std::thread t2(&Database::updateAmount, this->db, symbol, accountId, amount2);
     // t1.detach();
