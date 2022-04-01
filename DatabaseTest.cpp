@@ -74,7 +74,7 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.placeOrder(testconn, 1, "SYM", 1, 3, 1650); // buy
+        db.placeOrder(testconn, 1, "SYM", 1, 5, 1650); // buy
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_BALANCE_ERROR);
@@ -82,11 +82,11 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.placeOrder(testconn, 1, "BTC", 2, -11, 110); // sell
+        db.placeOrder(testconn, 1, "BTC", 25, -11, 110); // sell
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);
-        assert(db.getAmount(testconn, "BTC", 2) == 10);
+        assert(db.getAmount(testconn, "BTC", 2) == 22.2);
     }
 
     try {
