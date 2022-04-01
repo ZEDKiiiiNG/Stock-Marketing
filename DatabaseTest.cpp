@@ -178,9 +178,9 @@ void DatabaseTest::testHandleSell() {
     assert(db.getAmount(testconn, "HW", 6) == 15 - 8);
 
     pqxx::result r = db.getOrder(testconn, 7, 5);
-    displayOrder(testconn, r);
+    displayOrder(r);
     r = db.getOrder(testconn, 8, 5);
-    displayOrder(testconn, r);
+    displayOrder(r);
     r = db.getOrder(testconn, 9, 7);
     displayOrder(r);
     r = db.getOrder(testconn, 10, 6);
