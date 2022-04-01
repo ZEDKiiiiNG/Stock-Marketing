@@ -320,6 +320,15 @@ void DatabaseTest::testUpdateBalanceMuti() {
     conn2->disconnect();
 }
 
+void DatabaseTest::testCancelOrderMuti() {
+    pqxx::connection * conn1 = db.connect();
+    db.createAccount(conn1, 33, 10000);
+    db.saveOrder(conn1, 41, "SYM1", 5, 110, STATUS_OPEN, 0, 33);
+    r = db.getOrder(conn1, 41, 33);
+    displayOrder(r);
+
+}
+
 int main(int argc, char *argv[]) {
     DatabaseTest test;
     /*
@@ -337,5 +346,6 @@ int main(int argc, char *argv[]) {
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
     test.testUpdateBalanceMuti();
+    test.testCancelOrderMuti();
     return EXIT_SUCCESS;
 }

@@ -135,33 +135,31 @@ pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accoun
 
 
 pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int accountId) {
-    pqxx::result r = getOrderByStatus(conn, orderId, accountId, STATUS_OPEN);
+    pqxx::work w(*conn);
+    std::stringstream ss1;
+    ss1 << getOpenOrderQuery(&w, orderId, accountId) << ";";
+    pqxx::result r = w.exec(ss1.str());
     if (r.size() == 0) {
         throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
-    std::stringstream ss;
-    ss << "SELECT * FROM trade_order"
-       << " WHERE account_id = " << accountId << " AND order_id = " << orderId
-       << " AND status = " << w.quote(status)
-       << " FOR UPDATE";
-    pqxx::result r = w.exec(ss.str());
+    std::cout << ss1 << '\n';
 
     // refund
+    std::stringstream ss2;
     std::string symbol = r.begin()[1].as<std::string>();
     double amount = r.begin()[2].as<double>();
     double limitPrice = r.begin()[3].as<double>();
-    pqxx::work w(*conn);
-
     if (amount < 0) {
         // negative amount, sell order, refund shares
-        ss << getUpdateAmountQuery(symbol, accountId, -amount);
+        ss2 << getUpdateAmountQuery(&w, symbol, accountId, -amount);
     }
     else {
         // buy order, refund price
-        ss << getUpdateBalanceQuery(accountId, limitPrice * amount)
+        ss2 << getUpdateBalanceQuery(&w, accountId, limitPrice * amount)
     }
-    ss << getUpdateCancelOrderQuery(orderId, accountId);
-    ss << ";";
+    ss2 << getUpdateCancelOrderQuery(&w, orderId, accountId) << ";";
+    std::cout << ss.str();
+    /*
     try {
         w.exec(ss.str());
         w.commit();
@@ -169,6 +167,7 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
         std::cout << e.what() << '\n';
         w.abort();
     }
+     */
     return getOrder(conn, orderId, accountId);
 }
 
@@ -181,32 +180,45 @@ std::string Database::getUpdateBalanceQuery(int accountId, double amount) {
 }
 
 
-std::string Database::getUpdateAmountQuery(std::string symbol, int accountId, double amount) {
+std::string Database::getUpdateAmountQuery(pqxx::work * w, std::string symbol, int accountId, double amount) {
     std::stringstream ss;
     ss << "UPDATE position"
        << " SET amount = amount + " << amount
        << " WHERE account_id = " << accountId
-       << " AND symbol = " << w.quote(symbol);
+       << " AND symbol = " << w->quote(symbol);
     return  ss.str();
 }
 
-std::string Database::getUpdateCancelOrderQuery(int orderId, int accountId) {
+std::string Database::getUpdateCancelOrderQuery(pqxx::work * w, int orderId, int accountId) {
     std::stringstream ss;
     ss << "UPDATE trade_order"
        << " SET status = " << w.quote(STATUS_CANCELLED)
        << ", update_time = " << time(NULL)
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
-       << " AND status = " << w.quote(STATUS_OPEN);
+       << " AND status = " << w->quote(STATUS_OPEN);
     return ss.str();
 }
 
-std::string Database::getOpenOrderQuery(int orderId, int accountId) {
+std::string Database::getOpenOrderQuery(pqxx::work * w, int orderId, int accountId) {
     std::stringstream ss;
     ss << "SELECT * FROM trade_order"
        << " WHERE account_id = " << accountId << " AND order_id = " << orderId
-       << " AND status = " << w.quote(status)
+       << " AND status = " << w->quote(status)
        << " FOR UPDATE";
     return ss.str();
+}
+
+
+// for test
+void Database::saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice, std::string status,
+                         double executePrice, int accountId) {
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    ss << "INSERT INTO trade_order (order_id, symbol, amount, limit_price, status, update_time, execute_price, account_id) VALUES ("
+       << orderId << "," << w.quote(symbol) << "," << amount << "," << limitPrice << ","
+       << w.quote(status) << "," << time(NULL) << "," << executePrice << "," << accountId << ");";
+    w.exec(ss.str());
+    w.commit();
 }
 
 
