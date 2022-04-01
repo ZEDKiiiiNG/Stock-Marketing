@@ -364,7 +364,7 @@ void DatabaseTest::testHandleSellMuti() {
     pqxx::connection *conn2 = db.connect();
     db.createAccount(conn1, 35, 10000);
     db.createAccount(conn1, 36, 10000);
-    db.updatePosition(conn, "SYM2", 36, 20);
+    db.updatePosition(conn1, "SYM2", 36, 20);
     db.saveOrder(conn1, 44, "SYM2", 5, 110, STATUS_OPEN, 0, 33);
     db.saveOrder(conn1, 45, "SYM2", 6, 112, STATUS_OPEN, 0, 33);
     db.saveOrder(conn1, 46, "SYM", -5, 108, STATUS_OPEN, 0, 34);
