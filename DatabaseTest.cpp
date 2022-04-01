@@ -282,7 +282,7 @@ void DatabaseTest::testCreateAccountMulti() {
     conn2->disconnect();
 }
 
-void DatabaseTest::handleCreateAccount(int *conn, int accountId, double balance) {
+void DatabaseTest::handleCreateAccount(pqxx::connection *conn, int accountId, double balance) {
     try {
         db.createAccount(conn, accountId, balance)
     } catch (std::invalid_argument & e) {
