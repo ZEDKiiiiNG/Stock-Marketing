@@ -74,17 +74,17 @@ void DatabaseTest::testException() {
     }
 
     try {
-        db.placeOrder(testconn, 1, "SYM", 1, 5, 1650); // buy
+        db.placeOrder(testconn, 1, "SYM", 1, 8, 1650); // buy
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_BALANCE_ERROR);
-        assert(db.getBalance(testconn, 1) == 4860);
+        assert(db.getBalance(testconn, 1) == 10000);
     }
 
     try {
         db.placeOrder(testconn, 5, "BTC", 1, -24, 110); // sell
     } catch (std::invalid_argument & e) {
-        std::cout << "...." << e.what() << '\n';
+        std::cout << e.what() << '\n';
         assert(std::string(e.what()) == INSUFFICIENT_SHARE_ERROR);
         assert(db.getAmount(testconn, "BTC", 1) == 22.2);
     }
