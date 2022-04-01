@@ -447,7 +447,7 @@ int main(int argc, char *argv[]) {
     // test.testUpdateAmountMulti();
     test.testCreateAccountMulti();
     test.testUpdatePositionMuti();
-    test.testUpdateBalanceMuti();
+    // test.testUpdateBalanceMuti();
     test.testCancelOrderMuti();
     test.testOpenOrderMuti();
     test.testHandleSellMuti();
