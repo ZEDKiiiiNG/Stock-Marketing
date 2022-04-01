@@ -89,11 +89,12 @@ void Database::updateBalance(pqxx::connection * conn, int accountId, double amou
        << " WHERE account_id = " << accountId << ";";
     try {
         w.exec(ss.str());
+        sleep(2);
         w.commit();
     } catch (pqxx::sql_error &e) {
         std::cout << e.what();
         w.abort();
-        throw std::invalid_argument(INSUFFICIENT_BALANCE_ERROR);
+        // throw std::invalid_argument(INSUFFICIENT_BALANCE_ERROR);
     }
 }
 
@@ -130,6 +131,35 @@ pqxx::result Database::getOrderByStatus(pqxx::connection * conn, int orderId, in
 
 pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accountId) {
     return getOrderByStatus(conn, orderId, accountId, "");
+}
+
+pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int accountId) {
+    pqxx::result r = getOrderByStatus(orderId, accountId, STATUS_OPEN);
+    if (r.size() == 0) {
+        throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
+    }
+
+    // refund
+    std::string symbol = r.begin()[1].as<std::string>();
+    double amount = r.begin()[2].as<double>();
+    double limitPrice = r.begin()[3].as<double>();
+    pqxx::work w(*conn);
+    std::stringstream ss;
+    if (amount < 0) {
+        // negative amount, sell order, refund shares
+        ss << "UPDATE position"
+           << " SET amount = amount + " << -amount
+           << " WHERE account_id = " << accountId
+           << " AND symbol = " << w.quote(symbol) << ";";
+    }
+    else {
+        // buy order, refund price
+        ss << "UPDATE account"
+           << " SET balance = balance +" << amount
+           << " WHERE account_id = " << accountId << ";";
+    }
+    updateCancelOrder(orderId, accountId);
+    return getOrder(orderId, accountId);
 }
 
 

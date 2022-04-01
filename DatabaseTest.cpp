@@ -309,7 +309,14 @@ void DatabaseTest::testUpdatePositionMuti() {
 
 void DatabaseTest::testUpdateBalanceMuti() {
     pqxx::connection * conn1 = db.connect();
+    pqxx::connection * conn2 = db.connect();
     db.updateBalance(conn1, 32, -10005);
+    std::thread t1(&Database::updateBalance, this->db, conn1, 32, 10);
+    std::thread t2(&Database::updatePosition, this->db, conn2, 32, 5);
+    t1.join();
+    t2.join();
+    conn1->disconnect();
+    conn2->disconnect();
 }
 
 int main(int argc, char *argv[]) {

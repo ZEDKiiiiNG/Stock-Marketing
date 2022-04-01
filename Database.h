@@ -22,7 +22,7 @@ public:
     void createAccount(pqxx::connection * conn, int accountId, double balance);
     void updatePosition(pqxx::connection * conn, std::string symbol, int accountId, double amount);
     void placeOrder(int orderId, std::string symbol, int accountId, double amount, double limitPrice);
-    pqxx::result cancelOrder(int orderId, int accountId);
+    pqxx::result cancelOrder(pqxx::connection * conn, int orderId, int accountId);
     pqxx::result getOrder(pqxx::connection * conn, int orderId, int accountId);
     friend class DatabaseTest;
 private:
