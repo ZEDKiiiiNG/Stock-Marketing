@@ -55,7 +55,7 @@ private:
     std::string getOpenOrderQuery(pqxx::work * w, int orderId, int accountId);
     std::string getSaveOrderQuery(pqxx::work * w, int orderId, std::string symbol, double amount, double limitPrice,
                                   std::string status, double executePrice, int accountId);
-    std::string getBuyOrderQuery(pqxx::work *w, double sellLimit, std::string symbol, int sellerAccountId)
+    std::string getBuyOrderQuery(pqxx::work *w, double sellLimit, std::string symbol, int sellerAccountId);
 
     // fort test
     void saveOrder(pqxx::connection * conn, int orderId, std::string symbol, double amount, double limitPrice,
