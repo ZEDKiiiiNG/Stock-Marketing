@@ -270,7 +270,7 @@ void DatabaseTest::testUpdateAmountMulti() {
     conn1->disconnect();
     conn2->disconnect();
 }
- *?
+*/
 
 void DatabaseTest::testCreateAccountMulti() {
     pqxx::connection * conn1 = db.connect();
