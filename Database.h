@@ -49,7 +49,7 @@ private:
 
     // get query
     std::string getUpdateAmountQuery(pqxx::work * w, std::string symbol, int accountId, double amount);
-    std::string getUpdateBalanceQuery(int accountId, double amount);
+    std::string getUpdateBalanceQuery(pqxx::work * w, int accountId, double amount);
     std::string getUpdateCancelOrderQuery(pqxx::work * w, int orderId, int accountId);
     std::string getOpenOrderQuery(pqxx::work * w, int orderId, int accountId);
     std::string getSaveOrderQuery(pqxx::work * w, int orderId, std::string symbol, double amount, double limitPrice,

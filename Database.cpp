@@ -146,7 +146,7 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     }
     else {
         // buy order, refund price
-        ss2 << "\n" << getUpdateBalanceQuery(accountId, limitPrice * amount);
+        ss2 << "\n" << getUpdateBalanceQuery(&w, accountId, limitPrice * amount);
     }
     ss2 << "\n" << getUpdateCancelOrderQuery(&w, orderId, accountId);
     try {
@@ -168,10 +168,10 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
     pqxx::work w(*conn);
     std::stringstream ss;
     if (amount < 0) {
-        ss << getUpdateAmountQuery(&, symbol, accountId, amount); // negative amount, sell order, deduct shares
+        ss << getUpdateAmountQuery(&w, symbol, accountId, amount); // negative amount, sell order, deduct shares
     }
     else {
-        ss << getUpdateBalanceQuery(accountId, -limitPrice * amount);
+        ss << getUpdateBalanceQuery(&w, accountId, -limitPrice * amount);
         ss << "WAITFOR DELAY '00:00:03';";
     }
     ss << getSaveOrderQuery(&w, orderId, symbol, amount, limitPrice, STATUS_OPEN, 0, accountId);
@@ -196,7 +196,7 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
 
 
 // get query
-std::string Database::getUpdateBalanceQuery(int accountId, double amount) {
+std::string Database::getUpdateBalanceQuery(pqxx::work * w, int accountId, double amount) {
     std::stringstream ss;
     ss << "UPDATE account"
        << " SET balance = balance + " << amount
