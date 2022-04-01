@@ -125,7 +125,7 @@ pqxx::result Database::getOrderByStatus(pqxx::connection * conn, int orderId, in
 }
 
 pqxx::result Database::getOrder(pqxx::connection * conn, int orderId, int accountId) {
-    return getOrderByStatus(orderId, accountId, "");
+    return getOrderByStatus(conn, orderId, accountId, "");
 }
 
 
