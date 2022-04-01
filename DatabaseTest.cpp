@@ -354,6 +354,7 @@ void DatabaseTest::displayOrder(pqxx::result & r) {
     std::cout << '\n';
 }
 
+/*
 void DatabaseTest::testOpenOrderMuti() {
     pqxx::connection *conn1 = db.connect();
     pqxx::connection *conn2 = db.connect();
@@ -369,6 +370,7 @@ void DatabaseTest::testOpenOrderMuti() {
     r = db.getOrder(conn1, 43, 34);
     displayOrder(r);
 }
+ */
 
 void DatabaseTest::testHandleSellMuti() {
     pqxx::connection *conn1 = db.connect();
@@ -449,7 +451,7 @@ int main(int argc, char *argv[]) {
     test.testUpdatePositionMuti();
     // test.testUpdateBalanceMuti();
     test.testCancelOrderMuti();
-    test.testOpenOrderMuti();
+    //test.testOpenOrderMuti();
     test.testHandleSellMuti();
     return EXIT_SUCCESS;
 }
