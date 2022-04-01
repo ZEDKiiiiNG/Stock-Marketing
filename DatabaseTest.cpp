@@ -274,14 +274,22 @@ void DatabaseTest::testUpdateAmountMulti() {
 void DatabaseTest::testCreateAccountMulti() {
     pqxx::connection * conn1 = db.connect();
     pqxx::connection * conn2 = db.connect();
+    std::thread t1;
     try {
-        std::thread t1(&Database::createAccount, this->db, conn1, 31, 1000);
-        std::thread t2(&Database::createAccount, this->db, conn2, 31, 2000);
-        t1.join();
-        t2.join();
+        t1(&Database::createAccount, this->db, conn1, 31, 1000);
     } catch (std::invalid_argument & e) {
         std::cout << e.what() << '\n';
+        t1.join();
     }
+
+    std::thread t2;
+    try {
+        t2(&Database::createAccount, this->db, conn2, 31, 2000);
+    } catch (std::invalid_argument & e) {
+        std::cout << e.what() << '\n';
+        t2.join();
+    }
+
 
     conn1->disconnect();
     conn2->disconnect();
