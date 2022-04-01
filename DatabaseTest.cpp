@@ -4,7 +4,6 @@
 
 #include "DatabaseTest.h"
 
-/*
 void DatabaseTest::testSaveAccount() {
     db.createAccount(1, 10000);
     db.createAccount(2, 1500);
@@ -18,6 +17,7 @@ void DatabaseTest::testHasAccount() {
 }
 
 void DatabaseTest::testPosition() {
+    /*
     assert(not db.hasPosition("SYM", 1));
     db.savePosition("SYM", 1);
     assert(db.hasPosition("SYM", 1));
@@ -29,6 +29,7 @@ void DatabaseTest::testPosition() {
     assert(db.getAmount("SYM", 1) == 200);
     db.updateAmount("SYM", 1, 18.8);
     assert(db.getAmount("SYM", 1) == 218.8);
+     */
 
     db.updatePosition("BTC", 2, 15);
     assert(db.getAmount("BTC", 2) == 15);
@@ -36,10 +37,10 @@ void DatabaseTest::testPosition() {
     assert(db.getAmount("BTC", 1) == 22.2);
     db.updatePosition("SYM", 1, 10);
     assert(db.getAmount("SYM", 1) == 228.8);
-
     assert(db.getAmount("ABC", 1) == 0);
 }
 
+/*
 void DatabaseTest::testOrder() {
     assert(db.getBalance(1) == 10000);
     db.updateBalance(1, -1000);
@@ -418,10 +419,11 @@ void DatabaseTest::testBuyOrderMulti(std::string symbol, int accountId, double s
 
 int main(int argc, char *argv[]) {
     DatabaseTest test;
-    /*
+
     test.testSaveAccount();
     test.testHasAccount();
     test.testPosition();
+    /*
     test.testOrder();
     test.testException();
     test.testCancel();
