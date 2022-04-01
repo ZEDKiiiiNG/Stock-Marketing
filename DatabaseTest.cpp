@@ -291,7 +291,7 @@ void DatabaseTest::handleCreateAccount(pqxx::connection *conn, int accountId, do
 }
 
 void DatabaseTest::testUpdatePositionMuti() {
-    qxx::connection * conn1 = db.connect();
+    Pqxx::connection * conn1 = db.connect();
     db.savePosition(conn1, "SYM1", 32);
 }
 
