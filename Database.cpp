@@ -42,6 +42,7 @@ void Database::updateAmount(pqxx::connection * conn, std::string symbol, int acc
            << " WHERE account_id = " << accountId << "AND symbol = " << w.quote(symbol) << ";";
         pqxx::result r(w.exec(ss.str()));
         double curr = r.begin()[0].as<double>();
+        sleep(3);
 
         std::stringstream ss1;
         ss1 << "UPDATE position"
