@@ -312,7 +312,9 @@ void DatabaseTest::testCancelOrderMuti() {
     db.saveOrder(conn1, 41, "SYM1", 5, 110, STATUS_OPEN, 0, 33);
     pqxx::result r = db.getOrder(conn1, 41, 33);
     displayOrder(r);
-
+    db.cancelOrder(conn, 41, 33);
+    r = db.getOrder(conn1, 41, 33);
+    displayOrder(r);
 }
 
 void DatabaseTest::displayOrder(pqxx::result & r) {
