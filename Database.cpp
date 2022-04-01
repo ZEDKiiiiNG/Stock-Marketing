@@ -38,7 +38,7 @@ void Database::createTable(const char *fileName) {
 }
 
 
-void Database::updateAmount(pqxx::connection conn1, std::string symbol, int accountId, double amount) {
+void Database::updateAmount(pqxx::connection * conn1, std::string symbol, int accountId, double amount) {
     pqxx::work w(*conn1);
     try {
         std::stringstream ss;
