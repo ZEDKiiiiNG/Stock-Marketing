@@ -139,7 +139,7 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
     ss1 << getOpenOrderQuery(&w, orderId, accountId);
     pqxx::result r = w.exec(ss1.str());
     if (r.size() == 0) {
-        throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
+        // throw std::invalid_argument(NO_OPEN_ORDER_ERROR);
     }
     sleep(3);
 
