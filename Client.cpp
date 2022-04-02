@@ -4,7 +4,7 @@
 
 #include "Client.h"
 
-void Client::start(int numOfLoop) {
+void Client::start(int numOfLoop, int mode ) {
     std::cout << "client running...\n";
 
     //get all the path of test cases
@@ -20,6 +20,7 @@ void Client::start(int numOfLoop) {
             int msg_fd = socket.setupClient(HOST, PORT);
             ss<< filePath << i << ".xml";
             std::string testFileName = ss.str();
+            if(mode == 0)
             std::cout<<"test file name : "<< testFileName <<std::endl;
             TiXmlDocument requestDocument(testFileName.c_str());
             bool loadOk = requestDocument.LoadFile();
@@ -34,9 +35,11 @@ void Client::start(int numOfLoop) {
             request.append(stringBuffer);
 //        std::cout<<"request  content: "<<"\n"<< request <<std::endl;
             socket.sendMesg(msg_fd, request);
+            if(mode == 0)
             std::cout<<"request  send!!!!: "<<std::endl;
             try{
                 std::vector<char> response = socket.recvMesg(msg_fd);
+                if(mode == 0)
                 std::cout << response.data() << '\n';
                 socket.closeConn(msg_fd);
             }catch(std::invalid_argument &e){
@@ -50,7 +53,7 @@ void Client::start(int numOfLoop) {
 
 }
 
-void Client::multiThreadStart(int numOfThread,int numOfLoop ){
+void Client::multiThreadStart(int numOfThread,int numOfLoop, int mode ){
 //    size_t  numOfThread = 10;
 //    std::vector<std::thread> threadVector(10);
     std::thread thArr[numOfThread];
@@ -58,7 +61,7 @@ void Client::multiThreadStart(int numOfThread,int numOfLoop ){
 //        std::thread t(&Client::start, this);
 //        threadVector.push_back(t);
 //        thArr[i] = std::thread(&Client::scalabilityStart, this,MAX_TEST_NUM);
-        thArr[i] = std::thread(&Client::start, this, numOfLoop);
+        thArr[i] = std::thread(&Client::start, this, numOfLoop, mode);
     }
     for (auto &a : thArr)
         a.join();
@@ -181,13 +184,15 @@ int main(int argc, char *argv[]) {
 
     int numOfThread = std::atoi(argv[1]);
     int numOfLoop = std::atoi(argv[2]);
+    //0 = functionality; 1 = scalability
+    int mode = std::atoi(argv[3]);
     int MAX_TEST_NUM = 8;
 
-    client.multiThreadStart(numOfThread, numOfLoop);
+    client.multiThreadStart(numOfThread, numOfLoop, mode);
 //    scalabilityStart();
     clock_gettime(CLOCK_MONOTONIC, &end_time);
     double elapsed_ns = client.calc_time(start_time, end_time);
-    std::cout << "Number of thread: "<< argv[1]<< " and number of loop"<< argv[2] <<std::endl;
+    std::cout << "Number of thread: "<< argv[1]<< " and number of loop : "<< argv[2] <<std::endl;
     printf("total request number: %d\n",   numOfLoop*numOfThread*MAX_TEST_NUM);
     printf("Throughput: %f request/sec \n",   numOfLoop*numOfThread*MAX_TEST_NUM/(elapsed_ns/1000000000));
 

@@ -15,8 +15,8 @@
 
 class Client {
 public:
-    void start(int numOfLoop);
-    void multiThreadStart(int numOfThread,int numOfLoop );
+    void start(int numOfLoop, int mode);
+    void multiThreadStart(int numOfThread,int numOfLoop, int mode );
     double calc_time(struct timespec start, struct timespec end);
     void scalabilityStart(size_t MAX_TEST_NUM);
 

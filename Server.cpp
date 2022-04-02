@@ -33,7 +33,7 @@ void Server::handleAccountCreate(TiXmlElement* rootElement, TiXmlElement* rootRe
         newChildElement->SetAttribute("id", id); //属性
         rootResultElement->LinkEndChild(newChildElement);
     } catch (std::invalid_argument & e) {
-        std::cout << e.what() << '\n';
+        //std::cout << e.what() << '\n';
         //<error id="ACCOUNT_ID">Msg</error> #For account create error
         TiXmlElement *newChildElement = new TiXmlElement("error");//根元素
         newChildElement->SetAttribute("id", id); //属性
@@ -74,16 +74,16 @@ void Server::handleSymbolCreate(TiXmlElement* rootElement, TiXmlElement* rootRes
 void Server::handleCreate(TiXmlElement* rootElement, TiXmlElement* rootResultElement, pqxx::connection * conn){
     //Handle Create
     for (TiXmlNode *SubItem = rootElement->FirstChild(); SubItem != nullptr; SubItem = SubItem->NextSibling()) {
-        std::cout << "!!!current Node " <<SubItem->Value() << ": "<<std::endl;
+        //std::cout << "!!!current Node " <<SubItem->Value() << ": "<<std::endl;
 
         //TODO: check whether can be transfer to element or not
         TiXmlElement *createdElement = SubItem->ToElement();
         // if just a child node not element then return
         if (strcmp(createdElement ->Value(), "account") == 0){
-//            std::cout << "acount Node " <<SubItem->Value() << ": "<<std::endl;
+//            //std::cout << "acount Node " <<SubItem->Value() << ": "<<std::endl;
             handleAccountCreate(createdElement, rootResultElement, conn);
         }else if (strcmp(createdElement ->Value(), "symbol") == 0){
-//            std::cout << "sym Node " <<SubItem->Value() << ": "<<std::endl;
+//            //std::cout << "sym Node " <<SubItem->Value() << ": "<<std::endl;
             handleSymbolCreate(createdElement, rootResultElement, conn);
         }else{
             return;
@@ -260,16 +260,16 @@ void Server::handleTransection(TiXmlElement* rootElement, TiXmlElement* rootResu
          <cancel id="TRANS_ID">
         </transactions>
      * */
-    std::cout<< rootElement->Value()<< ":"<<rootElement->FirstAttribute()->Value()  << std::endl;
+    //std::cout<< rootElement->Value()<< ":"<<rootElement->FirstAttribute()->Value()  << std::endl;
     int accountId = std::atoi(rootElement->FirstAttribute()->Value());
     for (TiXmlNode *SubItem = rootElement->FirstChild(); SubItem != nullptr; SubItem = SubItem->NextSibling()) {
-        std::cout << "!!!current Node " <<SubItem->Value() << ": "<<std::endl;
+        //std::cout << "!!!current Node " <<SubItem->Value() << ": "<<std::endl;
 
         //TODO: check whether can be transfer to element or not
         TiXmlElement *createdElement = SubItem->ToElement();
         // if just a child node not element then return
         if (strcmp(createdElement ->Value(), "order") == 0){
-            std::cout << "!!!!!current Node " <<createdElement ->Value() <<std::endl;
+            //std::cout << "!!!!!current Node " <<createdElement ->Value() <<std::endl;
             handleOrderTransection(createdElement, rootResultElement, accountId, conn);
         }else if (strcmp(createdElement ->Value(), "query") == 0){
             handleQueryTransection(createdElement, rootResultElement, accountId, conn);
@@ -286,7 +286,7 @@ void Server::handleRequest(TiXmlElement* rootElement, TiXmlElement* rootResultEl
     if (strcmp(rootElement->Value() , "create") == 0 ){
         handleCreate(rootElement, rootResultElement, conn);
     } else if (strcmp(rootElement->Value() , "transactions") == 0){
-        std::cout <<"-current root " <<rootElement->Value() << std::endl;
+        //std::cout <<"-current root " <<rootElement->Value() << std::endl;
         handleTransection(rootElement, rootResultElement, conn);
     } else{
         // Exception
@@ -297,9 +297,9 @@ void Server::handleRequest(TiXmlElement* rootElement, TiXmlElement* rootResultEl
 
 void printXml(TiXmlElement* rootElement, bool isElement) {
     if (rootElement == nullptr) return;
-    std::cout <<"current root " <<rootElement->Value() << std::endl;
+    //std::cout <<"current root " <<rootElement->Value() << std::endl;
     for (TiXmlNode *SubItem = rootElement->FirstChild(); SubItem != nullptr;) {
-        std::cout << "current Node " <<SubItem->Value() << ": "<<std::endl;
+        //std::cout << "current Node " <<SubItem->Value() << ": "<<std::endl;
         // if just a child node not element then return
         if(!isElement) return;
         TiXmlElement *createdElement = SubItem->ToElement();
@@ -308,10 +308,10 @@ void printXml(TiXmlElement* rootElement, bool isElement) {
 
         while (nullptr != pAttr) //输出所有属性
         {
-            std::cout << pAttr->Name() << ": " << pAttr->Value() << " ";
+            //std::cout << pAttr->Name() << ": " << pAttr->Value() << " ";
             pAttr = pAttr->Next();
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
 
         TiXmlNode *sonNode = createdElement->FirstChild();
         TiXmlNode *sonElement = createdElement->FirstChildElement();
@@ -328,12 +328,12 @@ void Server::serveRequest(Socket socket) {
         int listen_fd = socket.setupServer(PORT);
         int msg_fd = socket.acceptConn(listen_fd);
         std::vector<char> request = socket.recvMesg(msg_fd);
-        std::cout << request.data() << '\n';
+        //std::cout << request.data() << '\n';
 
         TiXmlDocument *myDocument = new TiXmlDocument();
         myDocument->Parse(getXmlContent(request.data()));
 //    myDocument->Parse(request.data());
-        std::cout << "Parse Complete" << '\n';
+        //std::cout << "Parse Complete" << '\n';
         TiXmlElement *rootElement = myDocument->RootElement();
         //Create Result document
         TiXmlDocument *resDocument = new TiXmlDocument();
@@ -365,12 +365,12 @@ void Server::serveRequestMulti(Socket socket,int listen_fd) {
     while (true) {
         int msg_fd = socket.acceptConn(listen_fd);
         std::vector<char> request = socket.recvMesg(msg_fd);
-        std::cout << request.data() << '\n';
+        //std::cout << request.data() << '\n';
 
         TiXmlDocument *myDocument = new TiXmlDocument();
         myDocument->Parse(getXmlContent(request.data()));
 //    myDocument->Parse(request.data());
-        std::cout << "Parse Complete" << '\n';
+        //std::cout << "Parse Complete" << '\n';
         TiXmlElement *rootElement = myDocument->RootElement();
         //Create Result document
         TiXmlDocument *resDocument = new TiXmlDocument();
@@ -401,7 +401,7 @@ void Server::processRequest(Socket socket, std::vector<char> request, int msg_fd
     TiXmlDocument* myDocument = new TiXmlDocument();
     myDocument->Parse(getXmlContent(request.data()));
 //    myDocument->Parse(request.data());
-    std::cout << "Parse Complete" << '\n';
+    //std::cout << "Parse Complete" << '\n';
     TiXmlElement* rootElement = myDocument->RootElement();
     //Create Result document
     TiXmlDocument* resDocument = new TiXmlDocument();
@@ -430,7 +430,7 @@ void Server::runServer( Socket & socket){
     while(true) {
         int msg_fd = socket.acceptConn(listen_fd);
         std::vector<char> request = socket.recvMesg(msg_fd);
-        std::cout << request.data() << '\n';
+        //std::cout << request.data() << '\n';
 //        processRequest(socket, request, listen_fd, msg_fd);
         std::thread t(&Server::processRequest, this, socket, request, msg_fd);
         t.detach();
@@ -452,7 +452,7 @@ void Server::runServerPreCreate(Socket &socket) {
 }
 
 int main(int argc, char *argv[]) {
-//    std::cout << "server running\n";
+//    //std::cout << "server running\n";
 //    Socket socket;
 //    Server server;
 //    while(true){

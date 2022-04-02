@@ -59,7 +59,7 @@ void Database::createAccount(pqxx::connection * conn, int accountId, double bala
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << e.what() << '\n';
+        //std::cout << e.what() << '\n';
         w.abort();
         throw std::invalid_argument(ACCOUNT_EXIST_ERROR);
     }
@@ -75,7 +75,7 @@ void Database::updatePosition(pqxx::connection * conn, std::string symbol, int a
         w.exec(q);
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << e.what() << '\n';
+        //std::cout << e.what() << '\n';
         w.abort();
     }
 }
@@ -116,7 +116,7 @@ pqxx::result Database::cancelOrder(pqxx::connection * conn, int orderId, int acc
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << e.what() << '\n';
+        //std::cout << e.what() << '\n';
         w.abort();
     }
     return getOrder(conn, orderId, accountId);
@@ -188,7 +188,7 @@ void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::st
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << e.what() << '\n';
+        //std::cout << e.what() << '\n';
         w.abort();
     }
 }
@@ -222,7 +222,7 @@ void Database::handleBuyOrder(pqxx::connection * conn, int buyOrderId, std::stri
         w.exec(ss.str());
         w.commit();
     } catch (pqxx::sql_error &e) {
-        std::cout << e.what() << '\n';
+        //std::cout << e.what() << '\n';
         w.abort();
     }
 }
