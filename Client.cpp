@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
     int numOfLoop = std::atoi(argv[2]);
     int MAX_TEST_NUM = 8;
 
-    client.multiThreadStart(numOfThread, MAX_TEST_NUM);
+    client.multiThreadStart(numOfThread, numOfLoop);
 //    scalabilityStart();
     clock_gettime(CLOCK_MONOTONIC, &end_time);
     double elapsed_ns = client.calc_time(start_time, end_time);
