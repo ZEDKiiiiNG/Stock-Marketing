@@ -22,7 +22,7 @@ services:
   server:
     build: ./server
 
-    command: /code/run.sh
+    command: bash -c "./run.sh"
     volumes:
       - ./server:/code
 
