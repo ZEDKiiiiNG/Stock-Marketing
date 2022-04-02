@@ -162,9 +162,9 @@ void Database::placeOrder(pqxx::connection * conn, int orderId, std::string symb
 void Database::handleSellOrder(pqxx::connection * conn, int sellOrderId, std::string symbol, int sellerAccountId,
                                double sellAmount, double sellLimit) {
     pqxx::work w(*conn);
-    std::string q = getLockOrderQuery(&w, sellOrderId, sellerAccountId);
-    w.exec(q);
-    q = getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId);
+    // std::string q = getLockOrderQuery(&w, sellOrderId, sellerAccountId);
+    // w.exec(q);
+    std::string q = getBuyOrderQuery(&w, sellLimit, symbol, sellerAccountId);
     pqxx::result r = w.exec(q);
 
     // atmoic execute
