@@ -4,7 +4,7 @@
 
 #include "Client.h"
 
-void Client::start() {
+void Client::start(int numOfLoop) {
     std::cout << "client running...\n";
 
     //get all the path of test cases
@@ -12,42 +12,53 @@ void Client::start() {
     size_t MAX_TEST_NUM = 8;
     ////获取该路径下的所有文件
     std::stringstream ss;
-    for(int i =0; i< MAX_TEST_NUM; i++){
-        //notice this use of stringstream
-        ss.str("");
-        Socket socket;
-        int msg_fd = socket.setupClient(HOST, PORT);
-        ss<< filePath << i << ".xml";
-        std::string testFileName = ss.str();
-        std::cout<<"test file name : "<< testFileName <<std::endl;
-        TiXmlDocument requestDocument(testFileName.c_str());
-        bool loadOk = requestDocument.LoadFile();
-        if (!loadOk){
-            std::cout << "could load:" << requestDocument.ErrorDesc() << std::endl;
-        }
-        TiXmlPrinter *printer = new TiXmlPrinter();
-        requestDocument.Accept(printer);
-        std::string stringBuffer= printer->CStr();
-        std::string request = std::to_string(stringBuffer.length());
-        request.append("\n");
-        request.append(stringBuffer);
+    for(int j = 0; j< numOfLoop; ++j ){
+        for(int i =0; i< MAX_TEST_NUM; i++){
+            //notice this use of stringstream
+            ss.str("");
+            Socket socket;
+            int msg_fd = socket.setupClient(HOST, PORT);
+            ss<< filePath << i << ".xml";
+            std::string testFileName = ss.str();
+            std::cout<<"test file name : "<< testFileName <<std::endl;
+            TiXmlDocument requestDocument(testFileName.c_str());
+            bool loadOk = requestDocument.LoadFile();
+            if (!loadOk){
+                std::cout << "could load:" << requestDocument.ErrorDesc() << std::endl;
+            }
+            TiXmlPrinter *printer = new TiXmlPrinter();
+            requestDocument.Accept(printer);
+            std::string stringBuffer= printer->CStr();
+            std::string request = std::to_string(stringBuffer.length());
+            request.append("\n");
+            request.append(stringBuffer);
 //        std::cout<<"request  content: "<<"\n"<< request <<std::endl;
-        socket.sendMesg(msg_fd, request);
-        std::cout<<"request  send!!!!: "<<std::endl;
-        std::vector<char> response = socket.recvMesg(msg_fd);
-        std::cout << response.data() << '\n';
-        socket.closeConn(msg_fd);
+            socket.sendMesg(msg_fd, request);
+            std::cout<<"request  send!!!!: "<<std::endl;
+            try{
+                std::vector<char> response = socket.recvMesg(msg_fd);
+                std::cout << response.data() << '\n';
+                socket.closeConn(msg_fd);
+            }catch(std::invalid_argument &e){
+                socket.closeConn(msg_fd);
+                return;
+            }
+//        std::vector<char> response = socket.recvMesg(msg_fd);
+
+        }
     }
+
 }
 
-void Client::multiThreadStart(){
-    size_t  numOfThread = 10;
+void Client::multiThreadStart(int numOfThread,int numOfLoop ){
+//    size_t  numOfThread = 10;
 //    std::vector<std::thread> threadVector(10);
     std::thread thArr[numOfThread];
     for(int i =0; i< numOfThread; i++){
 //        std::thread t(&Client::start, this);
 //        threadVector.push_back(t);
-        thArr[i] = std::thread(&Client::start, this);
+//        thArr[i] = std::thread(&Client::scalabilityStart, this,MAX_TEST_NUM);
+        thArr[i] = std::thread(&Client::start, this, numOfLoop);
     }
     for (auto &a : thArr)
         a.join();
@@ -73,7 +84,7 @@ std::string getAccountCreateXML(int randomBase){
         ss << "<account id= \"" << randomId << "\" balance=\"1000\"/>\n";
     }
     ss << "</create>";
-    std::cout<< "test result !!!"<< ss.str() << std::endl;
+//    std::cout<< "test result !!!"<< ss.str() << std::endl;
     return ss.str();
 }
 std::string getSymCreateXML(int randomBase){
@@ -93,7 +104,7 @@ std::string getSymCreateXML(int randomBase){
         ss << "    </symbol>\n";
     }
     ss << "</create>";
-    std::cout<< "test result !!!"<< ss.str() << std::endl;
+//    std::cout<< "test result !!!"<< ss.str() << std::endl;
     return ss.str();
 }
 std::string getTransXML(int randomBase){
@@ -125,8 +136,41 @@ std::string getTransXML(int randomBase){
         ss<<"    <cancel id=\""<<randomCancelId<<"\"/>\n";
     }
     ss<< "</transactions>";
-    std::cout<< "test result !!!"<< ss.str() << std::endl;
+//    std::cout<< "test result !!!"<< ss.str() << std::endl;
     return ss.str();
+}
+
+void Client::scalabilityStart(size_t MAX_TEST_NUM) {
+    std::cout << "client running...\n";
+
+    //get all the path of test cases
+    std::string filePath = "testCases/testcase";
+//    size_t MAX_TEST_NUM = 8;
+    ////获取该路径下的所有文件
+    for(int i =0; i< MAX_TEST_NUM; i++){
+        //notice this use of stringstream
+        Socket socket;
+        std::string stringBuffer;
+        int randomBase = rand()%1000;
+        if(i == 0){
+            stringBuffer = getAccountCreateXML(randomBase);
+        }else if(i == 1){
+            stringBuffer = getSymCreateXML(randomBase);
+        }else{
+            stringBuffer = getTransXML(randomBase);
+        }
+        int msg_fd = socket.setupClient(HOST, PORT);
+
+        std::string request = std::to_string(stringBuffer.length());
+        request.append("\n");
+        request.append(stringBuffer);
+//        std::cout<<"request  content: "<<"\n"<< request <<std::endl;
+        socket.sendMesg(msg_fd, request);
+//        std::cout<<"request  send!!!!: "<<std::endl;
+        std::vector<char> response = socket.recvMesg(msg_fd);
+        std::cout << response.data() << '\n';
+        socket.closeConn(msg_fd);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -134,11 +178,19 @@ int main(int argc, char *argv[]) {
     struct timespec start_time, end_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
     int randomBase = rand()%1000;
-    client.multiThreadStart();
+
+    int numOfThread = std::atoi(argv[1]);
+    int numOfLoop = std::atoi(argv[2]);
+    int MAX_TEST_NUM = 8;
+
+    client.multiThreadStart(numOfThread, MAX_TEST_NUM);
+//    scalabilityStart();
     clock_gettime(CLOCK_MONOTONIC, &end_time);
     double elapsed_ns = client.calc_time(start_time, end_time);
-    printf("%f ns\n",   elapsed_ns/1000000000);
-//    std::cout << "arg[]: "<< argv[1] <<std::endl;
+    std::cout << "Number of thread: "<< argv[1]<< " and number of loop"<< argv[2] <<std::endl;
+    printf("total request number: %d\n",   numOfLoop*numOfThread*MAX_TEST_NUM);
+    printf("Throughput: %f request/sec \n",   numOfLoop*numOfThread*MAX_TEST_NUM/(elapsed_ns/1000000000));
+
 //    client.multiThreadStart();
     return EXIT_SUCCESS;
 }
