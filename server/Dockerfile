@@ -5,4 +5,3 @@ RUN apt-get update && apt-get install -y sudo netcat g++ make libpqxx-dev libpq-
 WORKDIR /code
 ADD . /code
 RUN chmod +x run.sh
-RUN sh run.sh
