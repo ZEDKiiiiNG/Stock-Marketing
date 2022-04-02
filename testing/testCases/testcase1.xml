@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<create>
+    <symbol sym="testSYM1">
+        <account id="1">100000</account>
+        <account id="3">100000</account>
+    </symbol>
+    <symbol sym="testSYM2">
+        <account id="4">100000</account>
+        <account id="1">100000</account>
+        <account id="1">555.5</account>
+    </symbol>
+    <symbol sym="testSYM3">
+        <account id="2">100000</account>
+    </symbol>
+</create>
