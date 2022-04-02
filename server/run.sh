@@ -1,9 +1,10 @@
 #!/bin/bash
 make clean
 make server
+./server
+./code/server
 echo "hello"
-while [ "1"=="1" ]
+while true
 do
-    ./server
     sleep 1
 done
