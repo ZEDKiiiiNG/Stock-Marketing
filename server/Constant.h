@@ -6,11 +6,11 @@
 #define _CONSTANT_H_
 
 #define BAGLOG 10
-#define LARGE_BUFFER_LEN 1000000
+#define LARGE_BUFFER_LEN 8000
 #define SMALL_BUFFER_LEN 8000
-#define HOST "vcm-24622.vm.duke.edu"
+#define HOST "vcm-24846.vm.duke.edu" // 24622
 #define PORT "12345"
-#define DB_INFO "dbname=testdb user=postgres password=postgres"
+#define DB_INFO "dbname=testdb user=postgres password=postgres host=db port=5432"
 #define ACCOUNT_EXIST_ERROR "Account already exists"
 #define ACCOUNT_NOT_EXIST_ERROR "Account does not exist"
 #define INSUFFICIENT_BALANCE_ERROR "Insufficient balance are available"
