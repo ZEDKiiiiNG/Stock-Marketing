@@ -1,8 +1,9 @@
 #!/bin/bash
 make clean
+echo "hello1"
 make server
 ./server
-echo "hello"
+echo "hello2"
 while true
 do
     sleep 1
