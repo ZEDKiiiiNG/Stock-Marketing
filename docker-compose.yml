@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  db:
+    restart: always
+    image: postgres
+
+    volumes:
+      - data-volume:/var/lib/postgresql/data
+      - ./initDB.sql:/docker-entrypoint-initdb.d/
+
+    expose:
+      - "5432"
+    ports:
+      - "54321:5432"
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  server:
+    build: ./server
+
+    command: ./server
+    volumes:
+      - ./server:/code
+
+    ports:
+      - "12345:12345"
+    links:
+      - db
+    depends_on:
+      - db
+
+volumes:
+  data-volume:
