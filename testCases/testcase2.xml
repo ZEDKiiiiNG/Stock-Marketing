@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<transactions id="1">
-    <order sym="testSYM1" amount="100" limit="2.5"/>
-    <order sym="testSYM1" amount="-100" limit="2.6"/>
-    <order sym="testSYM1" amount="-110000" limit="2.6"/>
-    <order sym="testSYM3" amount="-100" limit="2.6"/>
-    <order sym="testSYM3" amount="100" limit="2.5"/>
-</transactions>

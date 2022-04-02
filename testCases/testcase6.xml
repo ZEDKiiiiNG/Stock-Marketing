@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<transactions id="1">
-    <order sym="testSYM1" amount="-500" limit="2.4"/>
-    <query id="7"/>
-    <cancel id="7"/>
-    <query id="7"/>
-</transactions>
